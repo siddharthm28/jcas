@@ -14,17 +14,17 @@ for i=1:length(ids)
     img_predP=sprintf(path,sprintf('%s-seg_resultP',obj.dbparams.image_names{ids(i)}));
     histogram_filename = sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)}));
     
-    load(img_gt,'seg_i');
-    load(img_pred,'seg');
-    load(img_predP,'pixelSeg');
+    load(img_gt,'seg_i'); seg_i=seg_i(:);
+    load(img_pred,'seg'); seg=seg(:);
+    load(img_predP,'pixelSeg'); pixelSeg=pixelSeg(:);
     load(histogram_filename,'superpixel_histograms');
+    tmp=superpixel_histograms(end,:); tmp=tmp(:);
     
     indNoVoidP=find(seg_i(:));
     indNoVoidSP=find(superpixel_histograms(end,:));
     
     %indCM=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(seg_i(:)),double(pixelSeg(:)));
     %indCMP=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(superpixel_histograms(end,:)'),double(seg(:)));
-    tmp=superpixel_histograms(end,:);
     indCM=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(seg_i(indNoVoidP)),double(pixelSeg(indNoVoidP)));
     indCMP=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(tmp(indNoVoidSP)),double(seg(indNoVoidSP)));
     
@@ -57,11 +57,20 @@ r_acc_no_void = (diag(c(2:end,2:end))./sum(c(2:end,2:end),2))';
 r_int = (diag(c)./(sum(c,2)+sum(c',2)-diag(c)))';
 r_int_no_void = (diag(c(2:end,2:end))./(sum(c(2:end,2:end),2)+sum(c(2:end, 2:end)',2)-diag(c(2:end, 2:end))))';
 
+% fprintf('\n Mean of correctly labelled pixels Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f). Mean = %.2f \n', 100*[r_acc(:)' mean(r_acc)]);
+% fprintf('Mean of intersection by union Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_int(:)' mean(r_int)]);
+% fprintf('Mean of correctly labeled per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc(:)']);
+% fprintf('Mean of intersection by union per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc2(:)' mean(rc2)]);
 
-fprintf('\n Mean of correctly labelled pixels Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f). Mean = %.2f \n', 100*[r_acc(:)' mean(r_acc)]);
-fprintf('Mean of intersection by union Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_int(:)' mean(r_int)]);
-fprintf('Mean of correctly labeled per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc(:)']);
-fprintf('Mean of intersection by union per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc2(:)' mean(rc2)]);
+fprintf('\n At superpixel level \n');
+fprintf('Mean of correctly labelled pixels \n');
+display_results(r_acc);
+fprintf('Mean of intersection by union \n');
+display_results(r_int);
+fprintf('Mean of correctly labeled per image \n');
+display_results2(rc);
+fprintf('Mean of intersection by union per image \n');
+display_results(rc2);
 
 tot = squeeze(sum(cmatrixP,2));
 tot2 = squeeze(sum(cmatrixP,2)) + squeeze(sum(cmatrixP,1));
@@ -88,12 +97,35 @@ r_int = (diag(c)./(sum(c,2)+sum(c',2)-diag(c)))';
 r_int_no_void = (diag(c(2:end,2:end))./(sum(c(2:end,2:end),2)+sum(c(2:end, 2:end)',2)-diag(c(2:end, 2:end))))';
 %save(sprintf(globalparms.finaldestmatpath,'statistics'),'r_acc','r_int','rc','rc2', 'r_acc_no_void', 'r_int_no_void');
 
+% fprintf('\n Per pixel numbers\n');
+% fprintf('Mean of correctly labelled pixels Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_acc(:)' mean(r_acc)]);
+% fprintf('Mean of intersection by union Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_int(:)' mean(r_int)]);
+% fprintf('Mean of correctly labeled per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc(:)']);
+% fprintf('Mean of intersection by union per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc2(:)' mean(rc2)]);
+
 fprintf('\n Per pixel numbers\n');
-fprintf('Mean of correctly labelled pixels Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_acc(:)' mean(r_acc)]);
-fprintf('Mean of intersection by union Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[r_int(:)' mean(r_int)]);
-fprintf('Mean of correctly labeled per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc(:)']);
-fprintf('Mean of intersection by union per image Bike(%.2f) cars (%.2f) People(%.2f) BG(%.2f).. Mean = %.2f \n', 100*[rc2(:)' mean(rc2)]);
-keyboard;
+fprintf('Mean of correctly labelled pixels \n');
+display_results(r_acc);
+fprintf('Mean of intersection by union \n');
+display_results(r_int);
+fprintf('Mean of correctly labeled per image \n');
+display_results2(rc);
+fprintf('Mean of intersection by union per image \n');
+display_results(rc2);
+
 save(stat_file,'cmatrixSP','cmatrixP');
 end
 
+function display_results(r_acc)
+for i=1:length(r_acc)
+    fprintf('%3.2f \t',100*r_acc(i));
+end
+fprintf('\nMean= %3.2f \n',100*mean(r_acc));
+end
+
+function display_results2(rc)
+for i=1:length(rc)-1
+    fprintf('%3.2f \t',100*rc(i));
+end
+fprintf('\nMean= %3.2f \n',100*rc(end));
+end
