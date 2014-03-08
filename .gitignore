@@ -2,3 +2,11 @@
 *.m~
 toolboxes/vlfeat-0.9.18/*
 toolboxes/pax_global_header
+toolboxes/libsvm-3.17/*
+toolboxes/blocks/*
+toolboxes/GCMex/*
+toolboxes/gco-v3.0/*
+toolboxes/graphAnalysisToolbox-1.0/*
+toolboxes/maxflow-v3.01/*
+toolboxes/spams-matlab/*
+toolboxes/svm-struct-matlab-master/*
