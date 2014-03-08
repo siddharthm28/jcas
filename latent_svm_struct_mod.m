@@ -12,7 +12,7 @@ previousw(1)=previousw(1)+1;
 opts=optimset('Algorithm','interior-point-convex','Display','off');
 iterLatent=1;
 
-%while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
+while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     iterLatent=iterLatent+1;
     previousw=model.w;
     S=[]; Slabel=[]; Sfeature=[];
@@ -24,9 +24,9 @@ iterLatent=1;
     % front of the while iterLatent, the end at the end of the file, the if iter ==1,
     %and the follwoing lines :
     %Use current estimate to get "GT words"
-%        for i=1:n
-%            param.words{i}=wordsFnCP(param,model,param.patterns{i},param.labels{i});
-%        end
+    for i=1:n
+        param.words{i}=wordsFnCP(param,model,param.patterns{i},param.labels{i});
+    end
     
 while flag
     fprintf('CP learning : Iter. %d',iter);
@@ -35,11 +35,11 @@ while flag
 % Words can be updated after each epoch or after each run of the SVMSTRUCT    
      %Use current estimate to get "GT words"
      % Comment these
-          for i=1:n
-              param.words{i}=wordsFnCP(param,model,param.patterns{i},param.labels{i});
-              feature0(:,i)=param.featureFn(param,param.patterns{i},[param.labels{i};param.words{i}']);
-              fprintf('Update features and words\n')
-          end
+    %      for i=1:n
+    %          param.words{i}=wordsFnCP(param,model,param.patterns{i},param.labels{i});
+    %          feature0(:,i)=param.featureFn(param,param.patterns{i},[param.labels{i};param.words{i}']);
+    %          fprintf('Update features and words\n')
+    %      end
         
     for i=1:n
         fprintf('%03d',i);
