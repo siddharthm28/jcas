@@ -1,2 +1,4 @@
 *.asv
 *.m~
+toolboxes/vlfeat-0.9.18/*
+toolboxes/pax_global_header
