@@ -14,7 +14,7 @@ expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 2; % 0-U 1-(U+P)
+expJCAS.mode = 1; % 0-U 1-(U+P)
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
@@ -34,7 +34,7 @@ expJCAS.unary.dictionary.params.max_features_for_clustering = 1e5;
 % number of clusters for bottom up unary quantization
 expJCAS.unary.dictionary.params.num_bu_clusters = 500;
 % maximum number of histograms per class (used to balance the training)
-expJCAS.unary.svm.params.max_hists_per_class_for_training = 1e3;
+expJCAS.unary.svm.params.max_hists_per_class_for_training = 2e3;
 % maximum number of histogram per image
 expJCAS.unary.svm.trainingset.params.hists_per_image = 10;
 expJCAS.unary.SPneighboorhoodsize=4;
