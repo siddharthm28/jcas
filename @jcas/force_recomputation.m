@@ -33,10 +33,11 @@ if nargin>1 && isequal(varargin{1},'reset')
     obj.force_recompute.optimisation=0;
 elseif nargin>1 && isequal(varargin{1},'all')
     fprintf('Forcing recomputation for everything\n');
+    fprintf('Not recomputing image data, features and superpixels though \n');
     %Disable default recomputing of training data (Superpixels/Features)
-    obj.force_recompute.trainingdata_UF=1;
-    obj.force_recompute.imagedata=1;
-    obj.force_recompute.trainingdata_SP=1;
+    obj.force_recompute.trainingdata_UF=0;
+    obj.force_recompute.imagedata=0;
+    obj.force_recompute.trainingdata_SP=0;
     %Recomputing dictionary for unary
     obj.force_recompute.dictionary_unary=1;
     %Recomputing superpixels histograms
