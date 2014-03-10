@@ -27,7 +27,7 @@ fprintf('\n construct_histograms_for_superpixels: (total of %d images):    ', le
 
 % for each image
 for i=1:length(ids)
-    fprintf('\b\b\b\b %04d',i);
+    fprintf('\b\b\b\b%04d',i);
     %Name of the mat file where the histograms will be stored
     histogram_filename = sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)}));
     

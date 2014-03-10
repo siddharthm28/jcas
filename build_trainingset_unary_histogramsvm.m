@@ -32,7 +32,7 @@ if ((~exist(training_set_svm_filename, 'file') || obj.force_recompute.trainingse
 
     %Create a training set for SVM classification using the histograms associated with each superpixel
     for i=1:length(ids)
-        fprintf('\b\b\b\b %03d',i);
+        fprintf('\b\b\b\b%04d',i);
         
         %Check if we work on aggregated superpixels histograms
         %if (obj.unary.SPneighboorhoodsize ==0)

@@ -51,7 +51,7 @@ if (~exist(dictionary_filename, 'file') || (obj.force_recompute.dictionary_unary
     % Extract the features from each image (feature already stored)
 
     for i=1:length(ids)
-        fprintf('\b\b\b\b %03d',i);
+        fprintf('\b\b\b\b%04d',i);
         load(sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)})));
         %Retrieve the indexes corresponding to the current image
         index = find(randindex<=img_feat.num_features);

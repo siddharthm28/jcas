@@ -31,6 +31,34 @@ if nargin>1 && isequal(varargin{1},'reset')
     obj.force_recompute.topdown_unary=0;
     %Recomputing optimisation
     obj.force_recompute.optimisation=0;
+elseif nargin>1 && isequal(varargin{1},'all')
+    fprintf('Forcing recomputation for everything\n');
+    %Disable default recomputing of training data (Superpixels/Features)
+    obj.force_recompute.trainingdata_UF=1;
+    obj.force_recompute.imagedata=1;
+    obj.force_recompute.trainingdata_SP=1;
+    %Recomputing dictionary for unary
+    obj.force_recompute.dictionary_unary=1;
+    %Recomputing superpixels histograms
+    obj.force_recompute.superpixels_histograms=1;
+    %Recomputing aggregated superpixels histograms
+    obj.force_recompute.aggregated_histograms=1;
+    %Recomputing training set for svm on unary potentials
+    obj.force_recompute.trainingset_svm=1;
+    %Recomputing the svm classifiers for unary potentials
+    obj.force_recompute.unary_svm_classifiers=1;
+    %Recomputing the unary potentials
+    obj.force_recompute.unary=1;
+    %Recomputing pairwise potentials
+    obj.force_recompute.pairwise=1;
+    %Recomputing Topdown Dictionary
+    obj.force_recompute.topdown_dictionary=1;
+    %Recomputing topdown descriptors
+    obj.force_recompute.topdown_descriptors=1;
+    %Recomputing topdown unary
+    obj.force_recompute.topdown_unary=1;
+    %Recomputing optimisation
+    obj.force_recompute.optimisation=1;
 else
         %Disable default recomputing of training data (Superpixels/Features)
     %Recomputing dictionary for unarytrainingdata_UF

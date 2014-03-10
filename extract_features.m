@@ -40,7 +40,7 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 display(['Extracting features from ' obj.dbparams.name '. Total number of images in current set ' num2str(length(obj.dbparams.(imgsetname)))]);
-fprintf('Processing image    ');
+fprintf('Processing image:     ');
 
 % compute number of images in imageset
 num_imgs = length(obj.dbparams.(imgsetname));
