@@ -2,20 +2,15 @@ function InitializationVOC2011CarsPC
 % Function that Initializes the framework for InriaGraz dataset for PC
 clear all; clc; close all;
 
-% manually check if all the requisite toolboxes are present
-% blocks, GCMex, gco-v3.0 Graph-Toolbox, libsvm-3.17-Matlab, maxflow, queue
-% , robustpn_mex_v1.1, spams-matlab, svm-struct-matlab-1.2, vlfeat-0.9.16
-
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb('voc2011-cars-pc');
-expJCAS.force_recomputation('reset');
 % Default Quickshift superpixels
 expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 0; % 0-U 1-(U+P)
+expJCAS.mode = 1; % 0-U 1-(U+P)
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
