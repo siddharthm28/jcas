@@ -9,7 +9,7 @@ clear all; clc; close all;
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb('voc2011-cars-pc');
-expJCAS.force_recomputation('all');
+expJCAS.force_recomputation('reset');
 % Default Quickshift superpixels
 expJCAS.makesp('Quickshift');
 % dsift feature for unary options
