@@ -262,8 +262,9 @@ switch db_name
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
     case 'voc2011-cars-pc'
         % relevant paths
-        train_file='F:/codes/wireframe/voc2011/train.txt';
-        test_file='F:/codes/wireframe/voc2011/val.txt';
+        dataset_path='F:/codes/wireframe/voc2011/';
+        train_file=fullfile(dataset_path,'train.txt');
+        test_file=fullfile(dataset_path,'val.txt');
         % read the train file for training images
         train_images = read_file(train_file);
         test_images = read_file(test_file);
@@ -277,10 +278,35 @@ switch db_name
         % image index for test set
         obj.dbparams.test = length(train_images)+(1:length(test_images));
         % path to the images
-        obj.dbparams.imgpath = 'F:/codes/wireframe/voc2011/img/';
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
         obj.dbparams.format = '.jpg';
         % path to the ground truth lables
-        obj.dbparams.segpath = 'F:/codes/wireframe/voc2011/seg/%s.mat';
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
+        % path to the results
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
+    case 'voc2011-cars-lab'
+        % relevant paths
+        dataset_path='/cis/project/vision_sequences/voc2011/';
+        train_file=fullfile(dataset_path,'train.txt');
+        test_file=fullfile(dataset_path,'val.txt');
+        % read the train file for training images
+        train_images = read_file(train_file);
+        test_images = read_file(test_file);
+        % total number of images
+        obj.dbparams.num_images = length(train_images)+length(test_images);
+        obj.dbparams.image_names = [train_images;test_images];
+        % total number of categories
+        obj.dbparams.ncat = 2;
+        % image index for training set
+        obj.dbparams.training = 1:length(train_images);
+        % image index for test set
+        obj.dbparams.test = length(train_images)+(1:length(test_images));
+        % path to the images
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
+        obj.dbparams.format = '.jpg';
+        % path to the ground truth lables
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
         % path to the results
         obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
