@@ -146,10 +146,27 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.tmp.topdown.features.destmatpath=obj.topdown.features.destmatpath;
             param.nbIterLatent=20;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=latent_svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=latent_svm_struct_mod(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
-            fprintf('Optimisation computed \n');            
+            fprintf('Optimisation computed \n');
+            
+        case 8
+            %Latent+structure
+            param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
+            obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary+...
+            obj.topdown.dictionary.params.size_dictionary*obj.topdown.dictionary.params.size_dictionary;
+            param.w0=zeros(1,param.dimension);
+            param.w0(1)=1;
+            param.w0(2)=1;
+            param.eps=obj.optimisation.params.eps;
+            param.nbIterLatent=20;
+            %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
+            optsvm=latent_svm_struct_mod(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            
+            save(opt_filename,'optsvm');
+            fprintf('Optimisation computed \n');
+            
     end
 end
 end

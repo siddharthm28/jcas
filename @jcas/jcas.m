@@ -260,6 +260,8 @@ classdef jcas < handle
             obj.force_recompute.topdown_unary=0;
             %Recomputing optimisation
             obj.force_recompute.optimisation=0;
+            %Recompute td adjacency
+            obj.force_recompute.latent_adj=0;
             %--------------------------------------------------------------
 
             %--------------------------------------------------------------

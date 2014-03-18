@@ -172,6 +172,7 @@ expJCAS.optimisation.params.eps=0.001;
 expJCAS.maketd_feats('SIFT');
 expJCAS.topdown.dictionary.params.size_dictionary=20;
 expJCAS.topdown.features.params.max_per_image='none';
+expJCAS.topdown.latent.params.n_neighbor=4;
 
 % -------------------------------------------------------------------------
 % What to do ?

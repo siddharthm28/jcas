@@ -98,6 +98,10 @@ if obj.mode>=2
     fprintf('\n Generate TD unary');
     compute_topdown_unaries(obj,'training');
 end
+
+if obj.mode>=8
+    compute_IP_adj(obj,'training')
+end
     
 
 %Cutting plane algorithm to learn the parameters

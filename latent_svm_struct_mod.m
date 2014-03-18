@@ -1,4 +1,4 @@
-function model=latent_svm_struct_mod(param,miter,C)            
+function model=latent_svm_struct_mod(obj,param,miter,C)            
 %Performing cutting plane learning for weights subject to positivity
 %constraints.
 %Input : param with handles like svm_struct, miter maximum number of
@@ -25,7 +25,7 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     %and the follwoing lines :
     %Use current estimate to get "GT words"
     for i=1:n
-        param.words{i}=wordsFnCP(param,model,param.patterns{i},param.labels{i});
+        param.words{i}=wordsFnCP(obj,model,param.patterns{i},param.labels{i});
     end
     
 while flag
