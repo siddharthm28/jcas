@@ -402,9 +402,10 @@ switch db_name
         % total number of categories
         obj.dbparams.ncat = 2;
         % image index for training set
-        obj.dbparams.training = 1:length(train_images);
+%         obj.dbparams.training = 1:length(train_images);
+        obj.dbparams.training = [];
         % image index for test set
-        obj.dbparams.test = length(train_images)+(1:length(test_images));
+        obj.dbparams.test = 1:obj.dbparams.num_images;
         % path to the images
         obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
         obj.dbparams.format = '.jpg';
