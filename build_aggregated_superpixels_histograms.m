@@ -69,8 +69,10 @@ for i=1:length(ids)
                 %Retrieves the neighboorhood of superpixel j
                 %index = find(L(j,:)~=0);
                 %Gathering the histograms
-                hh(:,j) = [(sum(superpixel_histograms(1:end-1,(L(j,:)~=0)),2)); superpixel_histograms(end,j)];
-                %Normalization step
+                size(superpixel_histograms)
+                size(L)
+                 hh(:,j) = [(sum(superpixel_histograms(1:end-1,(L(j,:)~=0)),2)); superpixel_histograms(end,j)];
+               %Normalization step
             end
             norm_tmp=sum(hh(1:end-1,:),1);
             hh(1:end-1,norm_tmp~=0)=hh(1:end-1,norm_tmp~=0)./repmat(norm_tmp,[size(hh,1)-1,1]);
