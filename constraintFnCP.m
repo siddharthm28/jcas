@@ -736,7 +736,10 @@ switch obj.mode
         locations = X*(round(F(1,:))-1)+round(F(2,:));
         
         %Words Pairwise
-        wordsPairwise=reshape(model.w(wordOffset+1:end),[obj.topdown.dictionary.params.size_dictionary,obj.topdown.dictionary.params.size_dictionary]);
+        wordsPairwise=zeros(obj.topdown.dictionary.params.size_dictionary,obj.topdown.dictionary.params.size_dictionary);
+        wordsPairwise(param.wordsInd)=model.w(wordOffset+1:end);
+        wordsPairwise=wordsPairwise+wordsPairwise';
+            
         ind_novoid=find(gt_h);
         
         hamming =ones(size(unary));
@@ -764,7 +767,7 @@ switch obj.mode
         [dum,yMostViolatedLabel]=min(unaryCI',[],1);
         
         %Initialize words
-        [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
+        [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
         unaryC=unaryCI+topdown_unary*alphaMat;
         %Interest points extraction
         IP=find(topdown_count>0);

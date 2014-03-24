@@ -27,7 +27,8 @@ else
     %Get n nearest neigh.
     edgeStruct = UGM_makeEdgeStruct(adj,nbWords);
     edgePot=repmat(wordsPairwise,[1,1,edgeStruct.nEdges]);
-    z=UGM_LoopyBP(ipUnary,edgePot,edgeStruct,1);
+    z=UGM_Decode_LBP(exp(-ipUnary),exp(-edgePot),edgeStruct);
+    z=z';
 end
 topdown_unary = sparse(img_sp.spInd(locations), z, ones(length(locations),1), img_sp.nbSp,nbWords);
 topdown_count=sum(topdown_unary,2);

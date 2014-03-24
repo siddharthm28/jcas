@@ -345,6 +345,81 @@ switch obj.mode
             sum(D(:,z==k),2);
         end
         E=sparse(E);   
+        
+    case 8
+        latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
+        wordOffset=latentOffset+obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary;
+
+        %Descriptor in each column
+
+        E = zeros(param.dimension,1);
+ 
+        %Unary
+        unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
+        load (unary_filename,'unary');
+        
+        nbSp=size(unary,1);
+            z=y(nbSp+1:end);
+            y=y(1:nbSp);       
+        if sum(y(:)==0)>0
+            ind_NoVoid=find(y>0);
+            ind_void=setdiff(1:nbSp,ind_NoVoid);
+            ind=sub2ind(size(unary),ind_NoVoid,double(y(ind_NoVoid)));
+            E(1)=sum(unary(ind));
+        else
+            ind=sub2ind(size(unary),([1:size(unary,1)]),double(y(:))');
+            E(1)=sum(unary(ind));
+        end
+        
+        %pairwise
+        sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
+        pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
+        tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
+        load(sp_filename);
+        load(pw_filename);
+        load(tdfeat_filename,'feat_topdown');
+                
+        edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
+        E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
+        
+        %Compute topdown Energy map labelHist
+        %TD Features
+        [X,Y] = size(img_sp.spInd);
+        F=feat_topdown.locations;
+        D=feat_topdown.descriptors;
+        locations = X*(round(F(1,:))-1)+round(F(2,:));
+        topdown_unary = sparse(img_sp.spInd(locations), double(z), ones(length(locations),1), img_sp.nbSp,obj.topdown.dictionary.params.size_dictionary);
+        topdown_count=full(sparse(img_sp.spInd(locations), ones(length(locations),1), ones(length(locations),1), img_sp.nbSp,1));
+        
+        labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
+        labelPres=zeros(obj.dbparams.ncat,1);
+        IP=find(topdown_count>0);
+        for l=1:obj.dbparams.ncat
+            v=sum(topdown_unary(y'==l,:),1);
+            labelHist(:,l)=v';
+            labelPres(l)=ismember(l,y(IP));
+        end
+        
+        %Ordering : l=1, k=1, k=2 ,..., k=size td dict, l=2 etc... for
+        %alphas_(l,k), then beta_l
+        E(3:latentOffset-obj.dbparams.ncat) = ...
+            labelHist(:);
+        
+        %Then betas
+        %normLabelHist=sum(labelHist,1); % (1,nb labels)
+
+        E(latentOffset-obj.dbparams.ncat+1:latentOffset)=...
+            labelPres(:);
+        
+        %Latent 
+        for k=1:size(topdown_unary,2)
+        E(latentOffset+1+(k-1)*obj.topdown.features.params.dimension:latentOffset+k*obj.topdown.features.params.dimension)=...
+            sum(D(:,z==k),2);
+        end
+        
+        E(wordOffset+1:end)=sparse();
+        
+        E=sparse(E);           
 
     otherwise
         error('Problem with mode selected')

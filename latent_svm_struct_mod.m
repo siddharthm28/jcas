@@ -25,7 +25,7 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     %and the follwoing lines :
     %Use current estimate to get "GT words"
     for i=1:n
-        param.words{i}=wordsFnCP(obj,model,param.patterns{i},param.labels{i});
+        param.words{i}=wordsFnCP(obj,model,param.patterns{i},param.labels{i},param.wordsInd);
     end
     
 while flag

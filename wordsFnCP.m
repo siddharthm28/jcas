@@ -1,4 +1,4 @@
-function words= wordsFnCP(obj,model,x,y)
+function words= wordsFnCP(obj,model,x,y,wordsInd)
 %w{i} contains curent word assigment for image i (best predictor)
 ncat=obj.dbparams.ncat;
 nwords=obj.topdown.dictionary.params.size_dictionary;
@@ -31,7 +31,9 @@ switch obj.mode
         %Descriptor in each column
         alphaMat=reshape(alphaTd,[nwords,ncat]);
         clusterCenters=reshape(model.w(latentOffset+1:wordsOffset),[featdim,nwords]);
-        wordsPairwise=reshape(model.w(wordsOffset+1:end),[nwords,nwords]);
+        wordsPairwise=zeros(obj.topdown.dictionary.params.size_dictionary,obj.topdown.dictionary.params.size_dictionary);
+        wordsPairwise(wordsInd)=model.w(wordOffset+1:end);
+        wordsPairwise=wordsPairwise+wordsPairwise';
         [X,Y] = size(img_sp.spInd);
         F=feat_topdown.locations;
         D=feat_topdown.descriptors;
