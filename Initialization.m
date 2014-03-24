@@ -2,18 +2,6 @@ clc;
 close all;
 clear;
 
-%%%%%%% Preliminary installation %%%%%%%
-% fprintf('Installing toolboxes');
-% 
-% run('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/vlfeat-0.9.16/toolbox/vl_setup');
-% addpath(genpath('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/GCMex'));
-% addpath(genpath('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/svm-struct-matlab-1.2'));
-% addpath(genpath('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/libsvm-3.17/matlab'));
-% addpath(genpath('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/graphAnalysisToolbox-1.0'));
-% run('/Users/Bertrand/Documents/X/Stage3A/Matlab/Recode Jcas/jcasLibs/blocks/blocks_setup');
-% 
-% fprintf('Install complete\n');
-
 disp('Preparing setup...');
 addpath(genpath('/cis/home/brondep1/JCaS/JCaSLib/'));
 run('/cis/home/brondep1/JCaS/JCaSLib/vlfeat-0.9.16/toolbox/vl_setup');
