@@ -12,8 +12,8 @@ II. Usage
 
 (0) Everything is parametrized in a JCaS() object. You can create one and explore the structure and the options available.
 
-a.Image/ground truth format : 
-_ Put the images in a directory
+a.Image/ground truth format : \n
+_ Put the images in a directory\n
 _ Put the ground truth labelings in another one, with .mat format being a matlab array of integers from 1 to the number of classes, and if it exists 0 as the void class.
 
 b. Adding the database:
@@ -30,8 +30,8 @@ e. Further modification
 Most of the options are in a single file. You can add your own superpixels/unary/topdown features in the compute*.m files in @jcas dir.
 
 III. Modes 
-You can change the jcas.mode option to the following :
-_ 0 = Unary only
+You can change the jcas.mode option to the following :\n
+0 = Unary only
 _ 1 = Unary and pairwise
 _ 2 = Unary + pairwise + linear topdown from ECCV12 paper
 _ 3 = Unary + pairwise + linear topdown from ECCV + label cost
