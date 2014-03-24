@@ -7,6 +7,8 @@ In order to use the code for Joint Categorization and segmentation, you have to 
   _ maxflow-v3.01 or above (Miki Rubinstein Wrapper available on Matlab FileExchange)
   _ graphAnalysisToolbox-1.0 or above 
   _ GCMex wrapper for maxflow.
+NB : Don't forget to add them in Matlab's search path  
+
 
 II. Usage
 
