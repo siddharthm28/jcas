@@ -31,12 +31,12 @@ Most of the options are in a single file. You can add your own superpixels/unary
 
 III. Modes 
 You can change the jcas.mode option to the following :
-0 = Unary only
-1 = Unary and pairwise
-2 = Unary + pairwise + linear topdown from ECCV12 paper
-3 = Unary + pairwise + linear topdown from ECCV + label cost
-4 = Unary + pairwise + linear topdown + label cost (= topdown histogram norm)
-5 = Unary + pairwise + label cost only
-6 = Unary + pairwise + intersection kernel (PAMI)
-7 = unary + pairwise + linear topdown + Unary on words (ECCV)
-8 = unary + pairwise + linear topdown + CRF on words (ECCV) (Under construction)
+_ 0 = Unary only
+_ 1 = Unary and pairwise
+_ 2 = Unary + pairwise + linear topdown from ECCV12 paper
+_ 3 = Unary + pairwise + linear topdown from ECCV + label cost
+_ 4 = Unary + pairwise + linear topdown + label cost (= topdown histogram norm)
+_ 5 = Unary + pairwise + label cost only
+_ 6 = Unary + pairwise + intersection kernel (PAMI)
+_ 7 = unary + pairwise + linear topdown + Unary on words (ECCV)
+_ 8 = unary + pairwise + linear topdown + CRF on words (ECCV) (Under construction)
