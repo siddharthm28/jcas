@@ -35,7 +35,8 @@ function seg=generateSeg(I,sp)
     nbsp=max(sp);
     seg=zeros(size(In));
     for i=1:nbsp
-        tmp=mean(In(sp==i,:));
+        tmp=round(mean(In(sp==i,:)));
         seg(sp==i,:)=repmat(tmp,sum(sp==i),1);
     end
+    seg=uint8(reshape(seg,[M,N,d]));
 end

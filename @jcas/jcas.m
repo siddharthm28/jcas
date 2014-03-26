@@ -373,7 +373,7 @@ classdef jcas < handle
         %Given the name of the superpixels method builds the appropriate
         %parameters
         
-        makesp(obj,sp_name);
+        makesp(obj,sp_name,options);
 
         %--------------------------------------------------------------------------
         % Top down features

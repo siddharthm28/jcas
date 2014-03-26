@@ -97,7 +97,6 @@ for i=1:num_imgs
                     [img_sp.spInd,img_sp.nbSp,img_sp.Iseg]=obj.computeSuperpixels(img_info.I);
                 case 'ucm'
                     [img_sp.spInd,img_sp.nbSp,img_sp.Iseg]=obj.loadPrecomputedSuperpixels(img_info.I,obj.dbparams.image_names{imgset(i)});
-                    keyboard;
             end
         % -----------------------------------------------------------------
         % Build graph

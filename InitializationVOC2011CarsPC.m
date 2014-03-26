@@ -8,8 +8,8 @@ expJCAS.makedb('voc2011-cars-pc');
 % % Default Quickshift superpixels
 % expJCAS.makesp('Quickshift');
 % ucm superpixels
-options.path='F:/Datasets/ucm_voc2012/VOC2012/ucm2_uint8/';
-options.threshold=30;
+options.path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
+options.threshold=15;
 expJCAS.makesp('ucm',options);
 expJCAS.force_recompute.trainingdata_SP=true;
 % dsift feature for unary options
