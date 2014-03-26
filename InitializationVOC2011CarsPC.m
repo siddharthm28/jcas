@@ -5,8 +5,13 @@ clear all; clc; close all;
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb('voc2011-cars-pc');
-% Default Quickshift superpixels
-expJCAS.makesp('Quickshift');
+% % Default Quickshift superpixels
+% expJCAS.makesp('Quickshift');
+% ucm superpixels
+options.path='F:/Datasets/ucm_voc2012/VOC2012/ucm2_uint8/';
+options.threshold=30;
+expJCAS.makesp('ucm',options);
+expJCAS.force_recompute.trainingdata_SP=true;
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms

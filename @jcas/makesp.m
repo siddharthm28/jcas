@@ -30,6 +30,19 @@ switch method_name
         else
             obj.superpixels.params=options;
         end
+    case 'ucm'
+        % uses the superpixels computed using the gpb-owt-ucm method. 
+        % The only parameter that needs to be specified once the ucm is
+        % computed is the threshold at which to compute the superpixels. 
+        % The assumption is that these have been computed already and we
+        % are simply reading off the output to generate our superpixels.
+        % So, the path to the precomputations needs to be specified. These
+        % two things need to be passed via options.
+        if(nargin==2)
+            error(['To use this option, you need to mention path to the',...
+                'precomputed superpixels and a threshold parameter']);
+        end
+        obj.superpixels.params=options;
     otherwise
         error('Superpixel method unknown, please add it to makesp.m file');
         
