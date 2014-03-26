@@ -262,7 +262,7 @@ switch db_name
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
     case 'voc2011-cars-pc'
         % relevant paths
-        dataset_path='F:/codes/wireframe/voc2011/';
+        dataset_path='F:/Datasets/voc2011/';
         train_file=fullfile(dataset_path,'train.txt');
         test_file=fullfile(dataset_path,'val.txt');
         % read the train file for training images
