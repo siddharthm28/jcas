@@ -143,11 +143,11 @@ end
 
 function show_latex_table(r_acc,ci)
 for i=1:length(r_acc)
-    fprintf('%3.2f & \t',100*r_acc(i));
+    fprintf('%3.2f & ',100*r_acc(i));
 end
 fprintf('\n');
 for i=1:length(r_acc)
-    fprintf('(%3.2f-%3.2f) & \t',100*ci(i,1),100*ci(i,2));
+    fprintf('(%3.2f-%3.2f) & ',100*ci(i,1),100*ci(i,2));
 end
 fprintf('\n');
 end
