@@ -34,9 +34,11 @@ for i=1:length(ids)
     
 end
 
-
+idx=eye(obj.dbparams.ncat); idx=(idx(:)>0);
 tot = squeeze(sum(cmatrixSP,2));
-tot2 = squeeze(sum(cmatrixSP,2)) + squeeze(sum(cmatrixSP,1));
+tmp=reshape(cmatrixSP,[obj.dbparams.ncat^2,length(ids)]);
+tmp=tmp(idx,:);
+tot2 = squeeze(sum(cmatrixSP,2)) + squeeze(sum(cmatrixSP,1))-tmp;
 nr2 = 0;
 rc=zeros(1,obj.dbparams.ncat);
 rc2=zeros(1,obj.dbparams.ncat);
@@ -44,9 +46,9 @@ for j = 1:obj.dbparams.ncat
     nr = cmatrixSP(j,j,:);
     nr2 = nr2 + nr;
     ind = find(tot(j,:)>0);
-    ind2 = find(tot2(j,:)>0);
     rc(j) =  mean(squeeze(nr(ind))'./squeeze(tot(j,ind)));
-    rc2(j) = mean(squeeze(nr(ind))'./squeeze(tot2(j,ind)));
+    ind2 = find(tot2(j,:)>0);
+    rc2(j) = mean(squeeze(nr(ind2))'./squeeze(tot2(j,ind2)));
 end
 
 rc = [rc(:)' mean(squeeze(nr2)'./sum(squeeze(sum(cmatrixSP,1)),1))];

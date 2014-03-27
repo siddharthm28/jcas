@@ -11,7 +11,6 @@ expJCAS.makedb('voc2011-cars-pc');
 options.path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
 options.threshold=15;
 expJCAS.makesp('ucm',options);
-expJCAS.force_recompute.trainingdata_SP=true;
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms

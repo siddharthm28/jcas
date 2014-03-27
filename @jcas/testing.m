@@ -81,7 +81,7 @@ fprintf('\n Converting superpixels to pixels');
 sp_label_to_pixlabel(obj,'test');
 
 fprintf('\n Computing Statistics');
-Compute_Statistics(obj,obj.test.destmatpath);
+Compute_Statistics_with_Bootstrapping(obj,obj.test.destmatpath);
 profile off
 p = profile('info');
 save(sprintf(obj.test.destmatpath,sprintf('testprofile_mode_%d',obj.mode)) ,'p');
