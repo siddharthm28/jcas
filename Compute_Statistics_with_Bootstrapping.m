@@ -83,12 +83,14 @@ function [rc2,r_int]=compute_scores(cmatrix)
 % for every image
 ncat=size(cmatrix,1); num_images=size(cmatrix,3);
 rc2=zeros(ncat,num_images);
+counts=zeros(ncat,num_images);
 for i=1:num_images
     c=cmatrix(:,:,i);
     rc2(:,i)=(diag(c)./(sum(c,2)+sum(c)'-diag(c)));
+    counts(:,i)=(sum(c,2)>0);
 end
 rc2(isnan(rc2))=0;
-rc2=mean(rc2,2);
+rc2=sum(rc2.*counts,2)./sum(counts,2);
 
 c = sum(cmatrix,3); 
 r_int = (diag(c)./(sum(c,2)+sum(c)'-diag(c)));
@@ -132,7 +134,7 @@ end
 
 function display_results2(r_acc,ci)
 for i=1:length(r_acc)-1
-    fprintf('%3.2f [%3.2f-%3.2f] \t',100*r_acc(i),100*ci(i,1),100*ci(i,2));
+    fprintf('%3.2f (%3.2f-%3.2f) \t',100*r_acc(i),100*ci(i,1),100*ci(i,2));
 end
-fprintf('\nMean= %3.2f [%3.2f-%3.2f] \n',100*r_acc(end),100*ci(end,1),100*ci(end,2));
+fprintf('\nMean= %3.2f (%3.2f-%3.2f) \n',100*r_acc(end),100*ci(end,1),100*ci(end,2));
 end
