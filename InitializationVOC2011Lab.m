@@ -61,7 +61,7 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.dimension=128;
 end
 
-expJCAS.train;
+% expJCAS.train;
 expJCAS.testing;
 
 fprintf('\n Job done\n');

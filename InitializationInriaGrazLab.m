@@ -10,7 +10,7 @@ expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 8; % 0-U 1-(U+P)
+expJCAS.mode = 7; % 0-U 1-(U+P)
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
@@ -61,7 +61,7 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.dimension=128;
 end
 
-expJCAS.train;
+% expJCAS.train;
 expJCAS.testing;
 
 fprintf('\n Job done\n');
