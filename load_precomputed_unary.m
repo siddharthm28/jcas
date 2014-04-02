@@ -14,6 +14,7 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 ids = obj.dbparams.(imgsetname);
+eps=1e-8;
 
 %For each image in image set
 for i=1:length(ids)
@@ -22,8 +23,10 @@ for i=1:length(ids)
     %Load image data
     img_filename=sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',...
         obj.dbparams.image_names{ids(i)}));
-    feat_filename = sprintf(obj.unary.precomputed_path,sprintf('%s.unary',...
+    sp_filename = sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',...
         obj.dbparams.image_names{ids(i)}));
+    precomputed_unary_filename = sprintf(obj.unary.precomputed_path,...
+        obj.dbparams.image_names{ids(i)});
     unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',...
         obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize));
     
@@ -32,20 +35,18 @@ for i=1:length(ids)
  %   load(unary_filename, 'unary');
     if (~exist(unary_filename, 'file') || obj.force_recompute.unary)
         
-        tmp=load(img_filename,'img_info');
-        img_info=tmp.img_info;
-        
-        keyboard;
-        
-        fid=fopen(feat_filename,'r');
+        tmp=load(img_filename,'img_info'); img_info=tmp.img_info;
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+
+        fid=fopen(precomputed_unary_filename,'r');
         a=fread(fid,inf,'float');
-        a=reshape(a,[obj.dbparams.ncat,Y,X]);
-        c=zeros(globalparms.ncat,Y*X);
-        for ii=1:globalparms.ncat
+        a=reshape(a,[obj.dbparams.ncat,img_info.Y,img_info.X]);
+        c=zeros(obj.dbparams.ncat,img_info.Y*img_info.X);
+        for ii=1:obj.dbparams.ncat
             b=squeeze(a(ii,:,:))';
-            c(ii,:)=-log(b(:));
+            b=b(:)+eps; b=b/sum(abs(b));
+            c(ii,:)=-log(b);
         end
-        c(c==inf)=5; %any number that's big enough        
         fclose(fid);
         
         % Compute the unaries
