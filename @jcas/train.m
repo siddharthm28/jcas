@@ -27,58 +27,68 @@ if ~exist(sprintf([tDir,'%s.mat'],'extract_features'),'file')
 end
 profile clear
 
-%Compute the dictionary associated to the features previously extracted
-build_dictionary_unary(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'build_dictionary_unary'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'build_dictionary_unary'),'p');
-end
-profile clear
+if(~isfield(obj.unary,'precomputed') || ~obj.unary.precomputed)
+    %Compute the dictionary associated to the features previously extracted
+    build_dictionary_unary(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'build_dictionary_unary'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'build_dictionary_unary'),'p');
+    end
+    profile clear
 
-%Compute the histograms associated to superpixels in each image of training
-%set
-%Ok Void
-build_superpixels_histograms(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'p');
-end
-profile clear
+    %Compute the histograms associated to superpixels in each image of training
+    %set
+    %Ok Void
+    build_superpixels_histograms(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'p');
+    end
+    profile clear
 
-%Build aggregated histograms accross superpixels if associated parameter is
-%non zero
-%Ok Void
-build_aggregated_superpixels_histograms(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'aggregation_histograms'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'aggregation_histograms'),'p');
-end
-profile clear
+    %Build aggregated histograms accross superpixels if associated parameter is
+    %non zero
+    %Ok Void
+    build_aggregated_superpixels_histograms(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'aggregation_histograms'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'aggregation_histograms'),'p');
+    end
+    profile clear
 
-%Build the training set used to learn the classifier for the unary
-%potentials
-build_trainingset_unary_histogramsvm(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'trainingset_unary'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'trainingset_unary'),'p');
-end
-profile clear
+    %Build the training set used to learn the classifier for the unary
+    %potentials
+    build_trainingset_unary_histogramsvm(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'trainingset_unary'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'trainingset_unary'),'p');
+    end
+    profile clear
 
-%Train the classifiers for unary potential
-train_unary_classifiers(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'unary_class'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'unary_class'),'p');
-end
-profile clear
+    %Train the classifiers for unary potential
+    train_unary_classifiers(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'unary_class'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'unary_class'),'p');
+    end
+    profile clear
 
-%Compute unary costs
-compute_unary_costs(obj,'training');
-if ~exist(sprintf([tDir,'%s.mat'],'unary_costs'),'file')
-p = profile('info');
-save(sprintf([tDir,'%s.mat'],'unary_costs'),'p');
+    %Compute unary costs
+    compute_unary_costs(obj,'training');
+    if ~exist(sprintf([tDir,'%s.mat'],'unary_costs'),'file')
+    p = profile('info');
+    save(sprintf([tDir,'%s.mat'],'unary_costs'),'p');
+    end
+    profile clear
+else
+    fprintf('one \n');
+    if(~isfield(obj.unary,'precomputed_path') || isempty(obj.unary.precomputed_path))
+        error('Please mention precomputed path if you want to use this option \n');
+    else
+        fprintf('two \n');
+        load_precomputed_unary(obj,'training');
+    end
 end
-profile clear
 
 if obj.mode>=1
     %compute pairwise costs

@@ -51,16 +51,24 @@ profile on
 %Extract the features to compute unary from the set of training images
 extract_features(obj,'test');
 
-%Compute the histograms associated to superpixels in each image of training
-%set
-build_superpixels_histograms(obj,'test');
+if(~isfield(obj.unary,'precomputed') || ~obj.unary.precomputed)
+    %Compute the histograms associated to superpixels in each image of training
+    %set
+    build_superpixels_histograms(obj,'test');
 
-%Build aggregated histograms accross superpixels if associated parameter is
-%non zero
-build_aggregated_superpixels_histograms(obj,'test');
+    %Build aggregated histograms accross superpixels if associated parameter is
+    %non zero
+    build_aggregated_superpixels_histograms(obj,'test');
 
-%Compute unary costs
-compute_unary_costs(obj,'test');
+    %Compute unary costs
+    compute_unary_costs(obj,'test');
+else
+    if(~isfield(obj.unary,'precomputed_path') || isempty(obj.unary.precomputed_path))
+        error('Please mention precomputed path if you want to use this option \n');
+    else
+        load_precomputed_unary(obj,'test');
+    end
+end
 
 if obj.mode>0;
 %compute pairwise costs

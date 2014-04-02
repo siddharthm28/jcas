@@ -1,20 +1,19 @@
-function InitializationVOC2011CarsPC
+function InitializationVOC2010Lab_with_textonboost_unary
 % Function that Initializes the framework for InriaGraz dataset for PC
 clear all; clc; close all;
-
 % Create an object of class jcas.
 expJCAS = jcas();
-expJCAS.makedb('voc2011-cars-pc');
-% % Default Quickshift superpixels
-% expJCAS.makesp('Quickshift');
-% ucm superpixels
-options.path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
-options.threshold=12;
-expJCAS.makesp('ucm',options);
+expJCAS.makedb('voc2010-all-lingling');
+% Default Quickshift superpixels
+expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
 expJCAS.mode = 1; % 0-U 1-(U+P)
+% use precomputed unaries from textonboost
+expJCAS.unary.precomputed=1;
+expJCAS.unary.precomputed_path='/cis/project/vision_sequences/voc2010/TBunarylogit1/';
+expJCAS.force_recompute.unary=1;
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
@@ -34,10 +33,9 @@ expJCAS.unary.dictionary.params.max_features_for_clustering = 1e5;
 % number of clusters for bottom up unary quantization
 expJCAS.unary.dictionary.params.num_bu_clusters = 400;
 % maximum number of histograms per class (used to balance the training)
-expJCAS.unary.svm.params.max_hists_per_class_for_training = 750;
+expJCAS.unary.svm.params.max_hists_per_class_for_training = 1000;
 % maximum number of histogram per image
-expJCAS.unary.svm.trainingset.params.hists_per_image = 100;
-expJCAS.force_recompute.trainingset_svm=true;
+expJCAS.unary.svm.trainingset.params.hists_per_image = 10;
 expJCAS.unary.SPneighboorhoodsize=4;
 % Slack variable for the Cutting Plane algorithm
 % used for the segmentation constraints, this value

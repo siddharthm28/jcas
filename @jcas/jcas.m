@@ -157,6 +157,8 @@ classdef jcas < handle
             %--------------------------------------------------------------
             %Name of feature method
             obj.unary.features.method='';
+            obj.unary.precomputed=0;
+            obj.unary.precomputed_path=[];
             
             %Parameters (if needed)
             obj.unary.features.params=struct();
@@ -292,6 +294,8 @@ classdef jcas < handle
                         %Use unary terms in energy (1 or 0)
                         obj.unary.use=1;
                         % SVM kernel (requires BLOCKS toolbox)
+                        obj.unary.precomputed=0;
+                        obj.unary.precomputed_path=[];
                         
                         % 1- linear; 2- intersection; 3- Chi2; 4- Chi2-RBF
                         obj.unary.svm.kernel_type   = 4;

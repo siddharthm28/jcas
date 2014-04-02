@@ -11,3 +11,5 @@ toolboxes/maxflow-v3.01/*
 toolboxes/spams-matlab/*
 toolboxes/svm-struct-matlab-master/*
 results/*
+compare_dataset_splits.m
+*_in_parallel.m

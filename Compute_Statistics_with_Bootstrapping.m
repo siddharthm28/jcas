@@ -72,10 +72,8 @@ display_results2(rc2_SP,ci_SP);
 fprintf('\n Per pixel numbers\n');
 fprintf('Intersection by Union (aggregate) \n');
 display_results2(r_int_P,ci_int_P);
-show_latex_table(r_int_P,ci_int_P);
 fprintf('Intersection by Union (per image) \n');
 display_results2(rc2_P,ci_P);
-show_latex_table(rc2_P,ci_P);
 
 save(stat_file,'cmatrixSP','cmatrixP');
 end
@@ -139,15 +137,4 @@ for i=1:length(r_acc)-1
     fprintf('%3.2f (%3.2f-%3.2f) \t',100*r_acc(i),100*ci(i,1),100*ci(i,2));
 end
 fprintf('\nMean= %3.2f (%3.2f-%3.2f) \n',100*r_acc(end),100*ci(end,1),100*ci(end,2));
-end
-
-function show_latex_table(r_acc,ci)
-for i=1:length(r_acc)
-    fprintf('%3.2f & ',100*r_acc(i));
-end
-fprintf('\n');
-for i=1:length(r_acc)
-    fprintf('(%3.2f-%3.2f) & ',100*ci(i,1),100*ci(i,2));
-end
-fprintf('\n');
 end
