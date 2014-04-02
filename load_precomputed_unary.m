@@ -40,6 +40,7 @@ for i=1:length(ids)
 
         fid=fopen(precomputed_unary_filename,'r');
         a=fread(fid,inf,'float');
+	keyboard;
         a=reshape(a,[obj.dbparams.ncat,img_info.Y,img_info.X]);
         c=zeros(obj.dbparams.ncat,img_info.Y*img_info.X);
         for ii=1:obj.dbparams.ncat
@@ -48,6 +49,8 @@ for i=1:length(ids)
             c(ii,:)=-log(b);
         end
         fclose(fid);
+
+	keyboard;
         
         % Compute the unaries
         %Check superpixels neighboorhood size
