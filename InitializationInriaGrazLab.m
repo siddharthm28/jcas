@@ -4,13 +4,13 @@ clear all; clc; close all;
 
 % Create an object of class jcas.
 expJCAS = jcas();
-expJCAS.makedb('inria-graz-lab');
+expJCAS.makedb('inria-graz-lab-mixmatch');
 % Default Quickshift superpixels
 expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 7; % 0-U 1-(U+P)
+expJCAS.mode = 1; % 0-U 1-(U+P)
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
