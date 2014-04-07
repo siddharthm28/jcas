@@ -38,40 +38,28 @@ for i=1:length(ids)
         tmp=load(img_filename,'img_info'); img_info=tmp.img_info;
         tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
 
+        % get the probabilities at the pixel level
         fid=fopen(precomputed_unary_filename,'r');
-        a=fread(fid,inf,'float');
-	keyboard;
-        a=reshape(a,[obj.dbparams.ncat,img_info.Y,img_info.X]);
-        c=zeros(obj.dbparams.ncat,img_info.Y*img_info.X);
-        for ii=1:obj.dbparams.ncat
-            b=squeeze(a(ii,:,:))';
-            b=b(:)+eps; b=b/sum(abs(b));
-            c(ii,:)=-log(b);
-        end
+        tmp=fread(fid,inf,'float');
         fclose(fid);
-
-	keyboard;
+        tmp=reshape(tmp,[obj.dbparams.ncat,img_info.Y*img_info.X]);
+        tmp=tmp+eps;
+        pixel_probability_estimates=tmp./repmat(sum(tmp),obj.dbparams.ncat,1);
+        pixel_probability_estimates=pixel_probability_estimates';
         
-        % Compute the unaries
-        %Check superpixels neighboorhood size
-       % if (obj.unary.SPneighboorhoodsize ==0)
-        %    load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
-        %else
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');
-        %end
+        % use the superpixel info to calculate the info at the superpixel
+        % level
+        spInd=img_sp.spInd; nbsp=img_sp.nbSp;
+        ind=reshape(spInd',numel(spInd),1);
+        probability_estimates=zeros(nbsp,obj.dbparams.ncat);
+        for j=1:nbsp
+            probability_estimates(j,:)=mean(pixel_probability_estimates(ind==j,:));
+        end
+        unary=-log(probability_estimates);
+        [~,predicted_label]=max(probability_estimates,[],2);
         
-        %Give the probability estimates (potentials) and predicted labels
-        [predicted_label,probability_estimates] = test_kernel_svm(superpixel_histograms, svm.training_SVs, obj.unary.svm.params.kernel_type, svm.libsvm_cl, svm.gamma);
-        %Potentials = - log probability estimates
-        unary = probability_estimates;
-        unary(:,svm.libsvm_cl.Label) = -log(probability_estimates);
-        %unary_size = size(unary)    ;
-        %         % If superpixel belong to void class give them max probability
-        %         if (globalparms.use_gt_for_void == 1)
-        %             unary(:,SOMETHING_GT == VOID) = 0; % LUCA: Patrick what is ground truth?
-        %         end
-                
-        save(unary_filename,'unary','predicted_label','probability_estimates');
+        save(unary_filename,'unary','predicted_label','probability_estimates',...
+            'pixel_probability_estimates');
     end
 end
 end

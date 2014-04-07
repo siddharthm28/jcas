@@ -19,12 +19,14 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     
     %Collect the ground truth labelings
     for i=1:length(ids)
-        % if obj.unary.SPneighboorhoodsize>0
-        load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},...
-            obj.unary.SPneighboorhoodsize)));
-        %else
-        %   load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})));
-        %end
+        if obj.unary.SPneighboorhoodsize>0
+            load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',...
+                obj.dbparams.image_names{ids(i)},...
+                obj.unary.SPneighboorhoodsize)));
+        else
+          load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',...
+              obj.dbparams.image_names{ids(i)})));
+        end       
         temp=superpixel_histograms(end,:);
         param.labels{i}=temp(:);
         clear temp superpixel_histograms;

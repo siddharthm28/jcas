@@ -97,5 +97,3 @@ clear p
 %load myprofiledata
 %profview(0,p)
 end
-
-

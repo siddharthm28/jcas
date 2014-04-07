@@ -81,11 +81,9 @@ if(~isfield(obj.unary,'precomputed') || ~obj.unary.precomputed)
     end
     profile clear
 else
-    fprintf('one \n');
     if(~isfield(obj.unary,'precomputed_path') || isempty(obj.unary.precomputed_path))
         error('Please mention precomputed path if you want to use this option \n');
     else
-        fprintf('two \n');
         load_precomputed_unary(obj,'training');
     end
 end
