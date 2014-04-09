@@ -4,7 +4,7 @@ clear all; clc; close all;
 
 % Create an object of class jcas.
 expJCAS = jcas();
-expJCAS.makedb('inria-graz-lab-mixmatch');
+expJCAS.makedb('inria-graz-old-splits');
 % Default Quickshift superpixels
 expJCAS.makesp('Quickshift');
 % dsift feature for unary options
@@ -61,7 +61,7 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.dimension=128;
 end
 
-% expJCAS.train;
+expJCAS.train;
 expJCAS.testing;
 
 fprintf('\n Job done\n');

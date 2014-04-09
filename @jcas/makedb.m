@@ -226,7 +226,7 @@ switch db_name
     case 'voc2010-all-lingling'
         % relevant paths
         dataset_path='/cis/project/vision_sequences/voc2010/';
-        train_file=fullfile(dataset_path,'Train.txt');
+        train_file=fullfile(dataset_path,'trainval.txt');
         test_file=fullfile(dataset_path,'Test.txt');
         % read the train file for training images
         train_images = read_file(train_file);
