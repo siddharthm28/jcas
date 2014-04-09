@@ -15,7 +15,8 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 %Load previously trained svm for unary potentials
-load(sprintf(obj.unary.svm.destmatpath,sprintf('svm_data-%d',obj.unary.SPneighboorhoodsize)),'svm');
+tmp=load(sprintf(obj.unary.svm.destmatpath,sprintf('svm_data-%d',obj.unary.SPneighboorhoodsize)),'svm');
+svm=tmp.svm;
 ids = obj.dbparams.(imgsetname);
 
 %For each image in image set
@@ -33,16 +34,17 @@ for i=1:length(ids)
  %   load(unary_filename, 'unary');
     if (~exist(unary_filename, 'file') || obj.force_recompute.unary)
         
-        load(img_filename,'img_info');
-        load(feat_filename,'img_feat');
-        load(sp_filename,'img_sp');
+        tmp=load(img_filename,'img_info'); img_info=tmp.img_info;
+        tmp=load(feat_filename,'img_feat'); img_feat=tmp.img_feat;
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
         
         % Compute the unaries
         %Check superpixels neighboorhood size
        % if (obj.unary.SPneighboorhoodsize ==0)
         %    load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
         %else
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');
+            tmp=load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');
+            superpixel_histograms=tmp.superpixel_histograms;
         %end
         
         %Give the probability estimates (potentials) and predicted labels

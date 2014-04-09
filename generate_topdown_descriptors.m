@@ -42,7 +42,8 @@ if (~exist(topdown_descriptors_filename, 'file') || obj.force_recompute.topdown_
         % Read image i and convert it to gray scale
         I = imread([obj.dbparams.imgpath,obj.dbparams.image_names{ids(i)},obj.dbparams.format]);
         %Load ground truth
-        load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}), 'seg_i');
+        tmp=load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}),'seg_i');
+        seg_i=tmp.seg_i;
         
         %Extract chosen features from image
         feat_topdown = obj.computeFeatures_topdown(I);
@@ -53,15 +54,15 @@ if (~exist(topdown_descriptors_filename, 'file') || obj.force_recompute.topdown_
         %save(sprintf(obj.topdown.destmatpath, sprintf('%s-topdown_features',obj.dbparams.image_names{ids(i)})),'D','F','I','seg');
         save(featImName,'feat_topdown');
         else
-            load(featImName,'feat_topdown');
-            load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}), 'seg_i');
+            tmp=load(featImName,'feat_topdown'); feat_topdown=tmp.feat_topdown;
+            tmp=load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}),'seg_i'); seg_i=tmp.seg_i;
             I = imread([obj.dbparams.imgpath,obj.dbparams.image_names{ids(i)},obj.dbparams.format]);
             F=feat_topdown.locations;
             D=feat_topdown.descriptors;
         end
 
         % Find features locations
-        [X,Y ~] = size(I);
+        [X,Y,~] = size(I);
         locations = X*(round(F(1,:))-1)+round(F(2,:));
 
         % Find features

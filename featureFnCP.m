@@ -11,7 +11,7 @@ switch obj.mode
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load(unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -27,8 +27,8 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
@@ -41,7 +41,7 @@ switch obj.mode
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -57,14 +57,15 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary','topdown_count');
+        tmp=load(topdown_unary_filename,'topdown_unary','topdown_count');
+        topdown_unary=tmp.topdown_unary; topdown_count=tmp.topdown_count;
         labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
         labelPres=zeros(obj.dbparams.ncat,1);
         IP=find(topdown_count>0);
@@ -95,7 +96,7 @@ switch obj.mode
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -111,15 +112,16 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary','topdown_count');
+        tmp=load(topdown_unary_filename,'topdown_unary','topdown_count');
+        topdown_unary=tmp.topdown_unary; topdown_count=tmp.topdown_count;
         labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
         labelPres=zeros(obj.dbparams.ncat,1);
         IP=1:length(topdown_count);
@@ -150,7 +152,7 @@ switch obj.mode
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -166,15 +168,16 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost(find(y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary');
+        tmp=load(topdown_unary_filename,'topdown_unary');
+        topdown_unary=tmp.topdown_unary;
         labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
         for l=1:obj.dbparams.ncat
         v=sum(topdown_unary(y'==l,:),1);
@@ -201,7 +204,7 @@ switch obj.mode
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -217,8 +220,8 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
@@ -242,7 +245,7 @@ switch obj.mode
         E = zeros(param.dimension,1);
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
         if sum(y==0)>0
@@ -258,15 +261,16 @@ switch obj.mode
         %pairwise
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
-        load(sp_filename);
-        load(pw_filename);
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
         
         %Intersection kernel part
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary');
+        tmp=load(topdown_unary_filename,'topdown_unary');
+        topdown_unary=tmp.topdown_unary;
         segHists=compute_label_histograms(y,topdown_unary,obj.dbparams.ncat);
  
         E(3:end-obj.dbparams.ncat)=compute_intersection_kernel(segHists,param.tHistograms,obj.dbparams.ncat);
@@ -284,7 +288,7 @@ switch obj.mode
  
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
             z=y(nbSp+1:end);
@@ -303,9 +307,9 @@ switch obj.mode
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        load(sp_filename);
-        load(pw_filename);
-        load(tdfeat_filename,'feat_topdown');
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
+        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
                 
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
@@ -356,7 +360,7 @@ switch obj.mode
  
         %Unary
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
-        load (unary_filename,'unary');
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
             z=y(nbSp+1:end);
@@ -375,9 +379,9 @@ switch obj.mode
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         pw_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        load(sp_filename);
-        load(pw_filename);
-        load(tdfeat_filename,'feat_topdown');
+        tmp=load(sp_filename); img_sp=tmp.img_sp;
+        tmp=load(pw_filename); pairwise=tmp.pairwise;
+        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
                 
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));

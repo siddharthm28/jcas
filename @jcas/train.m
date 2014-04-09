@@ -11,7 +11,6 @@ tDir=obj.makedestpath(obj.dbparams.destmatpath);
 obj.force_recomputation;
 %Make path according to parameter.
 
-
 %--------------------------------------------------------------------------
 % Time saving
 %--------------------------------------------------------------------------

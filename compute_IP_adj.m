@@ -11,8 +11,8 @@ for i=1:num_imgs
     nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
     
     if ~exist(nn_filename,'file') || obj.force_recompute.latent_adj==1
-        load(tdfeat_filename,'feat_topdown');
-        load(sp_filename,'img_sp');
+        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
         %TD Features
         [X,Y] = size(img_sp.spInd);
         F=feat_topdown.locations;

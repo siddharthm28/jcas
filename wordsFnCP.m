@@ -5,8 +5,8 @@ nwords=obj.topdown.dictionary.params.size_dictionary;
 featdim=obj.topdown.features.params.dimension;
 sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
 tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-load(tdfeat_filename,'feat_topdown');
-load(sp_filename,'img_sp');
+tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
+tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
 
 switch obj.mode
     case 7

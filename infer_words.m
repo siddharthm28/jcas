@@ -20,7 +20,7 @@ end
 
 if ~exist('wordsPairwise','var')
     %Infer when only unaries
-    [dum,z]=min(ipUnary,[],2);
+    [~,z]=min(ipUnary,[],2);
     z=z';
 else
     %Infer with pairwise and LBP
@@ -33,4 +33,3 @@ end
 topdown_unary = sparse(img_sp.spInd(locations), z, ones(length(locations),1), img_sp.nbSp,nbWords);
 topdown_count=sum(topdown_unary,2);
 end
-

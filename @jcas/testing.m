@@ -23,7 +23,9 @@ if ~exist(sprintf([rootDir,'test_%d/testBase.mat'],obj.mode),'file')
     testBaseCount=0;
     mkdir([rootDir,sprintf('test_%d',obj.mode)]);
 else
-    load([rootDir,sprintf('test_%d/testBase.mat',obj.mode)]);
+    tmp=load([rootDir,sprintf('test_%d/testBase.mat',obj.mode)]);
+    testBaseCount=tmp.testBaseCount;
+    testBase=tmp.testBase;
 end
 
 
@@ -83,10 +85,13 @@ if obj.mode>=2;
     compute_topdown_unaries(obj,'test');
 end
 
+fprintf('Running inference on test images \n');
 obj.inference('test');
-
-fprintf('\n Converting superpixels to pixels');
 sp_label_to_pixlabel(obj,'test');
+
+fprintf('Running inference on train images \n');
+obj.inference('train');
+sp_label_to_pixlabel(obj,'train');
 
 fprintf('\n Computing Statistics');
 Compute_Statistics_with_Bootstrapping(obj,obj.test.destmatpath);

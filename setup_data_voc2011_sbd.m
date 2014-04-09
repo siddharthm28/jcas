@@ -1,4 +1,4 @@
-function setup_data_voc2011
+function setup_data_voc2011_sbd
 % code that reads data from the segmentations given in VOC2011 as annotated
 % by the Inverse Detector work into format relevant to us.
 clear all; clc;

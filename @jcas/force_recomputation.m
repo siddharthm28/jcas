@@ -4,7 +4,7 @@ function force_recomputation(obj,varargin)
 %options.
 
 if nargin>1 && isequal(varargin{1},'reset')
-    fprintf('Reset Forcin recomputation\n');
+    fprintf('Reset Forcing recomputation\n');
     %Disable default recomputing of training data (Superpixels/Features)
     obj.force_recompute.trainingdata_UF=0;
     obj.force_recompute.imagedata=0;
@@ -32,8 +32,8 @@ if nargin>1 && isequal(varargin{1},'reset')
     %Recomputing optimisation
     obj.force_recompute.optimisation=0;
 elseif nargin>1 && isequal(varargin{1},'all')
-    fprintf('Forcing recomputation for everything\n');
-    fprintf('Not recomputing image data, features and superpixels though \n');
+    fprintf('Forcing recomputation for almost everything \n');
+    fprintf('Not recomputing image data, features and superpixels \n');
     %Disable default recomputing of training data (Superpixels/Features)
     obj.force_recompute.trainingdata_UF=0;
     obj.force_recompute.imagedata=0;

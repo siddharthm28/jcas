@@ -30,13 +30,13 @@ for i=1:length(ids)
     %load(pairwise_filename, 'pairwise');
     if (~exist(pairwise_filename, 'file') || obj.force_recompute.pairwise)
         
-        load(img_filename,'img_info');
-        load(sp_filename,'img_sp');
+        tmp=load(img_filename,'img_info'); img_info=tmp.img_info;
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
         
 
         % Compute the pairwise terms with LUV distance
         I_Luv = [reshape(vl_xyz2luv(vl_rgb2xyz(img_sp.Iseg)),img_info.X*img_info.Y,3) reshape(img_sp.spInd,img_info.X*img_info.Y,1)];
-        [B,index] = unique(I_Luv(:,4));
+        [~,index] = unique(I_Luv(:,4));
         I_Luv = I_Luv(index,1:3);
         pairwise = img_sp.length_common_boundary./(1+(sum((I_Luv(img_sp.edges(:,1),:) - I_Luv(img_sp.edges(:,2),:)).^2,2)).^0.5);
         pairwise = sparse([img_sp.edges(:,1); img_sp.edges(:,2)], [img_sp.edges(:,2); img_sp.edges(:,1)], [pairwise; pairwise], img_sp.nbSp, img_sp.nbSp);
@@ -45,4 +45,3 @@ for i=1:length(ids)
 end
 
 end
-

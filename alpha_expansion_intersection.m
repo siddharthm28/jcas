@@ -17,7 +17,7 @@ for word=1:size(topdown_unary,2)
     pvt_max=max(tHists(word,:));
     for label=1:size(unary,2)
         pvts_tmp{label,word}=sparse(ones(1,length(tHists(word,tHists(word,:)>0))),tHists(word,tHists(word,:)>0)',intcoeffs(tHists(word,:)>0,label),1,pvt_max);
-        [dum pvts_sparse{label,word} pvts_coeffs{label,word}]=find(pvts_tmp{label,word});
+        [~,pvts_sparse{label,word},pvts_coeffs{label,word}]=find(pvts_tmp{label,word});
     end
 end
 
@@ -46,8 +46,8 @@ binary_unary = zeros(2,nlabels);
 
 % unaries for pixels in the image
 binary_unary(2,1:nlabels) = unary(cat,:);
-binary_unary(1,1:nlabels) = unary(ncat*[0:nlabels-1]+seg);
-binary_unary(1,find(seg==cat)) = 2e10;
+binary_unary(1,1:nlabels) = unary(ncat*(0:nlabels-1)+seg);
+binary_unary(1,(seg==cat)) = 2e10;
 
 % unaries for auxilary pixels for modeling the pairwise terms in  alpha expansion
 binary_unary(1,nlabels+1:nlabels+length(diff_edge)) = edge_cost(diff_edge);

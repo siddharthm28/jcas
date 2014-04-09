@@ -30,7 +30,8 @@ fprintf('\n aggregate_histograms_across_superpixel_neighborhoods (N=%d, total of
 if ~exist(sprintf(obj.unary.destmatpath,sprintf('num_sphistograms_per_im-%d',obj.unary.SPneighboorhoodsize)),'file');
     num_sphistograms_per_im = [];
 else
-    load(sprintf(obj.unary.destmatpath,sprintf('num_sphistograms_per_im-%d',obj.unary.SPneighboorhoodsize)),'num_sphistograms_per_im');
+    tmp=load(sprintf(obj.unary.destmatpath,sprintf('num_sphistograms_per_im-%d',obj.unary.SPneighboorhoodsize)),'num_sphistograms_per_im');
+    num_sphistograms_per_im=tmp.num_sphistograms_per_im;
 end
 
 % for each image
@@ -43,13 +44,15 @@ for i=1:length(ids)
         
         if (obj.unary.SPneighboorhoodsize >0)
             %Loading the image data and histograms previously computed
-            load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
+            tmp=load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
+            img_sp=tmp.img_sp;
+            tmp=load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
+            superpixel_histograms=tmp.superpixel_histograms;
             edges=img_sp.edges;
             %Number of superpixels
             num_sp = size(superpixel_histograms,2);            
             hh = zeros(obj.unary.dictionary.params.num_bu_clusters+1, num_sp);
-            save(aggregated_filename,'hh');
+%             save(aggregated_filename,'hh');
             %Building adjacency matrix
             A=adjacency(edges);
             L = A;
@@ -79,8 +82,10 @@ for i=1:length(ids)
 
             superpixel_histograms = hh;
         else
-            load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
+            tmp=load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
+            img_sp=tmp.img_sp;
+            tmp=load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
+            superpixel_histograms=tmp.superpixel_histograms;
             for j=1:img_sp.nbSp
                 %Normalization step
                 if(sum(superpixel_histograms(1:end-1,j))~=0)

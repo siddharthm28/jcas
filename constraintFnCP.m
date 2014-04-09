@@ -6,8 +6,8 @@ switch obj.mode
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         gt_h=y';
         
         ind_novoid=find(gt_h);
@@ -28,10 +28,10 @@ switch obj.mode
         unary=(model.w(1)*unary - hamming);
         pairwise=sparse(model.w(2)*(pairwise));
         
-        [val, yMostViolatedLabel] =  min(unary',[],1); %min(unary',[],1);
+        [~, yMostViolatedLabel] =  min(unary,[],2); %min(unary',[],1);
         labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
         if (model.w(2)~=0) %%% USING PAIRWISE
-            [seg2 Eafter E] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
+            [seg2,~,~] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
             yMostViolatedLabel = seg2+1;
         end
         yMostViolatedLabel=yMostViolatedLabel(:);
@@ -46,9 +46,9 @@ switch obj.mode
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
-        load(sp_filename,'img_sp');
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         gt_h=y';
         
         
@@ -69,7 +69,8 @@ switch obj.mode
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary','topdown_count');
+        tmp=load(topdown_unary_filename,'topdown_unary','topdown_count');
+        topdown_unary=tmp.topdown_unary; topdown_count=tmp.topdown_count;
         %Unary matrix for Topdown
         alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
         %Coeff of entries in topdown_unary
@@ -87,8 +88,8 @@ switch obj.mode
         %Stop condition if no possible improvement
         success=1;
         %Data preload
-        [dum,initSeg]=min(unaryC',[],1);
-        yMostViolatedLabel=initSeg;
+        [~,initSeg]=min(unaryC,[],2);
+        yMostViolatedLabel=initSeg(:);
         if (model.w(2)>0)
             %Rescale costs if neg
             betaTdb=betaTd;
@@ -96,7 +97,7 @@ switch obj.mode
             
             %Energy
             E=0;
-            E=E+sum(unaryC([1:size(unary,1)]+(yMostViolatedLabel-1)*size(unary,1)));
+            E=E+sum(unaryC((1:size(unary,1))+(yMostViolatedLabel-1)*size(unary,1)));
             edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
             E=E+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
             %labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
@@ -173,9 +174,9 @@ switch obj.mode
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
-        load(sp_filename,'img_sp');
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         gt_h=y';
         
         ind_novoid=find(gt_h);
@@ -195,7 +196,8 @@ switch obj.mode
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary','topdown_count');
+        tmp=load(topdown_unary_filename,'topdown_unary','topdown_count');
+        topdown_unary=tmp.topdown_unary; topdown_count=tmp.topdown_count;
         %Unary matrix for Topdown
         alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
         %Coeff of entries in topdown_unary
@@ -212,8 +214,8 @@ switch obj.mode
         %Stop condition if no possible improvement
         success=1;
         %Data preload
-        [dum,initSeg]=min(unaryC',[],1);
-        yMostViolatedLabel=initSeg;
+        [~,initSeg]=min(unaryC,[],2);
+        yMostViolatedLabel=initSeg(:);
         if (model.w(2)>0)
             %Rescale costs if neg
             betaTdb=betaTd;
@@ -221,7 +223,7 @@ switch obj.mode
             
             %Energy
             E=0;
-            E=E+sum(unaryC(sub2ind(size(unary),([1:size(unary,1)]),double(yMostViolatedLabel(:))')));
+            E=E+sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
             edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
             E=E+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
             labelPres=zeros(obj.dbparams.ncat,1);
@@ -299,8 +301,8 @@ switch obj.mode
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         gt_h=y';
         
         
@@ -321,7 +323,8 @@ switch obj.mode
         
         %Compute topdown Energy map labelHist
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));
-        load(topdown_unary_filename,'topdown_unary');
+        tmp=load(topdown_unary_filename,'topdown_unary');
+        topdown_unary=tmp.topdown_unary;
         %Unary matrix for Topdown
         alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary obj.dbparams.ncat]);
         betaMat=repmat(betaTd(:)',[obj.topdown.dictionary.params.size_dictionary 1]);
@@ -332,10 +335,11 @@ switch obj.mode
         unary=wBu(1)*unary-hamming+topdownU;
         pairwise=sparse(wBu(2)*pairwise);
         
-        [val, yMostViolatedLabel] =  min(unary',[],1); %min(unary',[],1);
+        [~, initSeg] =  min(unary,[],2); %min(unary',[],1);
+        yMostViolatedLabel=initSeg(:);
         labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
         if (model.w(2)>0) %%% USING PAIRWISE
-            [seg2 Eafter E] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
+            [seg2,~,~] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
             yMostViolatedLabel = seg2+1;
         end
         yMostViolatedLabel=yMostViolatedLabel(:);
@@ -349,9 +353,9 @@ switch obj.mode
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
-        load(sp_filename,'img_sp');
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
         gt_h=y';
         
         ind_novoid=find(gt_h);
@@ -377,8 +381,8 @@ switch obj.mode
         %Stop condition if no possible improvement
         success=1;
         %Data preload
-        [dum,initSeg]=min(unary',[],1);
-        yMostViolatedLabel=initSeg;
+        [~,initSeg]=min(unary,[],2);
+        yMostViolatedLabel=initSeg(:);
 
         if (model.w(2)>0)
             
@@ -452,13 +456,10 @@ switch obj.mode
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',x,obj.topdown.dictionary.params.size_dictionary));        
-        load(sp_filename,'img_sp');
-        load(pairwise_filename,'pairwise');
-        load(unary_filename,'unary');
-        load(topdown_unary_filename,'topdown_unary');
-        
-        
-        
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
+        tmp=load(topdown_unary_filename,'topdown_unary'); topdown_unary=tmp.topdown_unary;
         
         %Hamming 
         gt_h=y';
@@ -478,8 +479,8 @@ switch obj.mode
         end
         unaryC=model.w(1)*unary-hamming;
         %Initialization of the most violated constraint
-        [dum yMostViolatedLabel]=min(unaryC',[],1);
-        
+        [~,initSeg]=min(unaryC,[],2);
+        yMostViolatedLabel=initSeg(:);
         %Compute energy before graph cut
         %Histograms of the segmentation
         segHist=compute_label_histograms(yMostViolatedLabel,topdown_unary,obj.dbparams.ncat);
@@ -487,7 +488,7 @@ switch obj.mode
         %Energy
        % Ebefore=dot(model.w,param.featureFn(param,x,yMostViolatedLabel));
          %E=zeros(1,length(model.w));
-        ind=sub2ind(size(unary),([1:size(unary,1)]),double(yMostViolatedLabel(:))');
+        ind=sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))');
         E=sum(unaryC(ind));
         
         %pairwise
@@ -562,10 +563,10 @@ switch obj.mode
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        load(sp_filename,'img_sp');
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
-        load(tdfeat_filename,'feat_topdown');
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
+        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
         gt_h=y(1:img_sp.nbSp);
         z=y(img_sp.nbSp+1:end);
         
@@ -602,8 +603,8 @@ switch obj.mode
         %Stop condition if no possible improvement
         success=1;
         %Data preload
-        [dum,yMostViolatedLabel]=min(unaryCI',[],1);
-        
+        [~,initSeg]=min(unaryCI,[],2);
+        yMostViolatedLabel=initSeg(:);
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
         unaryC=unaryCI+topdown_unary*alphaMat;
@@ -617,7 +618,7 @@ switch obj.mode
             nbSp=size(unary,1);
             %Energy
             E=0;
-            E=E+sum(unaryC([1:size(unary,1)]+(yMostViolatedLabel-1)*size(unary,1)));
+            E=E+sum(unaryC((1:size(unary,1))+(yMostViolatedLabel-1)*size(unary,1)));
             edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
             E=E+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
             %labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
@@ -685,7 +686,7 @@ switch obj.mode
                         end
                     end
                 end
-                [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
+                [topdown_unary,~,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
                 unaryC=unaryCI+topdown_unary*alphaMat;
                 Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
                 Ebefore=Ebefore+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
@@ -715,14 +716,14 @@ switch obj.mode
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        load(sp_filename,'img_sp');
+        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
         %obj.topdown.latent.params.n_neighbor
-        load(pairwise_filename,'pairwise')
-        load(unary_filename,'unary')
-        load(tdfeat_filename,'feat_topdown');
+        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
+        tmp=load(unary_filename,'unary'); unary=tmp.unary;
+        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
         nn=obj.topdown.latent.params.n_neighbor;
         nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
-        load(nn_filename);
+        load(nn_filename);  % COME BACK TO THIS LATER AND CORRECT IT
         gt_h=y(1:img_sp.nbSp);
         z=y(img_sp.nbSp+1:end);
         
@@ -764,8 +765,8 @@ switch obj.mode
         %Stop condition if no possible improvement
         success=1;
         %Data preload
-        [dum,yMostViolatedLabel]=min(unaryCI',[],1);
-        
+        [~,initSeg]=min(unaryCI,[],2);
+        yMostViolatedLabel=initSeg(:);
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
         unaryC=unaryCI+topdown_unary*alphaMat;
@@ -847,7 +848,7 @@ switch obj.mode
                         end
                     end
                 end
-                [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
+                [topdown_unary,~,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
                 unaryC=unaryCI+topdown_unary*alphaMat;
                 Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
                 Ebefore=Ebefore+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));

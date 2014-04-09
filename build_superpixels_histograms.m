@@ -12,15 +12,17 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 
-load(sprintf(obj.unary.dictionary.destmatpath,'unary_dictionary'));
+tmp=load(sprintf(obj.unary.dictionary.destmatpath,'unary_dictionary'));
+feature_clusters=tmp.feature_clusters;
 
 %Indices of the image set (training or testing)
 ids = obj.dbparams.(imgsetname);
 
 if ~exist(sprintf(obj.unary.destmatpath,'num_sphistograms_per_im'),'file');
-    num_sphistograms_per_im = [];
+    num_sphistograms_per_im = zeros(1,obj.dbparams.num_images);
 else
-    load(sprintf(obj.unary.destmatpath,'num_sphistograms_per_im'),'num_sphistograms_per_im');
+    tmp=load(sprintf(obj.unary.destmatpath,'num_sphistograms_per_im'),'num_sphistograms_per_im');
+    num_sphistograms_per_im=tmp.num_sphistograms_per_im;
 end
 
 fprintf('\n construct_histograms_for_superpixels: (total of %d images):    ', length(ids));
@@ -35,12 +37,16 @@ for i=1:length(ids)
     if (~exist(histogram_filename, 'file') || obj.force_recompute.superpixels_histograms)
         
         %Load the data computed with extract_features
-        load(sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',obj.dbparams.image_names{ids(i)})));
-        load(sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)})));
-        load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
+        tmp=load(sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',obj.dbparams.image_names{ids(i)})));
+        img_info=tmp.img_info;
+        tmp=load(sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)})));
+        img_feat=tmp.img_feat;
+        tmp=load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})));
+        img_sp=tmp.img_sp;
         
         % Load training segmentation for each image
-        load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}),'seg_i');
+        tmp=load(sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)}),'seg_i');
+        seg_i=tmp.seg_i;
        
         % Find the number of labels
         %num_class = max(max(seg_i)); 
@@ -49,7 +55,7 @@ for i=1:length(ids)
         superpixel_histograms = zeros(obj.unary.dictionary.params.num_bu_clusters, img_sp.nbSp);
         %dominant_class = ones(1,num_class,'uint8');
         dominant_class = ones(1,img_sp.nbSp);
-        save(histogram_filename,'superpixel_histograms');
+%         save(histogram_filename,'superpixel_histograms');
         % Find the locations of the image features
         F=img_feat.locations;
         locations = img_info.X*(round(F(1,:))-1)+round(F(2,:));

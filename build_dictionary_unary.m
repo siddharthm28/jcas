@@ -19,7 +19,8 @@ if (~exist(dictionary_filename, 'file') || (obj.force_recompute.dictionary_unary
     %Retrieve the indexes of the right image set (training or testing)
     ids = obj.dbparams.(imgsetname);
 
-    load(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');
+    tmp=load(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');
+    num_features_per_images=tmp.num_features_per_images;
 
     
     %Test if the total number of features extracted from the images exceeds
@@ -27,13 +28,13 @@ if (~exist(dictionary_filename, 'file') || (obj.force_recompute.dictionary_unary
     %If it doesn't then keep all the features, and if it does take a random
     %sample of the features extracted of the maximum size allowed
     if (sum(num_features_per_images(obj.dbparams.training))<obj.unary.dictionary.params.max_features_for_clustering)
-        disp(sprintf('\n cluster_dense_sift_features: Total features (%d) is than the maximum allowed (%d).',...
-            num_features,obj.unary.dictionary.params.max_features_for_clustering) );
         num_features = sum(num_features_per_images(obj.dbparams.training));
-        randindex = [1:num_features];
+        fprintf('\n cluster_dense_sift_features: Total features (%d) is less than the maximum allowed (%d).',...
+            num_features,obj.unary.dictionary.params.max_features_for_clustering);
+        randindex = (1:num_features);
     else
-        disp(sprintf('\n cluster_dense_sift_features: Sampling %d features from a total of %d.',...
-        obj.unary.dictionary.params.max_features_for_clustering, sum(num_features_per_images(obj.dbparams.training))));
+        fprintf('\n cluster_dense_sift_features: Sampling %d features from a total of %d.',...
+        obj.unary.dictionary.params.max_features_for_clustering, sum(num_features_per_images(obj.dbparams.training)));
         num_features = obj.unary.dictionary.params.max_features_for_clustering;
         randindex = randsample(num_features,num_features);
         randindex = sort(randindex);
@@ -52,7 +53,8 @@ if (~exist(dictionary_filename, 'file') || (obj.force_recompute.dictionary_unary
 
     for i=1:length(ids)
         fprintf('\b\b\b\b%04d',i);
-        load(sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)})));
+        tmp=load(sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)})));
+        img_feat=tmp.img_feat;
         %Retrieve the indexes corresponding to the current image
         index = find(randindex<=img_feat.num_features);
         len = length(index);

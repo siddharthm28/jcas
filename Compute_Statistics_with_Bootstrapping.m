@@ -18,13 +18,11 @@ for i=1:num_images
     img_gt=sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)});
     img_pred=sprintf(path,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
     img_predP=sprintf(path,sprintf('%s-seg_resultP',obj.dbparams.image_names{ids(i)}));
-    histogram_filename = sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)}));
     
     tmp=load(img_gt,'seg_i'); pixel_gt=tmp.seg_i(:);
     tmp=load(img_pred,'seg'); seg=tmp.seg(:);
     tmp=load(img_predP,'pixelSeg'); pixelSeg=tmp.pixelSeg(:);
-    tmp=load(histogram_filename,'superpixel_histograms');
-    gt=tmp.superpixel_histograms(end,:); gt=gt(:);
+    gt=get_ground_truth(obj,obj.dbparams.image_names{ids(i)}); gt=gt(:);
     
     indNoVoidSP=find(gt);
     indNoVoidP=find(pixel_gt);

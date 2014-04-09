@@ -60,7 +60,8 @@ img_feat=struct();
 if ~exist(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'file')
     num_features_per_images=[];
 else
-    load(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');
+    tmp=load(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');
+    num_features_per_images=tmp.num_features_per_images;
 end
 
 for i=1:num_imgs
@@ -118,7 +119,7 @@ for i=1:num_imgs
         % -----------------------------------------------------------------
         % Features
         % -----------------------------------------------------------------
-        if ~exist(img_feat_filename,'file')||obj.force_recompute.trainingdata_UF
+        if ((~exist(img_feat_filename,'file')||obj.force_recompute.trainingdata_UF) && ~obj.unary.precomputed)
         img_feat=obj.computeFeatures_unary(img_info.I);
         num_features_per_images(imgset(i))=img_feat.num_features;
         save(img_feat_filename,'img_feat');

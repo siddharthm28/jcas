@@ -19,17 +19,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     
     %Collect the ground truth labelings
     for i=1:length(ids)
-        if obj.unary.SPneighboorhoodsize>0
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',...
-                obj.dbparams.image_names{ids(i)},...
-                obj.unary.SPneighboorhoodsize)));
-        else
-          load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',...
-              obj.dbparams.image_names{ids(i)})));
-        end       
-        temp=superpixel_histograms(end,:);
-        param.labels{i}=temp(:);
-        clear temp superpixel_histograms;
+        param.labels{i}=get_ground_truth(obj,obj.dbparams.image_names{ids(i)});
     end
     
     %Callbacks :
@@ -37,8 +27,6 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     param.constraintFn  = obj.optimisation.constraintCB ;
     param.featureFn = obj.optimisation.featureCB ;
     param.verbose=1;
-    
-    
     
     switch obj.mode
         case 0
@@ -110,7 +98,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
                     obj.dbparams.ncat*length(ids));
                 for i=1:length(ids)
                     topdown_unary_filename = sprintf(obj.topdown.unary.destmatpath,sprintf('%s-topdown_unary-%d',obj.dbparams.image_names{ids(i)},obj.topdown.dictionary.params.size_dictionary));
-                    load(topdown_unary_filename);
+                    tmp=load(topdown_unary_filename); topdown_unary=tmp.topdown_unary;
                     training_histograms(:,ctr:ctr+obj.dbparams.ncat-1)=compute_label_histograms(param.labels{i},topdown_unary,obj.dbparams.ncat);
                     %training_histograms(end-1,ctr:ctr+obj.dbparams.ncat-1)=i*ones(1,obj.dbparams.ncat);
                     %training_histograms(end,ctr:ctr+obj.dbparams.ncat-1)=1:obj.dbparams.ncat;
@@ -120,7 +108,8 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
                 
                 save(training_histograms_filename,'training_histograms');
             else
-                load(training_histograms_filename);
+                tmp=load(training_histograms_filename);
+                training_histograms=tmp.training_histograms;
                 %param.tHistograms=training_histograms;
             end
             
@@ -183,5 +172,3 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     end
 end
 end
-
-

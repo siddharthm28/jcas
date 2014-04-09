@@ -17,7 +17,8 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 
-load(sprintf(obj.topdown.dictionary.destmatpath,sprintf('topdown_dictionary_%d',obj.topdown.dictionary.params.size_dictionary)), 'C');
+tmp=load(sprintf(obj.topdown.dictionary.destmatpath,sprintf('topdown_dictionary_%d',obj.topdown.dictionary.params.size_dictionary)), 'C'); 
+C=tmp.C;
 
 % Establish the set of images of interest
 ids = obj.dbparams.(imgsetname);
@@ -31,8 +32,10 @@ for i=1:length(ids)
     if (~exist(topdown_unary_filename, 'file') || obj.force_recompute.topdown_unary)
         
         %Load features/superpixels
-        load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})),'img_sp');
-        load(sprintf(obj.topdown.features.destmatpath, sprintf('%s-topdown_features',obj.dbparams.image_names{ids(i)})),'feat_topdown');
+        tmp=load(sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)})),'img_sp');
+        img_sp=tmp.img_sp;
+        tmp=load(sprintf(obj.topdown.features.destmatpath, sprintf('%s-topdown_features',obj.dbparams.image_names{ids(i)})),'feat_topdown');
+        feat_topdown=tmp.feat_topdown;
 
         [X,Y] = size(img_sp.spInd);
         F=feat_topdown.locations;

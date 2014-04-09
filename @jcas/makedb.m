@@ -10,186 +10,98 @@ function makedb(obj,db_name)
 obj.dbparams.name=db_name;
 
 switch db_name
-    case 'Graz'
-        obj.dbparams.image_names=cell(1,900);
-        for i=1:900
-            if i<=300
-                obj.dbparams.image_names{i}=sprintf('bike_%03d',i);
-            elseif (300<i) && (i<=600)
-                obj.dbparams.image_names{i}=sprintf('carsgraz_%03d',i-300);
-            elseif (600<i)&&(i<=900)
-                obj.dbparams.image_names{i}=sprintf('person_%03d',i-600);
-            end
-        end
+    case 'inria-graz-lab'
+        % relevant paths
+        dataset_path='/cis/project/vision_sequences/inria_graz/';
+        train_file=fullfile(dataset_path,'train.txt');
+        test_file=fullfile(dataset_path,'test.txt');
+        % read the train file for training images
+        train_images = read_file(train_file);
+        test_images = read_file(test_file);
         % total number of images
-        obj.dbparams.num_images = 900;
-        
+        obj.dbparams.num_images = length(train_images)+length(test_images);
+        obj.dbparams.image_names = [train_images;test_images];
         % total number of categories
-        obj.dbparams.ncat       = 4;
-        
-            % image index for training set
-            %obj.dbparams.training   = (1:2:900);
-            obj.dbparams.training   = (2:2:900);
-            % image index for test set
-            %obj.dbparams.test       = (2:2:900);
-            obj.dbparams.test   = (1:2:900);
-            % path to the images
-                obj.dbparams.imgpath=['/cis/home/brondep1/DB/GrazImages/'];
-                obj.dbparams.format='.image.png';
-%             obj.dbparams.imgpath     = ['/cis/home/pmcclure/jcas_complete/',...
-%                 db_name,'_Raw_Images/%s',obj.dbparams.format];
-            
-            % % path to the ground truth lables??
-            obj.dbparams.segpath     = ['/cis/home/brondep1/DB/GrazOldGT/%s.mat'];
-            %obj.dbparams.segpath='/Users/Bertrand/Documents/X/Stage3A/DB/GrazCis/Graz_Labels/%s.mat';
-            % path to the results
-            obj.dbparams.destmatpath = ['/cis/home/luca/jcas_new/GrazOld/results/%s.mat'];
-            
-             case 'Graz1807'
-        obj.dbparams.image_names=cell(1,900);
-        for i=1:900
-            if i<=300
-                obj.dbparams.image_names{i}=sprintf('bike_%03d',i);
-            elseif (300<i) && (i<=600)
-                obj.dbparams.image_names{i}=sprintf('carsgraz_%03d',i-300);
-            elseif (600<i)&&(i<=900)
-                obj.dbparams.image_names{i}=sprintf('person_%03d',i-600);
-            end
-        end
-        % total number of images
-        obj.dbparams.num_images = 900;
-        
-        % total number of categories
-        obj.dbparams.ncat       = 4;
-        
-            % image index for training set
-            obj.dbparams.training   = (1:2:900);
-            
-            % image index for test set
-            obj.dbparams.test       = (2:2:900);
-            
-            % path to the images
-                obj.dbparams.imgpath=['/cis/home/brondep1/DB/GrazImages/'];
-                obj.dbparams.format='.image.png';
-%             obj.dbparams.imgpath     = ['/cis/home/pmcclure/jcas_complete/',...
-%                 db_name,'_Raw_Images/%s',obj.dbparams.format];
-            
-            % % path to the ground truth lables??
-            obj.dbparams.segpath     = ['/cis/home/brondep1/DB/GrazOldGT/%s.mat'];
-            %obj.dbparams.segpath='/Users/Bertrand/Documents/X/Stage3A/DB/GrazCis/Graz_Labels/%s.mat';
-            % path to the results
-            obj.dbparams.destmatpath = ['/cis/home/luca/jcas_new/GrazOld/results1807/%s.mat'];
-            
-    case 'GrazInria_900'
-        obj.dbparams.image_names=cell(1,900);
-        for i=1:900
-            if i<=300
-                obj.dbparams.image_names{i}=sprintf('bike_%03d',i);
-            elseif (300<i) && (i<=600)
-                obj.dbparams.image_names{i}=sprintf('carsgraz_%03d',i-300);
-            elseif (600<i)&&(i<=900)
-                obj.dbparams.image_names{i}=sprintf('person_%03d',i-600);
-            end
-        end
-        % total number of images
-        obj.dbparams.num_images = 900;
-        
-        % total number of categories
-        obj.dbparams.ncat       = 4;
-        
-            % image index for training set
-            obj.dbparams.training   = (2:2:900);
-            
-            % image index for test set
-            obj.dbparams.test       = (1:2:900);
-            
-            % path to the images
-                obj.dbparams.imgpath=['/cis/home/brondep1/DB/GrazImages/'];
-                obj.dbparams.format='.image.png';
-%    
-%                 db_name,'_Raw_Images/%s',obj.dbparams.format];
-            
-            % % path to the ground truth lables??
-            obj.dbparams.segpath     = ['/cis/home/brondep1/DB/GrazNewGT/%s.mat'];
-            %obj.dbparams.segpath='/Users/Bertrand/Documents/X/Stage3A/DB/GrazCis/Graz_Labels/%s.mat';
-            % path to the results
-            obj.dbparams.destmatpath = ['/cis/home/luca/jcas_new/Graz/results/%s.mat'];
-                        
-            
-        case 'CamVid'
-            
-            obj.dbparams.image_names=cell(1,701);
-            for i=1:701
-                obj.dbparams.image_names{i}=num2str(i);
-            end
-            % total number of images
-            obj.dbparams.num_images = 701;
-            
-            % total number of categories
-            obj.dbparams.ncat       = 12;
-            
-            % image index for training set
-            obj.dbparams.training   = (2:2:701);
-            
-            % image index for test set
-            obj.dbparams.test       = (1:2:701);
-            
-            % path to the images
-            obj.dbparams.imgpath     = ['/cis/home/pmcclure/jcas_complete/','CamVid','_Raw_Images/'];
-            obj.dbparams.format='.png';
-            
-            obj.dbparams.segpath=['/cis/home/pmcclure/jcas_complete/CamVid_Labels/%s.mat'];
-            
-            % path to the results
-            obj.dbparams.destmatpath = ['/cis/home/luca/jcas_new/CamVid/results/%s.mat'];
-            
-        case 'Pascal'
-            % total number of images
-            obj.dbparams.num_images = 2913;
-            
-            % total number of categories
-            obj.dbparams.ncat       = 21;
-            
-            % image index for training set
-            obj.dbparams.training   = (1:1464);
-            
-            % image index for test set
-            obj.dbparams.test       = (1465:2913);
-            
-    case 'MSRCV1'
-        obj.dbparams.image_names=cell(1,240);
-        count=1;
-        for i=1:8
-            for j=1:30
-                obj.dbparams.image_names{count}=sprintf('%d_%d_s',i);
-                count=count+1;
-            end
-        end
-        % total number of images
-        obj.dbparams.num_images = 240;
-        
-        % total number of categories
-        obj.dbparams.ncat       = 9;
-        
+        obj.dbparams.ncat = 4;
         % image index for training set
-        obj.dbparams.training   = (1:2:240);
-        
+        obj.dbparams.training = 1:length(train_images);
         % image index for test set
-        obj.dbparams.test       = (2:2:240);
-        
+        obj.dbparams.test = length(train_images)+(1:length(test_images));
         % path to the images
-        obj.dbparams.imgpath=['/cis/home/brondep1/DB/MSRCV1/'];
-        obj.dbparams.format='.bmp';
-        %             obj.dbparams.imgpath     = ['/cis/home/pmcclure/jcas_complete/',...
-        %                 db_name,'_Raw_Images/%s',obj.dbparams.format];
-        
-        % % path to the ground truth lables??
-        obj.dbparams.segpath     = ['/cis/home/brondep1/DB/MSRCV1GT/%s.mat'];
-        %obj.dbparams.segpath='/Users/Bertrand/Documents/X/Stage3A/DB/GrazCis/Graz_Labels/%s.mat';
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
+        obj.dbparams.format = '.image.png';
+        % path to the ground truth lables
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
         % path to the results
-        obj.dbparams.destmatpath = ['/cis/home/luca/jcas_new/MSRCV1/results/%s.mat'];
-
-    case 'inria-graz-cars-pc'
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
+    case 'inria-graz-old-splits'
+        % image names
+        obj.dbparams.image_names=cell(1,900);
+        for i=1:900
+            if i<=300
+                obj.dbparams.image_names{i}=sprintf('bike_%03d',i);
+            elseif (300<i) && (i<=600)
+                obj.dbparams.image_names{i}=sprintf('carsgraz_%03d',i-300);
+            elseif (600<i)&&(i<=900)
+                obj.dbparams.image_names{i}=sprintf('person_%03d',i-600);
+            end
+        end
+        obj.dbparams.num_images = 900;  % total number of images
+        obj.dbparams.ncat = 4;    % total number of categories
+        obj.dbparams.training = (1:2:900);    % image index for training set
+        obj.dbparams.test = (2:2:900);    % image index for test set
+        % path to the images
+        dataset_path='/cis/project/vision_sequences/inria_graz/';
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
+        obj.dbparams.format = '.image.png';
+        % path to the ground truth labels stored in a specific format
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
+        % path to the results
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
+    case 'CamVid' % NEED TO DO
+        num_images=701;
+        % image names
+        image_names=cellfun(@(x) num2str(x),num2cell(1:num_images),'uniformoutput',false);
+        obj.dbparams.image_names=image_names;
+        obj.dbparams.num_images = num_images;   % total number of images
+        obj.dbparams.ncat       = 12;    % total number of categories
+        obj.dbparams.training   = (2:2:701);    % image index for training set
+        obj.dbparams.test       = (1:2:701);    % image index for test set
+        % path to the images
+        obj.dbparams.imgpath     = '/cis/home/pmcclure/jcas_complete/CamVid_Raw_Images/';
+        obj.dbparams.format='.png';
+        % path to segmentations
+        obj.dbparams.segpath='/cis/home/pmcclure/jcas_complete/CamVid_Labels/%s.mat';
+        % path to the results
+        obj.dbparams.destmatpath = '/cis/home/luca/jcas_new/CamVid/results/%s.mat';
+    case 'msrc' % NEED TO DO
+        % relevant paths and files
+        dataset_path='/cis/project/vision_sequences/msrc21_segmentation/';
+        train_file=fullfile(dataset_path,'Train.txt');
+        val_file=fullfile(dataset_path,'Validation.txt');
+        test_file=fullfile(dataset_path,'Test.txt');
+        % load the images
+        train_images=read_file(train_file);
+        val_images=read_file(val_file);
+        test_images=read_file(test_file);
+        image_names=[train_images;val_images;test_images];
+        image_names=cellfun(@(x) x(1:end-4),image_names,'uniformoutput',false);
+        obj.dbparams.image_names=image_names;
+        obj.dbparams.num_images = length(image_names);        % total number of images
+        obj.dbparams.ncat       = 9;          % total number of categories
+        obj.dbparams.training   = 1:(length(train_images)+length(val_images));  % image index for training set
+        obj.dbparams.test       = length(val_images)+(1:length(test_images));  % image index for test set
+        % path to the images
+        obj.dbparams.imgpath=fullfile(dataset_path,'Images/');
+        obj.dbparams.format='.bmp';
+        % path to the ground truth labels
+        obj.dbparams.segpath= fullfile(dataset_path,'seg');
+        % path to the results
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
+    case 'inria-graz-cars-pc' 
         % relevant paths
         dataset_location = 'F:/Datasets/InriaGraz/';
         % read the train file for training images
@@ -336,7 +248,6 @@ switch db_name
         % path to the results
         obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
-   
     case 'voc2010-densecrf-pc'
         % relevant paths
         dataset_path='F:/Datasets/voc2010/';
@@ -357,57 +268,6 @@ switch db_name
         % path to the images
         obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
         obj.dbparams.format = '.jpg';
-        % path to the ground truth lables
-        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
-        % path to the results
-        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
-        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
-   
-    case 'inria-graz-lab'
-        % relevant paths
-        dataset_path='/cis/project/vision_sequences/inria_graz/';
-        train_file=fullfile(dataset_path,'train.txt');
-        test_file=fullfile(dataset_path,'test.txt');
-        % read the train file for training images
-        train_images = read_file(train_file);
-        test_images = read_file(test_file);
-        % total number of images
-        obj.dbparams.num_images = length(train_images)+length(test_images);
-        obj.dbparams.image_names = [train_images;test_images];
-        % total number of categories
-        obj.dbparams.ncat = 4;
-        % image index for training set
-        obj.dbparams.training = 1:length(train_images);
-        % image index for test set
-        obj.dbparams.test = length(train_images)+(1:length(test_images));
-        % path to the images
-        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
-        obj.dbparams.format = '.image.png';
-        % path to the ground truth lables
-        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
-        % path to the results
-        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
-        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
-    case 'inria-graz-lab-mixmatch'
-        % relevant paths
-        dataset_path='/cis/project/vision_sequences/inria_graz/';
-        train_file=fullfile(dataset_path,'train_mixmatch.txt');
-        test_file=fullfile(dataset_path,'test_mixmatch.txt');
-        % read the train file for training images
-        train_images = read_file(train_file);
-        test_images = read_file(test_file);
-        % total number of images
-        obj.dbparams.num_images = length(train_images)+length(test_images);
-        obj.dbparams.image_names = [train_images;test_images];
-        % total number of categories
-        obj.dbparams.ncat = 4;
-        % image index for training set
-        obj.dbparams.training = 1:length(train_images);
-        % image index for test set
-        obj.dbparams.test = length(train_images)+(1:length(test_images));
-        % path to the images
-        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
-        obj.dbparams.format = '.image.png';
         % path to the ground truth lables
         obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
         % path to the results
@@ -468,9 +328,7 @@ switch db_name
 
     otherwise
             error('Database specified unknown');
-    end
-    
-
+end
 
 end
 

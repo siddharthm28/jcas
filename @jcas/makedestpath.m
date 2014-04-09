@@ -38,7 +38,9 @@ if ~exist([rootDir,'superpixels/superpixelsBase.mat'],'file')
     superpixelsBaseCount=0;
     mkdir([rootDir,'superpixels']);
 else
-    load([rootDir,'superpixels/superpixelsBase.mat']);
+    tmp=load([rootDir,'superpixels/superpixelsBase.mat']);
+    superpixelsBase=tmp.superpixelsBase;
+    superpixelsBaseCount=tmp.superpixelsBaseCount;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -83,7 +85,9 @@ if ~exist([rootDir,'unary_features/unary_featuresBase.mat'],'file')
     unary_featuresBaseCount=0;
     mkdir([rootDir,'unary_features']);
 else
-    load([rootDir,'unary_features/unary_featuresBase.mat']);
+    tmp=load([rootDir,'unary_features/unary_featuresBase.mat']);
+    unary_featuresBaseCount=tmp.unary_featuresBaseCount;
+    unary_featuresBase=tmp.unary_featuresBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -127,7 +131,9 @@ if ~exist([rootDir,'topdown_features/topdown_featuresBase.mat'],'file')
     topdown_featuresBaseCount=0;
     mkdir([rootDir,'topdown_features']);
 else
-    load([rootDir,'topdown_features/topdown_featuresBase.mat']);
+    tmp=load([rootDir,'topdown_features/topdown_featuresBase.mat']);
+    topdown_featuresBase=tmp.topdown_featuresBase;
+    topdown_featuresBaseCount=tmp.topdown_featuresBaseCount;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -218,7 +224,9 @@ if ~exist([rootDir,'trainBase.mat'],'file')
     trainBase={};
     trainBaseCount=0;
 else
-    load([rootDir,'trainBase.mat']);
+    tmp=load([rootDir,'trainBase.mat']);
+    trainBase=tmp.trainBase;
+    trainBaseCount=tmp.trainBaseCount;
 end
 
 % Check if experiment with these training/testing sets were already done
@@ -262,7 +270,9 @@ if ~exist([tDir,'unary_dictionary/unary_dictionaryBase.mat'],'file')
     unary_dictionaryBaseCount=0;
     mkdir([tDir,'unary_dictionary']);
 else
-    load([tDir,'unary_dictionary/unary_dictionaryBase.mat']);
+    tmp=load([tDir,'unary_dictionary/unary_dictionaryBase.mat']);
+    unary_dictionaryBaseCount=tmp.unary_dictionaryBaseCount;
+    unary_dictionaryBase=tmp.unary_dictionaryBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -311,7 +321,9 @@ if ~exist([tDir,'unary/unaryBase.mat'],'file')
     unaryBaseCount=0;
     mkdir([tDir,'unary']);
 else
-    load([tDir,'unary/unaryBase.mat']);
+    tmp=load([tDir,'unary/unaryBase.mat']);
+    unaryBaseCount=tmp.unaryBaseCount;
+    unaryBase=tmp.unaryBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -354,13 +366,15 @@ end
 %(Check if custom user directory)
     
 if isempty(obj.unary.svm.trainingset.destmatpath)
-if ~exist(sprintf(obj.unary.destmatpath,'unarytsetsvm/unarytsetsvmBase'),'file')
-    unarytsetsvmBase={};
-    unarytsetsvmBaseCount=0;
-    dirS=sprintf(obj.unary.destmatpath,'unarytsetsvm/%s');
+if ~exist(sprintf(obj.unary.destmatpath,'unarytestsvm/unarytestsvmBase'),'file')
+    unarytestsvmBase={};
+    unarytestsvmBaseCount=0;
+    dirS=sprintf(obj.unary.destmatpath,'unarytestsvm/%s');
     mkdir(dirS(1:end-6));
 else
-    load(sprintf(obj.unary.destmatpath,'unarytsetsvm/unarytsetsvmBase'));
+    tmp=load(sprintf(obj.unary.destmatpath,'unarytestsvm/unarytestsvmBase'));
+    unarytestsvmBase=tmp.unarytestsvmBase;
+    unarytestsvmBaseCount=tmp.unarytestsvmBaseCount;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -368,27 +382,27 @@ end
 
 
     %Check the previous experiments
-    for i=1:unarytsetsvmBaseCount
-        if isequal(unarytsetsvmBase{i}.params,obj.unary.svm.trainingset.params)
-            obj.unary.svm.trainingset.destmatpath=unarytsetsvmBase{i}.folder;
+    for i=1:unarytestsvmBaseCount
+        if isequal(unarytestsvmBase{i}.params,obj.unary.svm.trainingset.params)
+            obj.unary.svm.trainingset.destmatpath=unarytestsvmBase{i}.folder;
             break;
         end
     end
     
     %If not in the previous, create a new exp
     if isempty(obj.unary.svm.trainingset.destmatpath)
-        unarytsetsvmBaseCount=unarytsetsvmBaseCount+1;
-        unarytsetsvmBase{unarytsetsvmBaseCount}.params=obj.unary.svm.trainingset.params;
+        unarytestsvmBaseCount=unarytestsvmBaseCount+1;
+        unarytestsvmBase{unarytestsvmBaseCount}.params=obj.unary.svm.trainingset.params;
         
         %Create folder
-        obj.unary.svm.trainingset.destmatpath=sprintf(obj.unary.destmatpath,sprintf('unarytsetsvm/%s/%s',datenow,'%s'));
+        obj.unary.svm.trainingset.destmatpath=sprintf(obj.unary.destmatpath,sprintf('unarytestsvm/%s/%s',datenow,'%s'));
         mkdir(obj.unary.svm.trainingset.destmatpath(1:end-6));
-        unarytsetsvmBase{unarytsetsvmBaseCount}.folder=obj.unary.svm.trainingset.destmatpath;
+        unarytestsvmBase{unarytestsvmBaseCount}.folder=obj.unary.svm.trainingset.destmatpath;
     end
     
     %Save the modifications
-    save(sprintf(obj.unary.destmatpath,'unarytsetsvm/unarytsetsvmBase'),'unarytsetsvmBase','unarytsetsvmBaseCount');
-    clear unarytsetsvmBase unarytsetsvmBaseCount;
+    save(sprintf(obj.unary.destmatpath,'unarytestsvm/unarytestsvmBase'),'unarytestsvmBase','unarytestsvmBaseCount');
+    clear unarytestsvmBase unarytestsvmBaseCount;
 end
 %--------------------------------------------------------------------------
 % Unary SVM
@@ -403,7 +417,9 @@ if ~exist(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase')
     dirS=sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/%s');
     mkdir(dirS(1:end-6));
 else
-    load(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase'));
+    tmp=load(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase'));
+    unarysvmBaseCount=tmp.unarysvmBaseCount;
+    unarysvmBase=tmp.unarysvmBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -446,7 +462,9 @@ if ~exist([tDir,'pairwise/pairwiseBase.mat'],'file')
     pairwiseBaseCount=0;
     mkdir([tDir,'pairwise']);
 else
-    load([tDir,'pairwise/pairwiseBase.mat']);
+    tmp=load([tDir,'pairwise/pairwiseBase.mat']);
+    pairwiseBaseCount=tmp.pairwiseBaseCount;
+    pairwiseBase=tmp.pairwiseBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -491,7 +509,9 @@ if ~exist([tDir,'topdown_dictionary/topdown_dictionaryBase.mat'],'file')
     topdown_dictionaryBaseCount=0;
     mkdir([tDir,'topdown_dictionary']);
 else
-    load([tDir,'topdown_dictionary/topdown_dictionaryBase.mat']);
+    tmp=load([tDir,'topdown_dictionary/topdown_dictionaryBase.mat']);
+    topdown_dictionaryBaseCount=tmp.topdown_dictionaryBaseCount;
+    topdown_dictionaryBase=tmp.topdown_dictionaryBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -542,7 +562,9 @@ if ~exist([tDir,'topdownUnary/topdownUnaryBase.mat'],'file')
     topdownUnaryBaseCount=0;
     mkdir([tDir,'topdownUnary']);
 else
-    load([tDir,'topdownUnary/topdownUnaryBase.mat']);
+    tmp=load([tDir,'topdownUnary/topdownUnaryBase.mat']);
+    topdownUnaryBaseCount=tmp.topdownUnaryBaseCount;
+    topdownUnaryBase=tmp.topdownUnaryBase;
 end
 
 % Check if experiment with these parameters was already done and if yes
@@ -594,7 +616,9 @@ if ~exist([tDir,'optimisation/optimisationBase.mat'],'file')
     optimisationBaseCount=0;
     mkdir([tDir,'optimisation']);
 else
-    load([tDir,'optimisation/optimisationBase.mat']);
+    tmp=load([tDir,'optimisation/optimisationBase.mat']);
+    optimisationBaseCount=tmp.optimisationBaseCount;
+    optimisationBase=tmp.optimisationBase;
 end
 
 % Check if experiment with these parameters was already done and if yes

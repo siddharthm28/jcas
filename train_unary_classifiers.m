@@ -16,8 +16,8 @@ end
 svm_filename = sprintf(obj.unary.svm.destmatpath,sprintf('svm_data-%d',obj.unary.SPneighboorhoodsize));
 
 if (~exist(svm_filename, 'file') || obj.force_recompute.unary_svm_classifiers)
-    load(sprintf(obj.unary.svm.trainingset.destmatpath,sprintf('training_set-%d',obj.unary.SPneighboorhoodsize)),'training_set','num_hists_per_class');
-
+    tmp=load(sprintf(obj.unary.svm.trainingset.destmatpath,sprintf('training_set-%d',obj.unary.SPneighboorhoodsize)),'training_set','num_hists_per_class');
+    training_set=tmp.training_set; num_hists_per_class=tmp.num_hists_per_class;
     h_tmp =[];
 
     % Build the final training set for classification with maximum number

@@ -13,7 +13,8 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 %load the dictionary
-load(sprintf(obj.unary.dictionary.destmatpath,'unary_dictionary'),'features');
+tmp=load(sprintf(obj.unary.dictionary.destmatpath,'unary_dictionary'),'features');
+features=tmp.features;
 
 %Allocate space for training set
 training_set_svm_filename = sprintf(obj.unary.svm.trainingset.destmatpath,sprintf('training_set-%d',obj.unary.SPneighboorhoodsize));
@@ -37,7 +38,8 @@ if ((~exist(training_set_svm_filename, 'file') || obj.force_recompute.trainingse
         %Check if we work on aggregated superpixels histograms
         %if (obj.unary.SPneighboorhoodsize ==0)
             %load(sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)})),'superpixel_histograms');
-            load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');
+            tmp=load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');
+            superpixel_histograms=tmp.superpixel_histograms;
 
         %else
          %   load(sprintf(obj.unary.destmatpath,sprintf('%s-histogram-neighborhood-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize)),'superpixel_histograms');

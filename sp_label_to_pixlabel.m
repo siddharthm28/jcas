@@ -6,12 +6,12 @@ segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparam
 segresP_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_resultP',obj.dbparams.image_names{ids(i)}));
 
 imgsp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)}));
-img_filename=sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',obj.dbparams.image_names{ids(i)}));
+% img_filename=sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',obj.dbparams.image_names{ids(i)}));
 
 
-load(segres_filename);
-load(imgsp_filename);
-load(img_filename);
+tmp=load(segres_filename); seg=tmp.seg;
+tmp=load(imgsp_filename); img_sp=tmp.img_sp;
+% tmp=load(img_filename); img_info=tmp.img_info;
 
 %Pixel label from superpixels
 pixelSeg=seg(img_sp.spInd);
