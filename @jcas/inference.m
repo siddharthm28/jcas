@@ -652,4 +652,4 @@ switch obj.mode
         error('Mode unknown')
 end
 
-fprintf('\n Inference finished \n');
+fprintf('Inference finished \n');

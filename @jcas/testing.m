@@ -90,8 +90,8 @@ obj.inference('test');
 sp_label_to_pixlabel(obj,'test');
 
 fprintf('Running inference on train images \n');
-obj.inference('train');
-sp_label_to_pixlabel(obj,'train');
+obj.inference('training');
+sp_label_to_pixlabel(obj,'training');
 
 fprintf('\n Computing Statistics');
 Compute_Statistics_with_Bootstrapping(obj,obj.test.destmatpath);

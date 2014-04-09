@@ -20,8 +20,9 @@ svm=tmp.svm;
 ids = obj.dbparams.(imgsetname);
 
 %For each image in image set
+fprintf('\n');
 for i=1:length(ids)
-    fprintf(sprintf('\n compute_unary_costs: Computed costs for %d of %d images',i,length(ids)));
+    fprintf(sprintf('compute_unary_costs: Computed costs for %d of %d images \n',i,length(ids)));
     
     %Load image data
     feat_filename = sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ids(i)}));

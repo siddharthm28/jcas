@@ -9,7 +9,7 @@ expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 0; % 0-U 1-(U+P)
+expJCAS.mode = 1; % 0-U 1-(U+P)
 % use precomputed unaries from textonboost
 expJCAS.unary.precomputed=1;
 expJCAS.unary.precomputed_path='F:/Datasets/voc2010/TBunarylogit1/%s.unary';
