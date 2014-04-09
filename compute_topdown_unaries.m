@@ -23,7 +23,7 @@ C=tmp.C;
 % Establish the set of images of interest
 ids = obj.dbparams.(imgsetname);
 
-fprintf('Compute topdown unaries:(total of %d images):    ', length(ids));
+fprintf('\nCompute topdown unaries:(total of %d images):    ', length(ids));
 
 % for each image
 for i=1:length(ids)
@@ -56,3 +56,4 @@ for i=1:length(ids)
     end
     
 end
+fprintf('\n');

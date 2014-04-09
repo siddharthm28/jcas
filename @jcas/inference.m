@@ -35,7 +35,7 @@ switch obj.mode
             labelcost_total = ones(size(unary,2))-eye(size(unary,2));
             [~, seg] =  min(unary,[],2);
             if (optsvm.w(2)~=0) %%% USING PAIRWISE
-                [seg2 Efin Eini] =  GCMex(seg-1, single(unary'), pairwise, single(labelcost_total),0);
+                [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
                 seg = seg2+1;
             end
             save(segres_filename,'seg');
@@ -85,7 +85,7 @@ switch obj.mode
             nbIP=topdown_count(IP);
             %Data preload
             [~,initSeg]=min(unary,[],2);
-            seg=initSeg;
+            seg=initSeg';
             if (optsvm.w(2)>0)
                 %Rescale costs if neg
                 nbSp=size(unary,1);
@@ -204,7 +204,7 @@ switch obj.mode
             IP=(1:length(topdown_count))';
             %Data preload
             [~,initSeg]=min(unary,[],2);
-            seg=initSeg;
+            seg=initSeg';
             if (optsvm.w(2)>0)
                 %Rescale costs if neg
                 nbSp=size(unary,1);
@@ -315,7 +315,7 @@ switch obj.mode
             [~, seg] =  min(unary,[],2); %min(unary',[],1);
             labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
             if (optsvm.w(2)~=0) %%% USING PAIRWISE
-                [seg2 Eafter E] =  GCMex(seg-1, single(unary'), pairwise, single(labelcost_total),0);
+                [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
                 seg = seg2+1;
             end
             save(segres_filename,'seg');
@@ -351,7 +351,7 @@ switch obj.mode
             success=1;
             %Data preload
             [~,initSeg]=min(unary,[],2);
-            seg=initSeg;
+            seg=initSeg';
             if (optsvm.w(2)>0)
                 %Rescale costs if neg
                 if sum(betaTd<0)>0
@@ -554,7 +554,7 @@ switch obj.mode
             nbIP=topdown_count(IP);
             %Data preload
             [~,initSeg]=min(unary,[],2);
-            seg=initSeg;
+            seg=initSeg';
             [topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp);
             unaryC=unary+topdown_unary*alphaMat;
             if (optsvm.w(2)>0)
@@ -562,7 +562,7 @@ switch obj.mode
                 nbSp=size(unary,1);
                 
                 %Energy
-                E=sum(unaryC([1:size(unary,1)]+(seg-1)*size(unary,1)));
+                E=sum(unaryC((1:size(unary,1))+(seg-1)*size(unary,1)));
                 edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
                 E=E+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
                 %labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);

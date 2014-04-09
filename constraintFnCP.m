@@ -31,7 +31,7 @@ switch obj.mode
         [~, yMostViolatedLabel] =  min(unary,[],2); %min(unary',[],1);
         labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
         if (model.w(2)~=0) %%% USING PAIRWISE
-            [seg2,~,~] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
+            [seg2,~,~] =  GCMex(yMostViolatedLabel'-1, single(unary'), pairwise, single(labelcost_total),0);
             yMostViolatedLabel = seg2+1;
         end
         yMostViolatedLabel=yMostViolatedLabel(:);
@@ -89,7 +89,7 @@ switch obj.mode
         success=1;
         %Data preload
         [~,initSeg]=min(unaryC,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         if (model.w(2)>0)
             %Rescale costs if neg
             betaTdb=betaTd;
@@ -215,7 +215,7 @@ switch obj.mode
         success=1;
         %Data preload
         [~,initSeg]=min(unaryC,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         if (model.w(2)>0)
             %Rescale costs if neg
             betaTdb=betaTd;
@@ -336,7 +336,7 @@ switch obj.mode
         pairwise=sparse(wBu(2)*pairwise);
         
         [~, initSeg] =  min(unary,[],2); %min(unary',[],1);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
         if (model.w(2)>0) %%% USING PAIRWISE
             [seg2,~,~] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
@@ -382,7 +382,7 @@ switch obj.mode
         success=1;
         %Data preload
         [~,initSeg]=min(unary,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
 
         if (model.w(2)>0)
             
@@ -392,7 +392,7 @@ switch obj.mode
             
             %Energy
             %E=zeros(1,param.dimension);
-            E=sum(unary(sub2ind(size(unary),([1:size(unary,1)]),double(yMostViolatedLabel(:))')));
+            E=sum(unary(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
             edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
             E=E+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
             labelPres=zeros(obj.dbparams.ncat,1);
@@ -480,7 +480,7 @@ switch obj.mode
         unaryC=model.w(1)*unary-hamming;
         %Initialization of the most violated constraint
         [~,initSeg]=min(unaryC,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         %Compute energy before graph cut
         %Histograms of the segmentation
         segHist=compute_label_histograms(yMostViolatedLabel,topdown_unary,obj.dbparams.ncat);
@@ -604,7 +604,7 @@ switch obj.mode
         success=1;
         %Data preload
         [~,initSeg]=min(unaryCI,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
         unaryC=unaryCI+topdown_unary*alphaMat;
@@ -766,7 +766,7 @@ switch obj.mode
         success=1;
         %Data preload
         [~,initSeg]=min(unaryCI,[],2);
-        yMostViolatedLabel=initSeg(:);
+        yMostViolatedLabel=initSeg';
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
         unaryC=unaryCI+topdown_unary*alphaMat;

@@ -17,8 +17,9 @@ ids = obj.dbparams.(imgsetname);
 eps=1e-8;
 
 %For each image in image set
+fprintf('\n');
 for i=1:length(ids)
-    fprintf(sprintf('\n load_unary_costs: loaded costs for %d of %d images',i,length(ids)));
+    fprintf(sprintf('load_unary_costs: loaded costs for %d of %d images \n',i,length(ids)));
     
     %Load image data
     img_filename=sprintf(obj.dbparams.destmatpath,sprintf('%s-imagedata',...

@@ -29,7 +29,7 @@ if (~exist(topdown_descriptors_filename, 'file') || obj.force_recompute.topdown_
     siftlocations = zeros(1,length(ids)*maxnb);
     ctr = 1;
 
-    tic
+    tic; 
     fprintf('generate_topdown_descriptors (total of %d images):    ', length(ids));
 
     % for each image
