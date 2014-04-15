@@ -117,7 +117,7 @@ switch db_name
                 obj.dbparams.format = '.jpg';
             case 'voc2011-sbd-cars-subset'
                 % relevant paths
-                dataset_path=get_dataset_path('voc2011');
+                dataset_path=get_dataset_path('voc2011-sbd-cars');
                 train_file=fullfile(dataset_path,'train_subset.txt');
                 test_file=fullfile(dataset_path,'test_subset.txt');
                 % total number of categories

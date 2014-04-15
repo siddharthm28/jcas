@@ -37,7 +37,7 @@ expJCAS.unary.dictionary.params.num_bu_clusters = 400;
 % maximum number of histograms per class (used to balance the training)
 expJCAS.unary.svm.params.max_hists_per_class_for_training = 750;
 % maximum number of histogram per image
-expJCAS.unary.svm.trainingset.params.hists_per_image = 10;
+expJCAS.unary.svm.trainingset.params.hists_per_image = 100;
 expJCAS.unary.SPneighboorhoodsize=4;
 % Slack variable for the Cutting Plane algorithm
 % used for the segmentation constraints, this value

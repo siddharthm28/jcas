@@ -282,10 +282,11 @@ switch obj.mode
     case 4
         %Unary + pairwise + Linear classifier for TD potential \sum
         %alpha_k,l h_k,l + beta_l *||h_l||
-        ids=obj.dbparams.test;
         model_filename=sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode));
         tmp=load(model_filename,'optsvm'); optsvm=tmp.optsvm;
+        fprintf('Processing image:     ');
         for i=1:length(ids)
+            fprintf('\b\b\b\b%04d', ids(i));
             %Weights
             
             
@@ -422,7 +423,6 @@ switch obj.mode
         
     case 6
         %Unary Pairwise + intersection kernel (PAMI)
-        ids=obj.dbparams.test;
         model_filename=sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode));
         tmp=load(model_filename,'optsvm'); optsvm=tmp.optsvm;
         training_histograms_filename=sprintf(obj.topdown.unary.destmatpath,'intersection_kernel_histograms');
