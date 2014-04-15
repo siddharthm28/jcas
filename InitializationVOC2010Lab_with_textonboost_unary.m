@@ -9,11 +9,11 @@ expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 1; % 0-U 1-(U+P)
+expJCAS.mode = 2; % 0-U 1-(U+P)
 % use precomputed unaries from textonboost
 expJCAS.unary.precomputed=1;
 expJCAS.unary.precomputed_path='/cis/project/vision_sequences/voc2010/TBunarylogit1/%s.unary';
-expJCAS.force_recompute.unary=1;
+expJCAS.force_recompute.unary=0;
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
