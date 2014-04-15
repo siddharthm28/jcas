@@ -19,7 +19,7 @@ expJCAS.mode = mode; % 0-U 1-(U+P)
 % use precomputed unaries from textonboost
 expJCAS.unary.precomputed=1;
 expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
-expJCAS.force_recompute.unary=1;
+expJCAS.force_recompute.unary=0;
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
