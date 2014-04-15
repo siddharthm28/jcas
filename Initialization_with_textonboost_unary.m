@@ -1,19 +1,25 @@
-function InitializationVOC2010Lab_with_textonboost_unary
+function Initialization_with_textonboost_unary(db_name,mode)
 % Function that Initializes the framework for InriaGraz dataset for PC
-clear all; clc; close all;
+clc; close all;
+if(~exist('db_name','var') || isempty(db_name))
+    db_name='voc2010';
+end
+if(~exist('mode','var') || isempty(mode))
+    mode=1;
+end
 % Create an object of class jcas.
 expJCAS = jcas();
-expJCAS.makedb('voc2010-all-lingling');
+expJCAS.makedb(db_name);
 % Default Quickshift superpixels
 expJCAS.makesp('Quickshift');
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
-expJCAS.mode = 2; % 0-U 1-(U+P)
+expJCAS.mode = mode; % 0-U 1-(U+P)
 % use precomputed unaries from textonboost
 expJCAS.unary.precomputed=1;
-expJCAS.unary.precomputed_path='/cis/project/vision_sequences/voc2010/TBunarylogit1/%s.unary';
-expJCAS.force_recompute.unary=0;
+expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
+expJCAS.force_recompute.unary=1;
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);

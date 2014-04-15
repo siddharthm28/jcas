@@ -17,6 +17,12 @@ switch dataset_name
         if(ispc)
             dataset_path='G:/datasets/VOC2010/VOCdevkit/VOC2010/';
         end
+    case 'voc2010-texton'
+        if(ispc)
+            dataset_path='F:/datasets/voc2010/TBunarylogit1/%s.unary';
+        elseif(isunix)
+            dataset_path='/cis/project/vision_sequences/voc2010/TBunarylogit1/%s.unary';
+        end
     case 'voc2011-sbd-cars'
         if(ispc)
             dataset_path='F:/Datasets/voc2011/';
