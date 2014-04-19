@@ -46,7 +46,7 @@ binary_unary = zeros(2,nlabels);
 
 % unaries for pixels in the image
 binary_unary(2,1:nlabels) = unary(cat,:);
-binary_unary(1,1:nlabels) = unary(ncat*(0:nlabels-1)+seg);
+binary_unary(1,1:nlabels) = unary(ncat*(0:nlabels-1)'+seg(:));
 binary_unary(1,(seg==cat)) = 2e10;
 
 % unaries for auxilary pixels for modeling the pairwise terms in  alpha expansion
@@ -86,7 +86,7 @@ for clstr=1:cdim
         coeff_catI= pvts_coeffs{cat,clstr};
         coeff_cat=coeff_catI(index_active);
         %GOLU coeff_cat = coeff(cat,clstr).im(end-num_pvts+1:end);
-        index_i = find(topdown_unary(:,clstr)>0 & seg'~=cat);
+        index_i = find(topdown_unary(:,clstr)>0 & seg(:)~=cat);
         len_index_i = length(index_i);
         
         new_edges3 = [new_edges3; [reshape(repmat(offset+[1:num_pvts], len_index_i,1),len_index_i*num_pvts,1) repmat(index_i(:), num_pvts,1)]];
@@ -122,7 +122,7 @@ for i=1:length(existing_labels)
         %                 length(pvts_active)
         num_pvts = length(pvts_active);
         if (num_pvts>0)
-            index_i = find(seg'==existing_labels(i)  & topdown_unary(:,clstr)>0);
+            index_i = find(seg(:)==existing_labels(i)  & topdown_unary(:,clstr)>0);
             len_index_i = length(index_i);
             coeff_catI = pvts_coeffs{existing_labels(i),clstr};
             coeff_cat=coeff_catI(1:num_pvts);
@@ -138,7 +138,7 @@ for i=1:length(existing_labels)
         end
     end
     
-    index_i = find(seg==existing_labels(i) & topdown_count>0);
+    index_i = find(seg(:)==existing_labels(i) & topdown_count(:)>0);
     len_index_i = length(index_i);
     if (len_index_i>0)
         new_edges3 = [new_edges3; [index_i(:) (offset+1)*ones(len_index_i,1) ]];

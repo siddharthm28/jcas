@@ -76,7 +76,6 @@ else
 end
 
 
-
 %Label besides alpha
 for i=1:length(existing_labels)
     lCost=label_cost(existing_labels(i));
@@ -114,11 +113,11 @@ binary_cost = [new_cost1; new_cost2; new_cost3];
 binary_pairwise = sparse([binary_edges(:,1); binary_edges(:,2)], [binary_edges(:,2); binary_edges(:,1)],...
     [binary_cost; binary_cost], num_nodes, num_nodes);
 
-%initseg_binary = [double(seg(:)'==cat) zeros(1,num_nodes-nbSp)];
 % PERFORM EXPANSION MOVE
 [~, seg2]=maxflow(binary_pairwise,sparse(binary_unary));
+% [~,initseg_binary]=max(binary_unary,[],2);
+% seg2=GCMex(initseg_binary-1, single(binary_unary'), binary_pairwise, single(ones(2)-eye(2)),0);
 
-%seg2=GCMex(initseg_binary, single(binary_unary'), binary_pairwise, single(ones(2)-eye(2)),0);
 finseg=seg;
 %Careful with the number associated to sink/source here 0 for some strange
 %reasons.

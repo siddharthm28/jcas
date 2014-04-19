@@ -1,5 +1,6 @@
-function Initialization(db_name,mode)
-% Function that Initializes the framework for expt dataset under type mode
+function Initialization(mode,db_name,pre_unary,pre_sp)
+% Function that Initializes the framework for dataset db_name under type mode
+% also pass if you want to use precomputed unaries and superpixels or not
 clc; close all;
 if(~exist('db_name','var') || isempty(db_name))
     db_name='inria-graz';
@@ -7,15 +8,34 @@ end
 if(~exist('mode','var') || isempty(mode))
     mode=1;
 end
+if(~exist('pre_unary','var') || isempty(pre_unary))
+    pre_unary=0;
+end
+if(~exist('pre_sp','var') || isempty(pre_sp))
+    pre_sp=0;
+end
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb(db_name);
-% Default Quickshift superpixels
-expJCAS.makesp('Quickshift');
+if(~pre_sp)
+    % Default Quickshift superpixels
+    expJCAS.makesp('Quickshift');
+else
+    % Using ucm superpixels
+    options.path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
+    options.threshold=12;
+    expJCAS.makesp('ucm',options);
+end
 % dsift feature for unary options
 expJCAS.makeunary_feats('dsiftext');
 % mode for unary and pairwise terms
 expJCAS.mode = mode; % 0-U 1-(U+P)
+if(pre_unary)
+    % use precomputed unaries from textonboost
+    expJCAS.unary.precomputed=1;
+    expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
+    expJCAS.force_recompute.unary=0;
+end
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
