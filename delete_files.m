@@ -29,5 +29,5 @@ td_feat_file=sprintf(obj.topdown.features.destmatpath,[image_name,'-topdown_feat
 if(exist(td_feat_file,'file')), delete(td_feat_file); end
 
 td_unary_file=sprintf(obj.topdown.unary.destmatpath,[image_name,...
-    sprintf('-topdown_unary-%d',obj.topdown.dictionary.params.size_dictionary));
+    sprintf('-topdown_unary-%d',obj.topdown.dictionary.params.size_dictionary)]);
 if(exist(td_unary_file,'file')), delete(td_unary_file); end

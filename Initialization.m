@@ -34,7 +34,7 @@ if(pre_unary)
     % use precomputed unaries from textonboost
     expJCAS.unary.precomputed=1;
     expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
-    expJCAS.force_recompute.unary=0;
+%    expJCAS.force_recompute.unary=0;
 end
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
@@ -89,6 +89,8 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.max_per_image='none';
     expJCAS.topdown.features.params.dimension=128;
 end
+
+expJCAS.force_recompute.topdown_descriptors=1;
 
 expJCAS.train;
 expJCAS.testing;
