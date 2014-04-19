@@ -13,3 +13,5 @@ toolboxes/svm-struct-matlab-master/*
 results*
 compare_dataset_splits.m
 *_in_parallel.m
+*.sh
+
