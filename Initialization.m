@@ -1,4 +1,4 @@
-function Initialization(mode,db_name,pre_unary,pre_sp)
+function Initialization(db_name,mode,pre_unary,pre_sp)
 % Function that Initializes the framework for dataset db_name under type mode
 % also pass if you want to use precomputed unaries and superpixels or not
 clc; close all;
