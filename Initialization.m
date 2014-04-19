@@ -22,7 +22,7 @@ if(~pre_sp)
     expJCAS.makesp('Quickshift');
 else
     % Using ucm superpixels
-    options.path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
+    options.path=get_dataset_path('voc2012-ucm');
     options.threshold=12;
     expJCAS.makesp('ucm',options);
 end
@@ -89,8 +89,6 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.max_per_image='none';
     expJCAS.topdown.features.params.dimension=128;
 end
-
-expJCAS.force_recompute.topdown_descriptors=1;
 
 expJCAS.train;
 expJCAS.testing;

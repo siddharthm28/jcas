@@ -39,4 +39,10 @@ switch dataset_name
         if(ispc)
             dataset_path='G:/datasets/SCB/benchmark_RELEASE/dataset/';
         end
+    case 'voc2012-ucm'
+        if(ispc)
+            dataset_path='F:/Datasets/ucm2_voc2012/VOC2012/ucm2_uint8/';
+        else
+            dataset_path='/cis/project/vision_sequences/ucm2_voc2012/VOC2012/ucm2_uint8/';
+        end
 end
