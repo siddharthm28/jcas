@@ -33,7 +33,7 @@ expJCAS.mode = mode; % 0-U 1-(U+P)
 if(pre_unary)
     % use precomputed unaries from textonboost
     expJCAS.unary.precomputed=1;
-    expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
+    expJCAS.unary.precomputed_path=get_dataset_path('voc2010-texton');
 %    expJCAS.force_recompute.unary=0;
 end
 % kernel svm for bottom-up unary
