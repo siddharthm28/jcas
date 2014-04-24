@@ -10,8 +10,10 @@ toolboxes/graphAnalysisToolbox-1.0/*
 toolboxes/maxflow-v3.01/*
 toolboxes/spams-matlab/*
 toolboxes/svm-struct-matlab-master/*
+toolboxes/Bk_matlab/*
 results*
 compare_dataset_splits.m
 *_in_parallel.m
 *.sh
-
+get_jcas_results.m
+logFiles/*
