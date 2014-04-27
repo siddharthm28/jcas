@@ -19,9 +19,9 @@ switch dataset_name
         end
     case 'voc2010-texton'
         if(ispc)
-            dataset_path='F:/datasets/voc2010/TBunarylogit1/%s.unary';
+            dataset_path='F:/datasets/voc2010/TBunarylogit1_matfiles/';
         elseif(isunix)
-            dataset_path='/cis/project/vision_sequences/voc2010/TBunarylogit1/%s.unary';
+            dataset_path='/cis/project/vision_sequences/voc2010/TBunarylogit1_matfiles/';
         end
     case 'voc2011-sbd-cars'
         if(ispc)
@@ -31,9 +31,9 @@ switch dataset_name
         end
     case 'voc2011-sbd-cars-subset-texton'
         if(ispc)
-            dataset_path='F:/Datasets/voc2011/TBunary-subset/%s.mat';
+            dataset_path='F:/Datasets/voc2010/car_matfiles/';
         elseif(isunix)
-            dataset_path='/cis/project/vision_sequences/voc2011/TBunary-subset/%s.mat';
+            dataset_path='/cis/project/vision_sequences/voc2010/car_matfiles/';
         end
     case 'voc2011-sbd-all'
         if(ispc)

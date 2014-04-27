@@ -26,8 +26,8 @@ for i=1:length(ids)
         obj.dbparams.image_names{ids(i)}));
     sp_filename = sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',...
         obj.dbparams.image_names{ids(i)}));
-    precomputed_unary_filename = sprintf(obj.unary.precomputed_path,...
-        obj.dbparams.image_names{ids(i)});
+    precomputed_unary_filename = fullfile(obj.unary.precomputed_path,...
+        [obj.dbparams.image_names{ids(i)},'.mat']);
     unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',...
         obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize));
     
@@ -38,20 +38,16 @@ for i=1:length(ids)
         
         tmp=load(img_filename,'img_info'); img_info=tmp.img_info;
         tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        tmp=load(precomputed_unary_filename); 
+        pixel_probability_estimates=tmp.pixel_probability_estimates;
+        pixel_probability_estimates=reshape(pixel_probability_estimates,[img_info.X*img_info.Y,obj.dbparams.ncat]);
+        pixel_probability_estimates=pixel_probability_estimates+eps;
+        pixel_probability_estimates=pixel_probability_estimates./repmat(sum(pixel_probability_estimates,2),1,obj.dbparams.ncat);
 
-        % get the probabilities at the pixel level
-        fid=fopen(precomputed_unary_filename,'r');
-        tmp=fread(fid,inf,'float');
-        fclose(fid);
-        tmp=reshape(tmp,[obj.dbparams.ncat,img_info.Y*img_info.X]);
-        tmp=tmp+eps;
-        pixel_probability_estimates=tmp./repmat(sum(tmp),obj.dbparams.ncat,1);
-        pixel_probability_estimates=pixel_probability_estimates';
-        
         % use the superpixel info to calculate the info at the superpixel
         % level
         spInd=img_sp.spInd; nbsp=img_sp.nbSp;
-        ind=reshape(spInd',numel(spInd),1);
+        ind=reshape(spInd,numel(spInd),1);
         probability_estimates=zeros(nbsp,obj.dbparams.ncat);
         for j=1:nbsp
             probability_estimates(j,:)=mean(pixel_probability_estimates(ind==j,:));
