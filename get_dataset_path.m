@@ -29,6 +29,12 @@ switch dataset_name
         elseif(isunix)
             dataset_path='/cis/project/vision_sequences/voc2011/';
         end
+    case 'voc2011-sbd-cars-subset-texton'
+        if(ispc)
+            dataset_path='F:/Datasets/voc2011/TBunary-subset/%s.mat';
+        elseif(isunix)
+            dataset_path='/cis/project/vision_sequences/voc2011/TBunary-subset/%s.mat';
+        end
     case 'voc2011-sbd-all'
         if(ispc)
             dataset_path='F:/Datasets/voc2011-all/';
