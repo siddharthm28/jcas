@@ -17,7 +17,7 @@ end
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb(db_name);
-% expJCAS.force_recomputation('all');
+expJCAS.force_recomputation('all');
 if(~pre_sp)
     % Default Quickshift superpixels
     expJCAS.makesp('Quickshift');
