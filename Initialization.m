@@ -17,7 +17,7 @@ end
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb(db_name);
-expJCAS.force_recomputation('all');
+% expJCAS.force_recomputation('all');
 if(~pre_sp)
     % Default Quickshift superpixels
     expJCAS.makesp('Quickshift');
@@ -35,8 +35,8 @@ if(pre_unary)
     % use precomputed unaries from textonboost
     expJCAS.unary.precomputed=1;
     expJCAS.unary.precomputed_path=get_dataset_path([db_name,'-texton']);
-    expJCAS.force_recompute.unary=1;
 end
+% expJCAS.force_recompute.unary=1;
 % kernel svm for bottom-up unary
 expJCAS.unary.svm.params.kernel_type = 4; % chi2-rbf kernel
 expJCAS.unary.svm.params.rbf = (expJCAS.unary.svm.params.kernel_type == 4);
