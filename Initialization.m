@@ -1,4 +1,4 @@
-function Initialization(db_name,mode,pre_unary,pre_sp)
+function expJCAS=Initialization(db_name,mode,pre_unary,pre_sp,recompute)
 % Function that Initializes the framework for dataset db_name under type mode
 % also pass if you want to use precomputed unaries and superpixels or not
 clc; close all;
@@ -14,10 +14,12 @@ end
 if(~exist('pre_sp','var') || isempty(pre_sp))
     pre_sp=0;
 end
+if(~exist('recompute','var') || isempty(recompute))
+    recompute=0;
+end
 % Create an object of class jcas.
 expJCAS = jcas();
 expJCAS.makedb(db_name);
-expJCAS.force_recomputation('all');
 if(~pre_sp)
     % Default Quickshift superpixels
     expJCAS.makesp('Quickshift');
@@ -91,6 +93,16 @@ if(expJCAS.mode>=2)
     expJCAS.topdown.features.params.dimension=128;
 end
 
+switch recompute
+    case 0  % reset
+        expJCAS.force_recomputation('reset');
+    case 1  % all    
+        expJCAS.force_recomputation('all');
+    case 2  % unary
+        expJCAS.force_recomputation('unary');
+    case 3  % topdown
+        expJCAS.force_recomputation('topdown');
+end
 expJCAS.train;
 expJCAS.testing;
 

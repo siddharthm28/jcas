@@ -16,6 +16,9 @@ if ~obj.destpathmade
 end
 ids = obj.dbparams.(imgsetname);
 
+% cform1=makecform('srgb2xyz');
+% cform2=makecform('xyz2uvl');
+
 %For each image in image set
 for i=1:length(ids)
     fprintf(sprintf('compute_pairwise_costs: Computed costs for %d of %d images\n',i,length(ids)));
@@ -35,7 +38,11 @@ for i=1:length(ids)
         
 
         % Compute the pairwise terms with LUV distance
-        I_Luv = [reshape(vl_xyz2luv(vl_rgb2xyz(img_sp.Iseg)),img_info.X*img_info.Y,3) reshape(img_sp.spInd,img_info.X*img_info.Y,1)];
+        tmp=vl_xyz2luv(vl_rgb2xyz(img_sp.Iseg));    % rgb2luv using vlfeat
+%         tmp(isnan(tmp(:)))=0;
+%         tmp=applycform(applycform(img_sp.Iseg,cform1),cform2); % rgb2uvl using matlab
+        I_Luv = [reshape(tmp,img_info.X*img_info.Y,3) reshape(img_sp.spInd,img_info.X*img_info.Y,1)];
+        I_Luv(isnan(I_Luv(:)))=0;
         [~,index] = unique(I_Luv(:,4));
         I_Luv = I_Luv(index,1:3);
         pairwise = img_sp.length_common_boundary./(1+(sum((I_Luv(img_sp.edges(:,1),:) - I_Luv(img_sp.edges(:,2),:)).^2,2)).^0.5);

@@ -1,4 +1,4 @@
-function Compute_Statistics_with_Bootstrapping(obj,path)
+function op=Compute_Statistics_with_Bootstrapping(obj,path)
 %Given the testing set directory compute statistics for the results
 %path should finish with %s.mat and usually obj.test.destmatpath. This
 %function computes only the Intersection over Union score TP/(TP+FP+FN)
@@ -74,6 +74,7 @@ fprintf('Intersection by Union (per image) \n');
 display_results2(rc2_P,ci_P);
 
 save(stat_file,'cmatrixSP','cmatrixP');
+op=r_int_P;
 end
 
 function [rc2,r_int]=compute_scores(cmatrix)
