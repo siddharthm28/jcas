@@ -87,7 +87,7 @@ switch db_name
                 % total number of categories
                 obj.dbparams.ncat = 4;
                 % image format
-                obj.dbparams.format = '.image.png';
+                obj.dbparams.format = '.png';
             case 'voc2010'
                 % relevant paths
                 dataset_path=get_dataset_path('voc2010');

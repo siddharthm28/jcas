@@ -38,8 +38,18 @@ clear all; clc; close all;
 %         use_unary,use_sp,recompute);
 % end
 % save('results/dsift-quickshift.mat','jcas_objects');
-num_experiments=10;
-jcas_objects=cell(1,num_experiments);
-for i=1:num_experiments
-    jcas_objects{i}=Initialization('inria-graz',1,0,0,1);
+
+% % run experiments to check if bootstrapping works or not
+% num_experiments=10;
+% jcas_objects=cell(1,num_experiments);
+% for i=1:num_experiments
+%     jcas_objects{i}=Initialization('inria-graz',1,0,0,1);
+% end
+
+% run all experiments on inria-graz data
+modes=[0,1,2,7,6];
+jcas_objects=cell(1,length(modes));
+for i=1:length(modes)
+    jcas_objects{i}=Initialization('inria-graz',modes(i),0,0,0);
 end
+save('results/inria-graz-experiments','jcas_objects');
