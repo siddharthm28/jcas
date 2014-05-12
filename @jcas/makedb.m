@@ -29,7 +29,7 @@ switch db_name
         % path to the images
         dataset_path=get_dataset_path('inria-graz');
         obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
-        obj.dbparams.format = '.image.png';
+        obj.dbparams.format = '.png';
         % path to the ground truth labels stored in a specific format
         obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
         % path to the results
