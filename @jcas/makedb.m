@@ -11,7 +11,7 @@ obj.dbparams.name=db_name;
 
 switch db_name
     case 'graz02'
-        obj.dbparams.image_names=arrayfun(@(x) sprintf('%d.png',x),1:900,'uniformoutput',false);
+        obj.dbparams.image_names=arrayfun(@(x) sprintf('%d',x),1:900,'uniformoutput',false);
         obj.dbparams.num_images=900;
         obj.dbparams.ncat=4;
         obj.dbparams.training=(1:2:900);
