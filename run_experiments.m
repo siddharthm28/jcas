@@ -54,10 +54,18 @@ clear all; clc; close all;
 % end
 % save('results/inria-graz-experiments','jcas_objects');
 
-% run all experiments on inria-graz data with old splits
+% % run all experiments on inria-graz data with old splits
+% modes=[0,1,2,7,6];
+% jcas_objects=cell(1,length(modes));
+% for i=1:length(modes)
+%     jcas_objects{i}=Initialization('inria-graz-old-splits',modes(i),0,0,0);
+% end
+% save('results/inria-graz-old-splits-experiments','jcas_objects');
+
+% run all experiments on graz02 data with old splits
 modes=[0,1,2,7,6];
 jcas_objects=cell(1,length(modes));
 for i=1:length(modes)
-    jcas_objects{i}=Initialization('inria-graz-old-splits',modes(i),0,0,0);
+    jcas_objects{i}=Initialization('graz02',modes(i),0,0,0);
 end
-save('results/inria-graz-old-splits-experiments','jcas_objects');
+save('results/graz02-experiments','jcas_objects');

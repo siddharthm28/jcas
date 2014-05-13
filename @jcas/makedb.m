@@ -10,6 +10,21 @@ function makedb(obj,db_name)
 obj.dbparams.name=db_name;
 
 switch db_name
+    case 'graz02'
+        tmp=num2cell(1:900);
+        obj.dbparams.image_names=cellfun(@(x) [x,'.png'],tmp,'uniformoutput',false);
+        obj.dbparams.num_images=900;
+        obj.dbparams.ncat=4;
+        obj.dbparams.training=(1:2:900);
+        obj.dbparams.test=(2:2:900);
+        dataset_path=get_dataset_path('graz02');
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
+        obj.dbparams.format = '.png';
+        % path to the ground truth labels stored in a specific format
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
+        % path to the results
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
     case 'inria-graz-old-splits'
         % image names
         obj.dbparams.image_names=cell(1,900);

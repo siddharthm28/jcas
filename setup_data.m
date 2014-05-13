@@ -12,6 +12,13 @@ img_path=fullfile(dataset_path,'img'); vl_xmkdir(img_path);
 gt_path=fullfile(dataset_path,'gt'); vl_xmkdir(gt_path);
 seg_path=fullfile(dataset_path,'seg'); vl_xmkdir(seg_path);
 switch dataset_name
+    case 'graz02'
+        for i=1:900
+            fprintf('i: %d \n',i);
+            seg_i=imread(fullfile(gt_path,sprintf('%d.png',i)));
+%             seg_i=imfill(seg_i);
+            save(fullfile(seg_path,sprintf('%d.mat',i)),'seg_i');
+        end
     case 'inria-graz'
         fprintf('Inria Graz dataset \n');
         % do for these three classes

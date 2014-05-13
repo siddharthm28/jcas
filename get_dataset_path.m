@@ -1,6 +1,12 @@
 function dataset_path=get_dataset_path(dataset_name)
 % function used to retrieve the path
 switch dataset_name
+    case 'graz02'
+        if(ispc)
+            dataset_path='F:/Datasets/Graz_Object_Rec_Database/';
+        elseif(isunix)
+            dataset_path='/cis/project/vision_sequences/Graz_Object_Rec_Database/';
+        end
     case 'inria-graz'
         if(ispc)
             dataset_path='F:/Datasets/InriaGraz/';
