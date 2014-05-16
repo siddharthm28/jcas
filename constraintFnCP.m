@@ -805,7 +805,7 @@ switch obj.mode
             E=E+dot(betaTdb,labelPres);
             
             %Latent part
-            %E=E+sum(sum(clusterCenters(:,z).*D,1));
+            E=E+sum(sum(clusterCenters(:,z).*D,1));
             
             %%%%%% End Energy computation
             
@@ -838,7 +838,7 @@ switch obj.mode
                             labelPres(l)=ismember(l,propSeg(IP));
                         end
                         Eafter=Eafter+dot(labelPres,betaTdb);
-                        %Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
+                        Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
                         
                         if Eafter<Ebefore
                             yMostViolatedLabel=propSeg;
@@ -856,7 +856,7 @@ switch obj.mode
                     labelPres(l)=ismember(l,yMostViolatedLabel(IP));
                 end
                 Ebefore=Ebefore+dot(labelPres,betaTdb);
-                %Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
+                Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
             end
             %param.zhat=z;
             yMostViolatedLabel=[yMostViolatedLabel(:);z(:)];
