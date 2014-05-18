@@ -10,6 +10,21 @@ function makedb(obj,db_name)
 obj.dbparams.name=db_name;
 
 switch db_name
+	case 'test_bertrand'
+		obj.dbparams.image_names=arrayfun(@(x) sprintf('%d',x),1:900,'uniformoutput',false);
+        obj.dbparams.num_images=900;
+        obj.dbparams.ncat=4;
+        obj.dbparams.training=[1 401 601 701];
+        obj.dbparams.test=[2 400 600 700];
+        dataset_path=get_dataset_path('graz02');
+        obj.dbparams.imgpath = [fullfile(dataset_path,'img'),'/'];
+        obj.dbparams.format = '.png';
+        % path to the ground truth labels stored in a specific format
+        obj.dbparams.segpath = strrep(fullfile(dataset_path,'seg/%s.mat'),'\','/');
+        % path to the results
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        vl_xmkdir(fileparts(obj.dbparams.destmatpath));
+		
     case 'graz02'
         obj.dbparams.image_names=arrayfun(@(x) sprintf('%d',x),1:900,'uniformoutput',false);
         obj.dbparams.num_images=900;
