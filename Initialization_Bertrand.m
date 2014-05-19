@@ -18,7 +18,7 @@ expJCAS=jcas();
 %Main folder (that contains for a given database all the results and the
 %files that stores all the previous experiments parameters.
 
-expJCAS.makedb('test_bertrand');
+expJCAS.makedb('graz02');
 %expJCAS.dbparams.destmatpath='/Users/Bertrand/Documents/X/Stage3A/DB/GrazCis/results/';
 
 %expJCAS.dbparams.destmatpath=['/cis/home/luca/jcas_new/Graz/results/%s.mat'];
