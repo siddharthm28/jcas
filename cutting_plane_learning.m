@@ -147,7 +147,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             %Latent+structure
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
             obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary+...
-            obj.topdown.dictionary.params.size_dictionary*(obj.topdown.dictionary.params.size_dictionary-1)/2;
+            obj.topdown.dictionary.params.size_dictionary^2;%*(obj.topdown.dictionary.params.size_dictionary-1)/2;
             param.w0=zeros(1,param.dimension);
             param.w0(1)=1;
             param.w0(2)=1;
