@@ -824,11 +824,9 @@ switch obj.mode
             success2=1;
             success=1;
             while success2==1 && (iter2)<=maxIter
-            fprintf('Entree boucle success 2\n')
                 success2=0;
                 iter2=iter2+1;
                 while success==1 && (iter)<=maxIter
-                fprintf('Entree boucle success 1\n')
                     success=0;
                     iter=iter+1;
                     labperm=randperm(obj.dbparams.ncat);
@@ -857,6 +855,7 @@ switch obj.mode
                             Ebefore=Eafter;
                             success=1;
                             success2=1;
+                            fprintf('Maj %f -> %f',Ebefore,Eafter)
                         end
                     end
                 end
