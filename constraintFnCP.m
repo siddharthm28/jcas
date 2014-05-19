@@ -653,6 +653,7 @@ switch obj.mode
             iter=0;
             iter2=0;
             success2=1;
+            success=1;
             while success2==1 && (iter)<=maxIter
                 success2=0;
                 while success==1 && (iter+iter2)<=maxIter
@@ -820,6 +821,7 @@ switch obj.mode
             iter=0;
             iter2=0;
             success2=1;
+            success=1;
             while success2==1 && (iter2)<=maxIter
                 success2=0;
                 while success==1 && (iter+iter2)<=maxIter
