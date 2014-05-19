@@ -429,7 +429,7 @@ switch obj.mode
         
         wordsPairwiseMat=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
 		
-        E(wordOffset+1:end)=wordsPairwiseMat(:)
+        E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd)
         
         E=sparse(E);           
 

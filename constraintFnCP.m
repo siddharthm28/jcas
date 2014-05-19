@@ -805,7 +805,12 @@ switch obj.mode
             E=E+dot(betaTdb,labelPres);
             
             %Latent part
-            E=E+sum(sum(clusterCenters(:,z).*D,1));
+            %E=E+sum(sum(clusterCenters(:,z).*D,1));
+            
+        	%LAtent structure
+        	%[i,j,s]=find(adj)        
+       		%wordsPairwisePot=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
+        	%E=E+sum(sum(wordsPairwise.*wordsPairwisePot))
             
             %%%%%% End Energy computation
             
@@ -815,7 +820,7 @@ switch obj.mode
             iter=0;
             iter2=0;
             success2=1;
-            while success2==1 && (iter)<=maxIter
+            while success2==1 && (iter2)<=maxIter
                 success2=0;
                 while success==1 && (iter+iter2)<=maxIter
                     success=0;
@@ -838,8 +843,9 @@ switch obj.mode
                             labelPres(l)=ismember(l,propSeg(IP));
                         end
                         Eafter=Eafter+dot(labelPres,betaTdb);
-                        Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
-                        
+                        %Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
+                        %wordsPairwisePot=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
+        				%Eafter=Eafter+sum(sum(wordsPairwise.*wordsPairwisePot))
                         if Eafter<Ebefore
                             yMostViolatedLabel=propSeg;
                             Ebefore=Eafter;
@@ -856,7 +862,9 @@ switch obj.mode
                     labelPres(l)=ismember(l,yMostViolatedLabel(IP));
                 end
                 Ebefore=Ebefore+dot(labelPres,betaTdb);
-                Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
+                %Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
+                %wordsPairwisePot=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
+        		%E=E+sum(sum(wordsPairwise.*wordsPairwisePot))
             end
             %param.zhat=z;
             yMostViolatedLabel=[yMostViolatedLabel(:);z(:)];
