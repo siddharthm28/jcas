@@ -425,11 +425,11 @@ switch obj.mode
 		nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
         load(nn_filename);
         
-        [i,j,s]=find(adj)
+        [i,j,s]=find(adj);
         
-        wordsPairwiseMat=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
+        wordsPairwiseMat=full(sparse(z(i),z(j),ones(size(i)),size(topdown_unary,2),size(topdown_unary,2)));
 		
-        E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd)
+        E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd);
         
         E=sparse(E);           
 
