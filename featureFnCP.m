@@ -363,8 +363,8 @@ switch obj.mode
         tmp=load(unary_filename,'unary'); unary=tmp.unary;
         
         nbSp=size(unary,1);
-            z=y(nbSp+1:end);
-            y=y(1:nbSp);       
+    	z=y(nbSp+1:end);
+        y=y(1:nbSp);       
         if sum(y(:)==0)>0
             ind_NoVoid=find(y>0);
             ind_void=setdiff(1:nbSp,ind_NoVoid);
@@ -417,11 +417,19 @@ switch obj.mode
         
         %Latent 
         for k=1:size(topdown_unary,2)
-        E(latentOffset+1+(k-1)*obj.topdown.features.params.dimension:latentOffset+k*obj.topdown.features.params.dimension)=...
-            sum(D(:,z==k),2);
+        	E(latentOffset+1+(k-1)*obj.topdown.features.params.dimension:latentOffset+k*obj.topdown.features.params.dimension)=...
+            	sum(D(:,z==k),2);
         end
         
-        E(wordOffset+1:end)=sparse();
+		nn=obj.topdown.latent.params.n_neighbor;
+		nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
+        load(nn_filename);
+        
+        [i,j,s]=find(adj)
+        
+        wordsPairwiseMat=full(sparse(z(i),z(j),ones(length(i)),size(topdown_unary,2),size(topdown_unary,2)))
+		
+        E(wordOffset+1:end)=wordsPairwiseMat(:)
         
         E=sparse(E);           
 
