@@ -54,7 +54,7 @@ fprintf('Intersection by Union (per image) \n');
 display_results(rc2_P);
 
 % Bootstrapping parameters
-B=1e3; alpha=0.05;
+B=1e3; alpha=0.3173;
 % compute the I/U score at the superpixel level with bootstrapping
 [rc2_SP,ci_SP,r_int_SP,ci_int_SP]=compute_scores_with_bootstrapping(cmatrixSP,B,alpha);
 % compute the I/U score at the pixel level with bootstrapping
