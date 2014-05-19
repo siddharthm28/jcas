@@ -2,7 +2,7 @@ function L=lossFnCP(obj,parm,y,yhat)
 % y GT and yhat estimate
 
 %Account latent struct
-if obj.mode==7
+if obj.mode>=7
     yhat=yhat(1:length(y));
 end
 switch obj.optimisation.params.lossFnCP_name
