@@ -73,6 +73,9 @@ classdef jcas < handle
         %Flag for makedestpath
         destpathmade=0;
         
+        %Initialization of hte model
+        init=struct();
+        
 %         %Preprocessing
 %         preprocessing=struct();
         

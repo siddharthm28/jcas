@@ -421,8 +421,16 @@ switch obj.mode
             sum(D(:,z==k),2);
         end
         
-        E(wordOffset+1:end)=sparse();
+		nn=obj.topdown.latent.params.n_neighbor;
+		nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
+        load(nn_filename);
         
+        [i,j,s]=find(adj);
+        
+        wordsPairwiseMat=full(sparse(z(i),z(j),ones(size(i)),size(topdown_unary,2),size(topdown_unary,2)));
+
+        E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd);
+                
         E=sparse(E);           
 
     otherwise

@@ -1,5 +1,13 @@
 function cutting_plane_learning(obj)
 
+if obj.init.given==0
+	init=struct();
+	init.UP=rand(1,2); %Unary + pairwise
+	init.labelcost=rand(1,obj.dbparams.ncat);
+	init.alphaMat=rand(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
+else
+	init=obj.init.vals;
+end
 
 if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath\n')
@@ -35,7 +43,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
         case 1
             param.dimension=2;
             %arg
-            param.w0=ones(1,param.dimension);
+            param.w0=init.UP;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -47,6 +55,9 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             %alpha_k,l h_k,l + beta_l delta(l present in interest points )
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
             param.w0=zeros(1,param.dimension);
+            param.w0(1:2)=init.UP;
+            param.w0(3:2+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary)=init.alphaMat;
+            param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -58,7 +69,10 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             %Unary + pairwise + Linear classifier for TD potential \sum
             %alpha_k,l h_k,l + beta_l delta(l present in labeling )
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
-            param.w0=ones(1,param.dimension);
+            param.w0=zeros(1,param.dimension);
+            param.w0(1:2)=init.UP;
+            param.w0(3:2+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary)=init.alphaMat;
+            param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -70,7 +84,10 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             %Unary + pairwise + Linear classifier for TD potential \sum
             %alpha_k,l h_k,l + beta_l *||h_l||
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
-            param.w0=ones(1,param.dimension);
+            param.w0=zeros(1,param.dimension);
+            param.w0(1:2)=init.UP;
+            param.w0(3:2+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary)=init.alphaMat;
+            param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -80,7 +97,9 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
         case 5
             %Unary + pairwise  + beta_l delta(l present)
             param.dimension=2+obj.dbparams.ncat;
-            param.w0=ones(1,param.dimension);
+            param.w0=zeros(1,param.dimension);
+            param.w0(1:2)=init.UP;
+            param.w0(3:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=svm_struct_mod(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -114,7 +133,9 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             end
             
             param.dimension=2+obj.dbparams.ncat*size(training_histograms,2)+obj.dbparams.ncat;
-            param.w0=ones(1,param.dimension);
+            param.w0=rand(1,param.dimension);
+            param.w0(1:2)=init.UP;
+            param.w0(end-obj.dbparams.ncat+1:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             param.tHistograms=training_histograms;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
@@ -127,8 +148,9 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
             obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary;
             param.w0=zeros(1,param.dimension);
-            param.w0(1)=1;
-            param.w0(2)=1;
+            param.w0(1:2)=init.UP;
+            param.w0(3:2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary))=init.alphaMat;
+            param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1))=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             param.tmp.ncat=obj.dbparams.ncat;
             param.tmp.nwords=obj.topdown.dictionary.params.size_dictionary;
@@ -149,8 +171,9 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary+...
             obj.topdown.dictionary.params.size_dictionary*(obj.topdown.dictionary.params.size_dictionary-1)/2;
             param.w0=zeros(1,param.dimension);
-            param.w0(1)=1;
-            param.w0(2)=1;
+            param.w0(1:2)=init.UP;
+            param.w0(3:2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary))=init.alphaMat;
+            param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1))=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             param.nbIterLatent=20;
             %Store ideces for pairwise words

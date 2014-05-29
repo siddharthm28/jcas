@@ -69,9 +69,9 @@ if ((~exist(training_set_svm_filename, 'file') || obj.force_recompute.trainingse
     training_set = training_set(:,1:ctr-1);
 
     for i=1:obj.dbparams.ncat
-        fprintf(sprintf('construct_training_set_for_svm_on_histograms: Collected %d histograms for class %d \n',num_hists_per_class(i),i));
+        fprintf('construct_training_set_for_svm_on_histograms: Collected %d histograms for class %d \n',num_hists_per_class(i),i);
     end
-    fprintf(sprintf('construct_training_set_for_svm_on_histograms: Collected a total of %d histograms \n' ,ctr));
+    fprintf('construct_training_set_for_svm_on_histograms: Collected a total of %d histograms \n' ,ctr);
 
     save(training_set_svm_filename,'training_set','num_hists_per_class');
     

@@ -32,7 +32,7 @@ switch obj.mode
         alphaMat=reshape(alphaTd,[nwords,ncat]);
         clusterCenters=reshape(model.w(latentOffset+1:wordsOffset),[featdim,nwords]);
         wordsPairwise=zeros(obj.topdown.dictionary.params.size_dictionary,obj.topdown.dictionary.params.size_dictionary);
-        wordsPairwise(wordsInd)=model.w(wordOffset+1:end);
+        wordsPairwise(wordsInd)=model.w(wordsOffset+1:end);
         wordsPairwise=wordsPairwise+wordsPairwise';
         [X,Y] = size(img_sp.spInd);
         F=feat_topdown.locations;

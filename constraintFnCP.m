@@ -563,10 +563,10 @@ switch obj.mode
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
-        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
-        tmp=load(unary_filename,'unary'); unary=tmp.unary;
-        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
+        load(sp_filename,'img_sp');
+        load(pairwise_filename,'pairwise')
+        load(unary_filename,'unary')
+        load(tdfeat_filename,'feat_topdown');
         gt_h=y(1:img_sp.nbSp);
         z=y(img_sp.nbSp+1:end);
         
@@ -599,12 +599,9 @@ switch obj.mode
         pairwiseC=sparse(wBu(2)*pairwise);
         
         %%%%%%%%% INFERENCE %%%%%%%%
-        
-        %Stop condition if no possible improvement
-        success=1;
         %Data preload
-        [~,initSeg]=min(unaryCI,[],2);
-        yMostViolatedLabel=initSeg';
+        [dum,yMostViolatedLabel]=min(unaryCI',[],1);
+        
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
         unaryC=unaryCI+topdown_unary*alphaMat;
@@ -617,8 +614,7 @@ switch obj.mode
             betaTdb=betaTd;
             nbSp=size(unary,1);
             %Energy
-            E=0;
-            E=E+sum(unaryC((1:size(unary,1))+(yMostViolatedLabel-1)*size(unary,1)));
+            E=sum(unaryC([1:size(unary,1)]+(yMostViolatedLabel-1)*size(unary,1)));
             edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
             E=E+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
             %labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
@@ -650,12 +646,13 @@ switch obj.mode
             
             Ebefore=E;
             maxIter=100;
-            iter=0;
             iter2=0;
             success2=1;
-            while success2==1 && (iter)<=maxIter
+            while success2==1
                 success2=0;
-                while success==1 && (iter+iter2)<=maxIter
+                success=1;
+                iter=0;
+                while success==1 && iter<=maxIter
                     success=0;
                     iter=iter+1;
                     labperm=randperm(obj.dbparams.ncat);
@@ -668,7 +665,7 @@ switch obj.mode
                         
                         %Compute Energy
                         Eafter=0;
-                        Eafter=Eafter+sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(propSeg(:))')));
+                        Eafter=Eafter+sum(unaryC([1:size(unary,1)]+(propSeg-1)*size(unary,1)));
                         Eafter=Eafter+sum(edge_cost((propSeg(img_sp.edges(:,1))~=propSeg(img_sp.edges(:,2)))));
                         for l=1:obj.dbparams.ncat
                             %  v=sum(topdown_unary(propSeg'==l,:),1);
@@ -677,7 +674,6 @@ switch obj.mode
                         end
                         Eafter=Eafter+dot(labelPres,betaTdb);
                         %Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
-                        
                         if Eafter<Ebefore
                             yMostViolatedLabel=propSeg;
                             Ebefore=Eafter;
@@ -686,22 +682,21 @@ switch obj.mode
                         end
                     end
                 end
-                [topdown_unary,~,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
+                [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp);
                 unaryC=unaryCI+topdown_unary*alphaMat;
-                Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
+                Ebefore=sum(unaryC([1:size(unary,1)]+(yMostViolatedLabel-1)*size(unary,1)));
                 Ebefore=Ebefore+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
                 for l=1:obj.dbparams.ncat
                     labelPres(l)=ismember(l,yMostViolatedLabel(IP));
                 end
                 Ebefore=Ebefore+dot(labelPres,betaTdb);
-                %Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
             end
             %param.zhat=z;
             yMostViolatedLabel=[yMostViolatedLabel(:);z(:)];
             optsvm=model;
-            save(sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode)),'optsvm');
-            
+            save(sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode)),'optsvm');            
         end
+        
     case 8
         %Latent + Linear TD with CRF on words
         latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
@@ -716,14 +711,14 @@ switch obj.mode
         unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
         sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
         tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
-        tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
+        load(sp_filename,'img_sp');
         %obj.topdown.latent.params.n_neighbor
-        tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
-        tmp=load(unary_filename,'unary'); unary=tmp.unary;
-        tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
+        load(pairwise_filename,'pairwise')
+        load(unary_filename,'unary')
+        load(tdfeat_filename,'feat_topdown');
         nn=obj.topdown.latent.params.n_neighbor;
         nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
-        load(nn_filename);  % COME BACK TO THIS LATER AND CORRECT IT
+        load(nn_filename);
         gt_h=y(1:img_sp.nbSp);
         z=y(img_sp.nbSp+1:end);
         
@@ -763,10 +758,9 @@ switch obj.mode
         %%%%%%%%% INFERENCE %%%%%%%%
         
         %Stop condition if no possible improvement
-        success=1;
         %Data preload
-        [~,initSeg]=min(unaryCI,[],2);
-        yMostViolatedLabel=initSeg';
+        [dum,yMostViolatedLabel]=min(unaryCI',[],1);
+        
         %Initialize words
         [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
         unaryC=unaryCI+topdown_unary*alphaMat;
@@ -805,19 +799,20 @@ switch obj.mode
             E=E+dot(betaTdb,labelPres);
             
             %Latent part
-            E=E+sum(sum(clusterCenters(:,z).*D,1));
+            %E=E+sum(sum(clusterCenters(:,z).*D,1));
             
             %%%%%% End Energy computation
             
             
             Ebefore=E;
             maxIter=100;
-            iter=0;
             iter2=0;
             success2=1;
-            while success2==1 && (iter)<=maxIter
+            while success2==1
                 success2=0;
-                while success==1 && (iter+iter2)<=maxIter
+                iter=0;
+                success=1;
+                while success==1 && iter<=maxIter
                     success=0;
                     iter=iter+1;
                     labperm=randperm(obj.dbparams.ncat);
@@ -838,7 +833,7 @@ switch obj.mode
                             labelPres(l)=ismember(l,propSeg(IP));
                         end
                         Eafter=Eafter+dot(labelPres,betaTdb);
-                        Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
+                        %Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
                         
                         if Eafter<Ebefore
                             yMostViolatedLabel=propSeg;
@@ -848,7 +843,7 @@ switch obj.mode
                         end
                     end
                 end
-                [topdown_unary,~,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
+                [topdown_unary,topdown_count,z]=infer_words(yMostViolatedLabel,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
                 unaryC=unaryCI+topdown_unary*alphaMat;
                 Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(yMostViolatedLabel(:))')));
                 Ebefore=Ebefore+sum(edge_cost((yMostViolatedLabel(img_sp.edges(:,1))~=yMostViolatedLabel(img_sp.edges(:,2)))));
@@ -856,7 +851,6 @@ switch obj.mode
                     labelPres(l)=ismember(l,yMostViolatedLabel(IP));
                 end
                 Ebefore=Ebefore+dot(labelPres,betaTdb);
-                Ebefore=Ebefore+sum(sum(clusterCenters(:,z).*D,1));
             end
             %param.zhat=z;
             yMostViolatedLabel=[yMostViolatedLabel(:);z(:)];

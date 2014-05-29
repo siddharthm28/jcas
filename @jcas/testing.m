@@ -85,6 +85,10 @@ if obj.mode>=2;
     compute_topdown_unaries(obj,'test');
 end
 
+if obj.mode>=8
+    compute_IP_adj(obj,'test')
+end
+
 fprintf('Running inference on test images \n');
 obj.inference('test');
 sp_label_to_pixlabel(obj,'test');

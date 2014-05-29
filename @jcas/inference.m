@@ -513,7 +513,7 @@ switch obj.mode
     case 7
         latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
         model_filename=sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode));
-        tmp=load(model_filename,'optsvm'); optsvm=tmp.optsvm;
+        load(model_filename,'optsvm');
         wBu=optsvm.w(1:2);
         alphaTd=optsvm.w(3:latentOffset-obj.dbparams.ncat);
         alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
@@ -525,129 +525,291 @@ switch obj.mode
         end
         
         for i=1:length(ids)
+        	fprintf('DOing inference on image %i over %i\n',i,length(ids))
+        	x=obj.dbparams.image_names{ids(i)};
             segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
-            pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',obj.dbparams.image_names{ids(i)}));
-            unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize));
-            sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',obj.dbparams.image_names{ids(i)}));
-            tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',obj.dbparams.image_names{ids(i)}));
-            tmp=load(tdfeat_filename,'feat_topdown'); feat_topdown=tmp.feat_topdown;
-            tmp=load(sp_filename,'img_sp'); img_sp=tmp.img_sp;
-            tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
-            tmp=load(unary_filename,'unary'); unary=tmp.unary;
-            
-            %Compute topdown Energy map labelHist
+        	pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
+        	unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
+        	sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
+        	tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
+        	load(sp_filename,'img_sp');
+        	load(pairwise_filename,'pairwise')
+        	load(unary_filename,'unary')
+			load(tdfeat_filename,'feat_topdown');
+        
+			%Unary matrix for Topdown
+			alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
+		
+			%TD Features
+			[X,Y] = size(img_sp.spInd);
+			F=feat_topdown.locations;
+			D=double(feat_topdown.descriptors);
+			locations = X*(round(F(1,:))-1)+round(F(2,:));
+		
+			%Perform Graph cuts to find most violated constraint.
+			unaryCI=wBu(1)*unary;
+			pairwiseC=sparse(wBu(2)*pairwise);
+		
+			%%%%%%%%% INFERENCE %%%%%%%%
+			%Data preload
+			[dum,seg]=min(unaryCI',[],1);
+		
+			%Initialize words
+			[topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp);
+			unaryC=unaryCI+topdown_unary*alphaMat;
+			%Interest points extraction
+			IP=find(topdown_count>0);
+			nbIP=topdown_count(IP);
 
-            %Coeff of entries in topdown_unary
-            %TD Features
-            [X,Y] = size(img_sp.spInd);
-            F=feat_topdown.locations;
-            D=double(feat_topdown.descriptors);
-            locations = X*(round(F(1,:))-1)+round(F(2,:));
-            topdown_count = full(sparse(img_sp.spInd(locations), ones(length(locations),1), ones(length(locations),1), img_sp.nbSp,1));
-            %Perform Graph cuts to find most violated constraint.
-            unary=wBu(1)*unary;
-            pairwise=sparse(wBu(2)*pairwise);
-            
-            %%%%%%%%% INFERENCE %%%%%%%%
-            %Stop condition if no possible improvement
-            success=1;
-            IP=find(topdown_count>0);
-            nbIP=topdown_count(IP);
-            %Data preload
-            [~,initSeg]=min(unary,[],2);
-            seg=initSeg';
-            [topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp);
-            unaryC=unary+topdown_unary*alphaMat;
-            if (optsvm.w(2)>0)
-                %Rescale costs if neg
-                nbSp=size(unary,1);
-                
-                %Energy
-                E=sum(unaryC((1:size(unary,1))+(seg-1)*size(unary,1)));
-                edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
-                E=E+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
-                %labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
-                labelPres=zeros(obj.dbparams.ncat,1);
-                
-                for l=1:obj.dbparams.ncat
-                    % v=sum(topdown_unary(seg'==l,:),1);
-                    % labelHist(:,l)=v;
-                    labelPres(l)=ismember(l,seg(IP));
-                end
-                
-                %Ordering : l=1, k=1, k=2 ,..., k=size td dict, l=2 etc... for
-                %alphas_(l,k), then beta_l
-                %   E(3:3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat)-1) = ...
-                %      labelHist(:);
-                
-                %Then betas
-                %normLabelHist=sum(labelHist,1); % (1,nb labels)
-                
-                
-                
-                E=E+dot(betaTd,labelPres);
-                
-                %Dic cost
-                %E=E+sum(sum(clusterCenters(:,z).*D,1));
-                
-                %%%%%% End Energy computation
-                Ebefore=E;
-                maxIter=100;
-                iter=0;
-                success2=1;
-                while success2==1 && iter<=maxIter
-                    success2=0;
-                    while success==1 && iter<=maxIter
-                        success=0;
-                        iter=iter+1;
-                        fprintf('Iter %d\n',iter);
-                        labperm=randperm(obj.dbparams.ncat);
-                        for ilab=1:obj.dbparams.ncat
-                            
-                            %Pick one label
-                            chosenLabel=labperm(ilab);
-                            
-                            %New segmentation
-                            propSeg=alpha_expansion_labelcost(chosenLabel,seg,img_sp,unary,edge_cost,betaTd,IP,nbIP);
-                            
-                            
-                            %Compute Energy
-                            labelPres=zeros(obj.dbparams.ncat,1);
-                            Eafter=sum(unaryC((1:size(unary,1))+(propSeg-1)*size(unary,1)));
-                            Eafter=Eafter+sum(edge_cost((propSeg(img_sp.edges(:,1))~=propSeg(img_sp.edges(:,2)))));
-                            for l=1:obj.dbparams.ncat
-                                % v=sum(topdown_unary(propSeg'==l,:),1);
-                                % labelHist(:,l)=v;
-                                labelPres(l)=ismember(l,propSeg(IP));
-                            end
-                            Eafter=Eafter+dot(betaTd,labelPres);
-                            %Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
-                            
-                            if Eafter<Ebefore
-                                seg=propSeg;
-                                fprintf('Jump from %f to %f\n',Ebefore,Eafter);
-                                Ebefore=Eafter;
-                                success=1;
-                                success2=1;
-                            end
-                        end
-                    end
-                    [topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp);
-                    unaryC=unary+topdown_unary*alphaMat;
-                    Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(seg(:))')));
-                    Ebefore=Ebefore+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
-                    for l=1:obj.dbparams.ncat
-                        labelPres(l)=ismember(l,seg(IP));
-                    end
-                    Ebefore=Ebefore+dot(labelPres,betaTd);
-                end
+			if (optsvm.w(2)>0)
+				%Rescale costs if neg
+				betaTdb=betaTd;
+				nbSp=size(unary,1);
+				%Energy
+				E=sum(unaryC([1:size(unary,1)]+(seg-1)*size(unary,1)));
+				edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
+				E=E+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
+				%labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
+				labelPres=zeros(obj.dbparams.ncat,1);
+			
+				for l=1:obj.dbparams.ncat
+					%v=sum(topdown_unary(seg'==l,:),1);
+					%labelHist(:,l)=v;
+					labelPres(l)=ismember(l,seg(IP));
+				end
+			
+				%Ordering : l=1, k=1, k=2 ,..., k=size td dict, l=2 etc... for
+				%alphas_(l,k), then beta_l
+				%Already in unaryC
+				%E=E+dot(alphaTdb,labelHist(:));
+			
+				%Then betas
+				%normLabelHist=sum(labelHist,1); % (1,nb labels)
+			
+			
+			
+				E=E+dot(betaTdb,labelPres);
+			
+				%Latent part
+				%E=E+sum(sum(clusterCenters(:,z).*D,1));
+			
+				%%%%%% End Energy computation
+			
+			
+				Ebefore=E;
+				maxIter=100;
+				iter2=0;
+				success2=1;
+				while success2==1
+					success2=0;
+					success=1;
+					iter=0;
+					while success==1 && iter<=maxIter
+						success=0;
+						iter=iter+1;
+						labperm=randperm(obj.dbparams.ncat);
+						for ilab=1:obj.dbparams.ncat
+							%Pick one label
+							chosenLabel=labperm(ilab);
+						
+							%New segmentation
+							propSeg=alpha_expansion_labelcost(chosenLabel,seg,img_sp,unaryC,edge_cost,betaTdb,IP,nbIP);
+						
+							%Compute Energy
+							Eafter=0;
+							Eafter=Eafter+sum(unaryC([1:size(unary,1)]+(propSeg-1)*size(unary,1)));
+							Eafter=Eafter+sum(edge_cost((propSeg(img_sp.edges(:,1))~=propSeg(img_sp.edges(:,2)))));
+							for l=1:obj.dbparams.ncat
+								%  v=sum(topdown_unary(propSeg'==l,:),1);
+								% labelHist(:,l)=v;
+								labelPres(l)=ismember(l,propSeg(IP));
+							end
+							Eafter=Eafter+dot(labelPres,betaTdb);
+							%Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
+							if Eafter<Ebefore
+								seg=propSeg;
+								Ebefore=Eafter;
+								success=1;
+								success2=1;
+							end
+						end
+					end
+					[topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp);
+					unaryC=unaryCI+topdown_unary*alphaMat;
+					Ebefore=sum(unaryC([1:size(unary,1)]+(seg-1)*size(unary,1)));
+					Ebefore=Ebefore+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
+					for l=1:obj.dbparams.ncat
+						labelPres(l)=ismember(l,seg(IP));
+					end
+					Ebefore=Ebefore+dot(labelPres,betaTdb);
+            	end            
             elseif optsvm.w(2)<0
                 error('negative weight w2')
             end
             save(segres_filename,'seg');
             
         end
+
+    case 8
+        model_filename=sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode));
+        load(model_filename,'optsvm');
+        %Latent + Linear TD with CRF on words
+        latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
+        wordOffset=latentOffset+obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary;
+        wBu=optsvm.w(1:2);
+        alphaTd=optsvm.w(3:latentOffset-obj.dbparams.ncat);
+        betaTd=optsvm.w(latentOffset-obj.dbparams.ncat+1:latentOffset);
+        %Descriptor in each column
+        clusterCenters=reshape(optsvm.w(latentOffset+1:wordOffset),[obj.topdown.features.params.dimension,obj.topdown.dictionary.params.size_dictionary]);
+        if sum(optsvm.w<0)>0
+            fprintf('Warning : negative coeffs in weights learned\n');
+        end
         
+        wordsInd=zeros(obj.topdown.dictionary.params.size_dictionary*(obj.topdown.dictionary.params.size_dictionary-1)/2,1);
+        wpit=1;
+        for wp=1:obj.topdown.dictionary.params.size_dictionary
+            for wp2=wp+1:obj.topdown.dictionary.params.size_dictionary
+                wordsInd(wpit)=wp+obj.topdown.dictionary.params.size_dictionary*(wp2-1);
+                wpit=wpit+1;
+            end
+        end
+        for i=1:length(ids)
+        	x=obj.dbparams.image_names{ids(i)};
+        	fprintf('DOing inference on image %i over %i\n',i,length(ids))
+            segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
+			pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
+			unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));
+			sp_filename=sprintf(obj.superpixels.destmatpath,sprintf('%s-imgsp',x));
+			tdfeat_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-topdown_features',x));
+			load(sp_filename,'img_sp');
+			%obj.topdown.latent.params.n_neighbor
+			load(pairwise_filename,'pairwise')
+			load(unary_filename,'unary')
+			load(tdfeat_filename,'feat_topdown');
+			nn=obj.topdown.latent.params.n_neighbor;
+			nn_filename=sprintf(obj.topdown.features.destmatpath,sprintf('%s-ipAdj-%d',x,nn));
+			load(nn_filename);
+		
+			%Unary matrix for Topdown
+			alphaMat=reshape(alphaTd,[obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
+		
+			%TD Features
+			[X,Y] = size(img_sp.spInd);
+			F=feat_topdown.locations;
+			D=double(feat_topdown.descriptors);
+			locations = X*(round(F(1,:))-1)+round(F(2,:));
+		
+			%Words Pairwise
+			wordsPairwise=zeros(obj.topdown.dictionary.params.size_dictionary,obj.topdown.dictionary.params.size_dictionary);
+			wordsPairwise(wordsInd)=optsvm.w(wordOffset+1:end);
+			wordsPairwise=wordsPairwise+wordsPairwise';
+		
+			%Perform Graph cuts to find most violated constraint.
+			unaryCI=wBu(1)*unary;
+			pairwiseC=sparse(wBu(2)*pairwise);
+		
+			%%%%%%%%% INFERENCE %%%%%%%%
+		
+			%Stop condition if no possible improvement
+			%Data preload
+			[dum,seg]=min(unaryCI',[],1);
+		
+			%Initialize words
+			[topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
+			unaryC=unaryCI+topdown_unary*alphaMat;
+			%Interest points extraction
+			IP=find(topdown_count>0);
+			nbIP=topdown_count(IP);
+
+			if (optsvm.w(2)>0)
+				%Rescale costs if neg
+				betaTdb=betaTd;
+				nbSp=size(unary,1);
+				%Energy
+				E=0;
+				E=E+sum(unaryC([1:size(unary,1)]+(seg-1)*size(unary,1)));
+				edge_cost = pairwiseC(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
+				E=E+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
+				%labelHist=zeros(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
+				labelPres=zeros(obj.dbparams.ncat,1);
+			
+				for l=1:obj.dbparams.ncat
+					%v=sum(topdown_unary(seg'==l,:),1);
+					%labelHist(:,l)=v;
+					labelPres(l)=ismember(l,seg(IP));
+				end
+			
+				%Ordering : l=1, k=1, k=2 ,..., k=size td dict, l=2 etc... for
+				%alphas_(l,k), then beta_l
+				%Already in unaryC
+				%E=E+dot(alphaTdb,labelHist(:));
+			
+				%Then betas
+				%normLabelHist=sum(labelHist,1); % (1,nb labels)
+			
+			
+			
+				E=E+dot(betaTdb,labelPres);
+			
+				%Latent part
+				%E=E+sum(sum(clusterCenters(:,z).*D,1));
+			
+				%%%%%% End Energy computation
+			
+			
+				Ebefore=E;
+				maxIter=100;
+				iter2=0;
+				success2=1;
+				while success2==1
+					success2=0;
+					iter=0;
+					success=1;
+					while success==1 && iter<=maxIter
+						success=0;
+						iter=iter+1;
+						labperm=randperm(obj.dbparams.ncat);
+						for ilab=1:obj.dbparams.ncat
+							%Pick one label
+							chosenLabel=labperm(ilab);
+						
+							%New segmentation
+							propSeg=alpha_expansion_labelcost(chosenLabel,seg,img_sp,unaryC,edge_cost,betaTdb,IP,nbIP);
+						
+							%Compute Energy
+							Eafter=0;
+							Eafter=Eafter+sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(propSeg(:))')));
+							Eafter=Eafter+sum(edge_cost((propSeg(img_sp.edges(:,1))~=propSeg(img_sp.edges(:,2)))));
+							for l=1:obj.dbparams.ncat
+								%  v=sum(topdown_unary(propSeg'==l,:),1);
+								% labelHist(:,l)=v;
+								labelPres(l)=ismember(l,propSeg(IP));
+							end
+							Eafter=Eafter+dot(labelPres,betaTdb);
+							%Eafter=Eafter+sum(sum(clusterCenters(:,z).*D,1));
+						
+							if Eafter<Ebefore
+								seg=propSeg;
+								Ebefore=Eafter;
+								success=1;
+								success2=1;
+							end
+						end
+					end
+					[topdown_unary,topdown_count,z]=infer_words(seg,alphaMat,clusterCenters,D,locations,img_sp,wordsPairwise,adj);
+					unaryC=unaryCI+topdown_unary*alphaMat;
+					Ebefore=sum(unaryC(sub2ind(size(unary),(1:size(unary,1)),double(seg(:))')));
+					Ebefore=Ebefore+sum(edge_cost((seg(img_sp.edges(:,1))~=seg(img_sp.edges(:,2)))));
+					for l=1:obj.dbparams.ncat
+						labelPres(l)=ismember(l,seg(IP));
+					end
+					Ebefore=Ebefore+dot(labelPres,betaTdb);
+				end    
+            elseif optsvm.w(2)<0
+                error('negative weight w2')
+            end
+            save(segres_filename,'seg');
+        end        
         
     otherwise
         error('Mode unknown')
