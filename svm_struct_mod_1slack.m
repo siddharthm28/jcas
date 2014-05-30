@@ -17,7 +17,7 @@ while flag
         fprintf('CP learning : Iter. %d',iter);
         
         fprintf(' Image ');
-        feature_sum_new=zeros(size(model.w,1),1);
+        feature_sum=zeros(size(model.w,1),1);
         loss_sum=0;
         for i=1:n
             fprintf('%03d',i);
@@ -34,6 +34,7 @@ while flag
             feature_sum=feature_sum+feature_new;
             feature0_sum=sum(feature0,2);
             loss_sum=loss_sum+param.lossFn(param,y,yhat);
+            fprintf('\b\b\b');
         end 
         
         lb=[zeros(param.dimension+1,1);];
@@ -58,7 +59,7 @@ while flag
         else
             flag=0;
         end
-        fprintf('\b\b\b');
+        
     
     iter=iter+1;
     if iter>miter
