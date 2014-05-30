@@ -83,27 +83,27 @@ switch db_name
     case 'msrc' % NEED TO DO
         % relevant paths and files
         dataset_path='/cis/project/vision_sequences/msrc21_segmentation/';
-        train_file=fullfile(dataset_path,'Train.txt');
-        val_file=fullfile(dataset_path,'Validation.txt');
+        train_file=fullfile(dataset_path,'trainval.txt');
+        %val_file=fullfile(dataset_path,'Validation.txt');
         test_file=fullfile(dataset_path,'Test.txt');
         % load the images
         train_images=read_file(train_file);
-        val_images=read_file(val_file);
+        %val_images=read_file(val_file);
         test_images=read_file(test_file);
-        image_names=[train_images;val_images;test_images];
-        image_names=cellfun(@(x) x(1:end-4),image_names,'uniformoutput',false);
+        image_names=[train_images;test_images];
+        %image_names=cellfun(@(x) x(1:end-4),image_names,'uniformoutput',false);
         obj.dbparams.image_names=image_names;
         obj.dbparams.num_images = length(image_names);        % total number of images
-        obj.dbparams.ncat       = 9;          % total number of categories
-        obj.dbparams.training   = 1:(length(train_images)+length(val_images));  % image index for training set
-        obj.dbparams.test       = length(val_images)+(1:length(test_images));  % image index for test set
+        obj.dbparams.ncat       = 21;          % total number of categories
+        obj.dbparams.training   = 1:(length(train_images));  % image index for training set
+        obj.dbparams.test       = length(train_images)+(1:length(test_images));  % image index for test set
         % path to the images
-        obj.dbparams.imgpath=fullfile(dataset_path,'Images/');
+        obj.dbparams.imgpath=fullfile(dataset_path,'img/');
         obj.dbparams.format='.bmp';
         % path to the ground truth labels
-        obj.dbparams.segpath= fullfile(dataset_path,'seg');
+        obj.dbparams.segpath= fullfile(dataset_path,'seg/%s.mat');
         % path to the results
-        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/results/%s.mat'];
+        obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/resulits_msrc/%s.mat'];
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
     case {'inria-graz','voc2010','voc2011-sbd-cars','voc2011-sbd-all',...
             'voc2011-sbd-cars-subset'}
