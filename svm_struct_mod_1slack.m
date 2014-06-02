@@ -50,7 +50,7 @@ while flag
             b=zeros(length(Sloss),1);
             for k=1:length(Sloss)
                 feature=Sfeature(:,k);
-                A(k,:)=[(feature0_sum'-feature')./n,1];
+                A(k,:)=[(feature0_sum'-feature')./n,-1];
                 b(k)=-Sloss(k)/n;
             end
             w=quadprog(H,f,A,b,[],[],lb,ub,[],opts);
