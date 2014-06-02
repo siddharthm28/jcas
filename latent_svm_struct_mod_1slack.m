@@ -15,8 +15,8 @@ iterLatent=1;
 while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     iterLatent=iterLatent+1;
     previousw=model.w;
-    S=[]; Slabel=[]; Sfeature=[];
-    slack=zeros(1,n);
+    Sloss=[]; Sfeature=[];
+    slack=0;
     flag=1;iter=1;
     feature0=zeros(param.dimension,n);
     % Words can be updated after each epoch or after each run of the SVMSTRUCT
