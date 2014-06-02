@@ -101,11 +101,11 @@ while flag
             x=param.patterns{i};
             y=param.labels{i};
             %Call separation oracle
-            yhat=param.constraintFn(param,model,x,y);
-
+            %yhat=param.constraintFn(param,model,x,y);
+              yhat=param.constraintFn(param,model,x,[y;param.words{i}']);
             if iter==1
-                feature0(:,i)=param.featureFn(param,x,y);
-
+               % feature0(:,i)=param.featureFn(param,x,y);
+               feature0(:,i)=param.featureFn(param,param.patterns{i},[param.labels{i};param.words{i}']);
             end
             feature_new=param.featureFn(param,x,yhat);
             feature_sum=feature_sum+feature_new;
