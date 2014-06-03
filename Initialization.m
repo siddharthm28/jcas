@@ -71,7 +71,7 @@ expJCAS.unary.SPneighboorhoodsize=4;
 % will be divided by the number of training images
 expJCAS.optimisation.params.C1 = 1e6;
 expJCAS.optimisation.params.eps = 0.01;
-expJCAS.optimisation.params.max_iter=1e2;
+expJCAS.optimisation.params.max_iter=1e3;
 expJCAS.optimisation.method = 'CP';
 expJCAS.optimisation.params.lossFnCP_name = 'hamming';
 % SVM_STRUCT_ARGS
