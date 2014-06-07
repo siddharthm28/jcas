@@ -17,3 +17,5 @@ compare_dataset_splits.m
 *.sh
 get_jcas_results.m
 logFiles/*
+debug*.mat
+
