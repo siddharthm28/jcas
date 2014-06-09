@@ -201,6 +201,3 @@ switch db_name
     otherwise
             error('Database specified unknown');
 end
-
-end
-

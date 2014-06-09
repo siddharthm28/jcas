@@ -25,9 +25,3 @@ switch method_name
         error('Unary Feature method unknown, please add it to makesp.m file');
         
 end
-
-
-
-
-end
-

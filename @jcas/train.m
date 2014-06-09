@@ -1,9 +1,7 @@
+function train(obj)
 %This function launch the training step given the parameters given in the
 %object obj of class jcas. Can be called with "obj.train;"
-
-function train(obj)
-
-if obj.destpathmade==1
+if(obj.destpathmade)
     obj.resetPath;
 end
 tDir=obj.makedestpath(obj.dbparams.destmatpath);

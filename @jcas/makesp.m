@@ -47,5 +47,3 @@ switch method_name
         error('Superpixel method unknown, please add it to makesp.m file');
         
 end
-end
-

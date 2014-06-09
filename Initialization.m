@@ -101,12 +101,12 @@ if(expJCAS.mode>=7)
     % -------------------------------------------------------------------------
     % Latent options
     % -------------------------------------------------------------------------
-    expJCAS.init.given=0;
     %expJCAS.init.vals.UP=
     %expJCAS.init.vals.labelcost=
     %expJCAS.init.vals.alphaMat=
 end
 
+expJCAS.init.given=0;
 switch recompute
     case 0  % reset
         expJCAS.force_recomputation('reset');
