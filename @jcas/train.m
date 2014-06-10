@@ -12,9 +12,6 @@ obj.force_recomputation;
 %--------------------------------------------------------------------------
 % Time saving
 %--------------------------------------------------------------------------
-
-
-
 %Extract the features to compute unary from the set of training images
 profile on
 extract_features(obj,'training');

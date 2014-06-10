@@ -13,7 +13,6 @@ toolboxes/svm-struct-matlab-master/*
 toolboxes/Bk_matlab/*
 results*
 compare_dataset_splits.m
-*_in_parallel.m
 *.sh
 get_jcas_results.m
 logFiles/*

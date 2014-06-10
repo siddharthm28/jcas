@@ -78,7 +78,7 @@ end
 %Load / Create 
 %(Check if custom user directory)
     
-if isempty(obj.unary.features.destmatpath) && ~obj.unary.precomputed
+if isempty(obj.unary.features.destmatpath)
     if ~exist([rootDir,'unary_features/unary_featuresBase.mat'],'file')
         unary_featuresBase={};
         unary_featuresBaseCount=0;
@@ -217,7 +217,7 @@ clear trainBase trainBaseCount;
 %Load / Create 
 %(Check if custom user directory)
 
-if isempty(obj.unary.dictionary.destmatpath) && ~obj.unary.precomputed
+if isempty(obj.unary.dictionary.destmatpath)
     if ~exist([tDir,'unary_dictionary/unary_dictionaryBase.mat'],'file')
         unary_dictionaryBase={};
         unary_dictionaryBaseCount=0;
@@ -323,7 +323,7 @@ end
 %Load / Create 
 %(Check if custom user directory)
     
-if isempty(obj.unary.svm.trainingset.destmatpath) && ~obj.unary.precomputed
+if isempty(obj.unary.svm.trainingset.destmatpath)
     if ~exist(sprintf(obj.unary.destmatpath,'unarytestsvm/unarytestsvmBase'),'file')
         unarytestsvmBase={};
         unarytestsvmBaseCount=0;
@@ -366,14 +366,14 @@ end
 %Load / Create 
 %(Check if custom user directory)
     
-if isempty(obj.unary.svm.destmatpath) && ~obj.unary.precomputed
-    if ~exist(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase'),'file')
+if isempty(obj.unary.svm.destmatpath)
+    if ~exist(sprintf(obj.unary.destmatpath,'unarysvm/unarysvmBase'),'file')
         unarysvmBase={};
         unarysvmBaseCount=0;
-        dirS=sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/%s');
+        dirS=sprintf(obj.unary.destmatpath,'unarysvm/%s');
         vl_xmkdir(fileparts(dirS));
     else
-        tmp=load(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase'));
+        tmp=load(sprintf(obj.unary.destmatpath,'unarysvm/unarysvmBase'));
         unarysvmBaseCount=tmp.unarysvmBaseCount;
         unarysvmBase=tmp.unarysvmBase;
     end
@@ -393,13 +393,13 @@ if isempty(obj.unary.svm.destmatpath) && ~obj.unary.precomputed
         unarysvmBase{unarysvmBaseCount}.params=obj.unary.svm.params;
         
         %Create folder
-        obj.unary.svm.destmatpath=[fileparts(obj.unary.svm.trainingset.destmatpath),'/unarysvm/',num2str(unarysvmBaseCount),'/%s.mat'];
+        obj.unary.svm.destmatpath=[fileparts(obj.unary.destmatpath),'/unarysvm/',num2str(unarysvmBaseCount),'/%s.mat'];
         vl_xmkdir(fileparts(obj.unary.svm.destmatpath));
         unarysvmBase{unarysvmBaseCount}.folder=obj.unary.svm.destmatpath;
     end
     
     %Save the modifications
-    save(sprintf(obj.unary.svm.trainingset.destmatpath,'unarysvm/unarysvmBase'),'unarysvmBase','unarysvmBaseCount');
+    save(sprintf(obj.unary.destmatpath,'unarysvm/unarysvmBase'),'unarysvmBase','unarysvmBaseCount');
     clear unarysvmBase unarysvmBaseCount;
 end
 
@@ -587,7 +587,7 @@ if isempty(obj.optimisation.destmatpath)
                 isequal(optimisationBase{i}.unary.dictionary.params,obj.unary.dictionary.params) && ...
                 isequal(optimisationBase{i}.unary.features.method,obj.unary.features.method);
         if ctr
-            obj.optimisation.destmatpath=sprintf(optimisationBase{i}.folder,'%s',obj.unary.SPneighboorhoodsize);
+            obj.optimisation.destmatpath=optimisationBase{i}.folder;
             break;
         end
     end
@@ -613,7 +613,7 @@ if isempty(obj.optimisation.destmatpath)
             obj.optimisation.method,optimisationBaseCount),'/%s_UNBS_',...
             num2str(obj.unary.SPneighboorhoodsize),'.mat'];
         vl_xmkdir(fileparts(obj.optimisation.destmatpath));
-        optimisationBase{optimisationBaseCount}.folder=sprintf([tDir,'optimisation/%s/%s_UNBS_%s','.mat'],datenow,'%s','%d');
+        optimisationBase{optimisationBaseCount}.folder=obj.optimisation.destmatpath;
     end
     
     %Save the modifications

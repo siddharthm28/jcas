@@ -28,10 +28,7 @@ fprintf('\n construct_histograms_for_superpixels: (total of %d images):    ', le
 % for each image
 tmp=zeros(1,length(ids));
 parfor i=1:length(ids)
-    fprintf('\b\b\b\b%04d',i);
-    
     tmp(i)=process_image(obj,ids(i));
-    
 end
 num_sphitograms_per_im(ids)=tmp;
 save(sprintf(obj.unary.destmatpath,'num_sphistograms_per_im'),'num_sphistograms_per_im');
@@ -60,7 +57,6 @@ function num_hists=process_image(obj,ind)
         superpixel_histograms = zeros(obj.unary.dictionary.params.num_bu_clusters, img_sp.nbSp);
         %dominant_class = ones(1,num_class,'uint8');
         dominant_class = ones(1,img_sp.nbSp);
-        save(histogram_filename,'superpixel_histograms');
         % Find the locations of the image features
         F=img_feat.locations;
         locations = img_info.X*(round(F(1,:))-1)+round(F(2,:));

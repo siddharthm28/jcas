@@ -60,12 +60,7 @@ end
 
 tmp=zeros(1,num_imgs);
 parfor i=1:num_imgs
-    
-    % print image index
-    fprintf('\b\b\b\b%04d', imgset(i));
-    
     tmp(i)=process_image(obj,imgset(i));
-    
 end
 num_features_per_image(imgset)=tmp;
 save(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');

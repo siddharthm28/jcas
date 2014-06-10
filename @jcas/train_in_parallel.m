@@ -73,7 +73,7 @@ end
 profile clear
 
 %Compute unary costs
-compute_unary_costs(obj,'training');
+compute_unary_costs_in_parallel(obj,'training');
 if ~exist(sprintf([tDir,'%s.mat'],'unary_costs'),'file')
 p = profile('info');
 save(sprintf([tDir,'%s.mat'],'unary_costs'),'p');
