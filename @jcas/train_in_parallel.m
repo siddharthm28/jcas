@@ -20,11 +20,13 @@ obj.force_recomputation;
 
 %Extract the features to compute unary from the set of training images
 profile on
+matlabpool('open',4);
 extract_features_in_parallel(obj,'training');
 if ~exist(sprintf([tDir,'%s.mat'],'extract_features'),'file')
     p = profile('info');
     save(sprintf([tDir,'%s.mat'],'extract_features'),'p');
 end
+matlabpool('close');
 profile clear
 
 %Compute the dictionary associated to the features previously extracted
@@ -38,11 +40,13 @@ profile clear
 %Compute the histograms associated to superpixels in each image of training
 %set
 %Ok Void
+matlabpool('open',4);
 build_superpixels_histograms_in_parallel(obj,'training');
 if ~exist(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'file')
 p = profile('info');
 save(sprintf([tDir,'%s.mat'],'build_superpixel_histograms'),'p');
 end
+matlabpool('close');
 profile clear
 
 %Build aggregated histograms accross superpixels if associated parameter is
@@ -73,11 +77,13 @@ end
 profile clear
 
 %Compute unary costs
+matlabpool('open',4);
 compute_unary_costs_in_parallel(obj,'training');
 if ~exist(sprintf([tDir,'%s.mat'],'unary_costs'),'file')
 p = profile('info');
 save(sprintf([tDir,'%s.mat'],'unary_costs'),'p');
 end
+matlabpool('close');
 profile clear
 
 if obj.mode>=1

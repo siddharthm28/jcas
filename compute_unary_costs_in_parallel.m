@@ -15,8 +15,6 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 %Load previously trained svm for unary potentials
-tmp=load(sprintf(obj.unary.svm.destmatpath,sprintf('svm_data-%d',obj.unary.SPneighboorhoodsize)),'svm');
-svm=tmp.svm;
 ids = obj.dbparams.(imgsetname);
 
 %For each image in image set
@@ -27,6 +25,8 @@ end
 
 function process_image(obj,ind)
 fprintf('compute_unary_costs: Computed costs for image %d \n',ind);
+tmp=load(sprintf(obj.unary.svm.destmatpath,sprintf('svm_data-%d',obj.unary.SPneighboorhoodsize)),'svm');
+svm=tmp.svm;
 
 %Load image data
 feat_filename = sprintf(obj.unary.features.destmatpath,sprintf('%s-unfeat',obj.dbparams.image_names{ind}));

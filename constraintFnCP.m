@@ -1,6 +1,7 @@
 function yMostViolatedLabel=constraintFnCP(obj,param,model,x,y)
 % Add switch for inference method
 
+ncat=obj.dbparams.ncat;
 switch obj.mode
     case 1 % U+P
         pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
@@ -28,12 +29,7 @@ switch obj.mode
         unary=(model.w(1)*unary - hamming);
         pairwise=sparse(model.w(2)*(pairwise));
         
-        [~, yMostViolatedLabel] =  min(unary,[],2); %min(unary',[],1);
-        labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
-        if (model.w(2)~=0) %%% USING PAIRWISE
-            [seg2,~,~] =  GCMex(yMostViolatedLabel'-1, single(unary'), pairwise, single(labelcost_total),0);
-            yMostViolatedLabel = seg2+1;
-        end
+        yMostViolatedLabel=run_up_solver(unary',pairwise,ncat);
         yMostViolatedLabel=yMostViolatedLabel(:);
         
     case 2
@@ -335,13 +331,7 @@ switch obj.mode
         unary=wBu(1)*unary-hamming+topdownU;
         pairwise=sparse(wBu(2)*pairwise);
         
-        [~, initSeg] =  min(unary,[],2); %min(unary',[],1);
-        yMostViolatedLabel=initSeg';
-        labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
-        if (model.w(2)>0) %%% USING PAIRWISE
-            [seg2,~,~] =  GCMex(yMostViolatedLabel-1, single((unary)'), pairwise, single(labelcost_total),0);
-            yMostViolatedLabel = seg2+1;
-        end
+        yMostViolatedLabel=run_up_solver(unary',pairwise,ncat);
         yMostViolatedLabel=yMostViolatedLabel(:);
         
     case 5

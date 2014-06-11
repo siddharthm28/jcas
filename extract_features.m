@@ -135,4 +135,3 @@ for i=1:num_imgs
     end
 end
 save(sprintf(obj.unary.features.destmatpath,'num_features_per_image'),'num_features_per_images');
-end

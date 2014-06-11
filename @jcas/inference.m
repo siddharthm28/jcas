@@ -1,7 +1,7 @@
 function inference(obj,imgsetname)
 %perform inference on training set
 ids=obj.dbparams.(imgsetname);
-
+ncat=obj.dbparams.ncat;
 switch obj.mode
     case 0
         for i=1:length(ids)
@@ -32,12 +32,7 @@ switch obj.mode
             unary=optsvm.w(1)*unary;
             pairwise=sparse(optsvm.w(2)*pairwise);
             
-            labelcost_total = ones(size(unary,2))-eye(size(unary,2));
-            [~, seg] =  min(unary,[],2);
-            if (optsvm.w(2)~=0) %%% USING PAIRWISE
-                [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
-                seg = seg2+1;
-            end
+            seg=run_up_solver(unary',pairwise,ncat);
             save(segres_filename,'seg');
         end
         
@@ -314,12 +309,7 @@ switch obj.mode
             unary=wBu(1)*unary+topdownU;
             pairwise=sparse(wBu(2)*pairwise);
             
-            [~, seg] =  min(unary,[],2); %min(unary',[],1);
-            labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
-            if (optsvm.w(2)~=0) %%% USING PAIRWISE
-                [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
-                seg = seg2+1;
-            end
+            seg=run_up_solver(unary',pairwise,ncat);
             save(segres_filename,'seg');
         end
         
