@@ -46,7 +46,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0=init.UP;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
@@ -60,7 +60,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
@@ -75,7 +75,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
@@ -90,7 +90,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
@@ -102,7 +102,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
             
@@ -139,7 +139,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.eps=obj.optimisation.params.eps;
             param.tHistograms=training_histograms;
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=svm_struct_mod_1slack(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.svm_struct(param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
             
@@ -160,7 +160,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.nbIterLatent=20;
             param.wordsInd=[];
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=latent_svm_struct_mod_1slack(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.latent_svm_struct(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');
@@ -187,7 +187,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
                 end
             end
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
-            optsvm=latent_svm_struct_mod_1slack(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
+            optsvm=obj.optimisation.latent_svm_struct(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
             
             save(opt_filename,'optsvm');
             fprintf('Optimisation computed \n');

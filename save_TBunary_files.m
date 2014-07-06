@@ -55,7 +55,7 @@ prob=tmp./repmat(sum(tmp),ncat,1);
 prob=num2cell(prob,2);
 prob=cellfun(@(x) reshape(x,[N,M])',prob,'uniformoutput',false);
 pixel_probability_estimates=cat(3,prob{:});
-pixel_probability_estimates=pixel_probability_estimates(:,:,[2,1]); % to have bg as label 1
+% pixel_probability_estimates=pixel_probability_estimates(:,:,[2,1]); % to have bg as label 1
 % [~,ind]=max(pixel_probability_estimates,[],3);
 % figure, imagesc(ind);
 % tmp=sum(pixel_probability_estimates,3); disp(unique(tmp(:)));

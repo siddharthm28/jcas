@@ -19,6 +19,7 @@ end
 
 tmp=load(sprintf(obj.topdown.dictionary.destmatpath,sprintf('topdown_dictionary_%d',obj.topdown.dictionary.params.size_dictionary)), 'C'); 
 C=tmp.C;
+kdtree=vl_kdtreebuild(C);
 
 % Establish the set of images of interest
 ids = obj.dbparams.(imgsetname);
@@ -41,8 +42,9 @@ for i=1:length(ids)
         F=feat_topdown.locations;
         D=feat_topdown.descriptors;
         locations = X*(round(F(1,:))-1)+round(F(2,:));
-        A = vl_ikmeanspush(D,C);
+%         A = vl_ikmeanspush(D,C);
         %        A = vl_ikmeanspush(uint8(D),int32(C));
+        A = double(vl_kdtreequery(kdtree, C, single(D),'MaxComparisons', 50)) ;
 
         %Map from features to dictionary words
         td_clustered_h = A;

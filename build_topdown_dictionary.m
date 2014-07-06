@@ -22,7 +22,9 @@ if (~exist(sparse_dictionary_filename, 'file') || obj.force_recompute.topdown_di
     index = (mod(siftlbls(2,:),2)==1);
 
     % Cluster features using k-means
-    [C,A] = vl_ikmeans(feats(:,index),obj.topdown.dictionary.params.size_dictionary);
+%     [C,A] = vl_ikmeans(feats(:,index),obj.topdown.dictionary.params.size_dictionary);
+    [C,A]=vl_kmeans(single(feats(:,index)),obj.topdown.dictionary.params.size_dictionary,...
+        'numrepetitions',10,'algorithm','elkan','initialization','plusplus');
 
     save(sparse_dictionary_filename, 'C', 'A');
 end

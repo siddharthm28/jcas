@@ -1,4 +1,4 @@
-function expJCAS=Initialization(db_name,mode,pre_unary,pre_sp,recompute)
+function expJCAS=Initialization(db_name,mode,pre_unary,pre_sp,recompute,optimization_type)
 % Function that Initializes the framework for dataset db_name under type mode
 % also pass if you want to use precomputed unaries and superpixels or not
 clc; close all;
@@ -71,12 +71,21 @@ expJCAS.unary.SPneighboorhoodsize=4;
 % will be divided by the number of training images
 expJCAS.optimisation.params.C1 = 1e6;
 expJCAS.optimisation.params.eps = 0.01;
-expJCAS.optimisation.params.max_iter=1e3;
 expJCAS.optimisation.method = 'CP';
 expJCAS.optimisation.params.lossFnCP_name = 'hamming';
 % SVM_STRUCT_ARGS
 expJCAS.optimisation.params.args = '-w 0 -c 1.0';
 % Callbacks functions :
+switch optimization_type
+    case 'nslack'
+        expJCAS.optimisation.params.max_iter=1e2;
+        expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod(param,miter,C);
+        expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod(param,miter,C);
+    case '1slack'
+        expJCAS.optimisation.params.max_iter=1e3;
+        expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod_1slack(param,miter,C);
+        expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod_1slack(param,miter,C);
+end
 expJCAS.optimisation.featureCB = @(parm,x,y) featureFnCP(expJCAS,parm,x,y);
 expJCAS.optimisation.lossCB = @(parm,y,yhat) lossFnCP(expJCAS,parm,y,yhat);
 expJCAS.optimisation.constraintCB = @(parm,model,x,y) constraintFnCP(expJCAS,parm,model,x,y);
@@ -116,6 +125,8 @@ switch recompute
         expJCAS.force_recomputation('unary');
     case 3  % topdown
         expJCAS.force_recomputation('topdown');
+    case 4  % optimization
+        expJCAS.force_recompute.optimisation=1;
 end
 expJCAS.train;
 expJCAS.testing;
