@@ -63,4 +63,10 @@ switch dataset_name
         else
             dataset_path='/cis/project/vision_sequences/ucm2_voc2012/VOC2012/ucm2_uint8/';
         end
+    case 'msrc'
+        if(ispc)
+            dataset_path='F:/Datasets/msrc21_segmentation/';
+        else
+            dataset_path='/cis/project/vision_sequences/msrc21_segmentation/';
+        end
 end
