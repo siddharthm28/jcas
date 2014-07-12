@@ -1,7 +1,8 @@
-function save_TBunary_files
+function save_TBunary_files(db_name,ip_folder,op_folder)
 % function that loads the TBunary files and saves them as .mat files with
 % pixel_probability_estimates in the natural matlab image format
-clear all; clc; close all;
+% clear all; 
+clc; close all;
 
 % % get the relevant paths and files
 % dataset_path=get_dataset_path('voc2010');
@@ -15,16 +16,24 @@ clear all; clc; close all;
 % VOCinit; ncat=VOCopts.nclasses+1;
 
 % get the relevant paths and files
-dataset_path=get_dataset_path('voc2011-sbd-cars');
+% dataset_path=get_dataset_path('voc2011-sbd-cars');
+dataset_path=get_dataset_path(db_name);
+unary_path=fullfile(dataset_path,ip_folder);
+unary_matfiles_path=fullfile(dataset_path,op_folder);
+switch db_name
+    case 'voc2011-sbd-cars'
+        train_file=fullfile(dataset_path,'train.txt');
+        test_file=fullfile(dataset_path,'val.txt');
+        ncat=2;
+    case {'msrc','voc2010'}
+        train_file=fullfile(dataset_path,'trainval.txt');
+        test_file=fullfile(dataset_path,'Test.txt');
+        ncat=21;
+end
 img_path=fullfile(dataset_path,'img');
-unary_path='F:/Datasets/voc2011/TBunary/';
-unary_matfiles_path='F:/Datasets/voc2011/TBunary_matfiles/';
-vl_xmkdir(unary_matfiles_path);
-train_file=fullfile(dataset_path,'train.txt');
-test_file=fullfile(dataset_path,'val.txt');
 % relevant variables
-ncat=2;
 
+vl_xmkdir(unary_matfiles_path);
 % run for all these images
 image_names=sort([read_file(train_file);read_file(test_file)]);
 vis_path=fullfile(unary_matfiles_path,'visualizations'); vl_xmkdir(vis_path);

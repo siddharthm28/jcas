@@ -124,7 +124,7 @@ switch obj.mode
                 while success==1 && iter<=maxIter
                     success=0;
                     iter=iter+1;
-                    fprintf('Iter %d\n',iter);
+%                     fprintf('Iter %d\n',iter);
                     labperm=randperm(obj.dbparams.ncat);
                     for ilab=1:obj.dbparams.ncat
                         
@@ -148,7 +148,7 @@ switch obj.mode
                         
                         if Eafter<Ebefore
                             seg=propSeg;
-                            fprintf('Jump from %f to %f\n',Ebefore,Eafter);
+%                             fprintf('Jump from %f to %f\n',Ebefore,Eafter);
                             Ebefore=Eafter;
                             success=1;
                         end
@@ -243,7 +243,7 @@ switch obj.mode
                 while success==1 && iter<=maxIter
                     success=0;
                     iter=iter+1;
-                    fprintf('Iter %d',iter);
+%                     fprintf('Iter %d',iter);
                     labperm=randperm(obj.dbparams.ncat);
                     for ilab=1:obj.dbparams.ncat
                         
@@ -267,7 +267,7 @@ switch obj.mode
                         
                         if Eafter<Ebefore
                             seg=propSeg;
-                            fprintf('Jump from %f to %f\n',Ebefore,Eafter);
+%                             fprintf('Jump from %f to %f\n',Ebefore,Eafter);
                             Ebefore=Eafter;
                             success=1;
                         end
@@ -384,7 +384,7 @@ switch obj.mode
                 while success==1 && iter<=maxIter
                     success=0;
                     iter=iter+1;
-                    fprintf('Iter %d\n',iter);
+%                     fprintf('Iter %d\n',iter);
                     labperm=randperm(obj.dbparams.ncat);
                     for ilab=1:obj.dbparams.ncat
                         
@@ -409,7 +409,7 @@ switch obj.mode
                         
                         if Eafter<Ebefore
                             seg=propSeg;
-                            fprintf('Jump from %f to %f\n',Ebefore,Eafter);
+%                             fprintf('Jump from %f to %f\n',Ebefore,Eafter);
                             Ebefore=Eafter;
                             success=1;
                         end
@@ -498,7 +498,7 @@ switch obj.mode
                         Eafter=E;
                         
                         if Eafter<Ebefore
-                            fprintf('Jump iter %d dE=%f\n',iter,Ebefore-Eafter)
+%                             fprintf('Jump iter %d dE=%f\n',iter,Ebefore-Eafter)
                             seg=propSeg;
                             Ebefore=Eafter;
                             success=1;

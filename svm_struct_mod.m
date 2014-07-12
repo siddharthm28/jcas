@@ -50,6 +50,7 @@ while flag
             w=quadprog(H,f,A,b,[],[],lb,ub,[],opts);
             model.w=w(1:param.dimension);
             slack=w(end-n+1:end);
+            model.slack=slack;
         end
         fprintf('\b\b\b');
     end

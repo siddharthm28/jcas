@@ -40,18 +40,18 @@ end
 % compute the I/U score at the pixel level
 [rc2_P,r_int_P]=compute_scores(cmatrixP);
 
-fprintf('Without any bootstrapping \n');
-fprintf('\n At superpixel level \n');
-fprintf('Intersection by Union (aggregate) \n');
-display_results(r_int_SP);
-fprintf('Intersection by Union (per image) \n');
-display_results(rc2_SP);
+fprintf('\nWithout any bootstrapping \n');
+% fprintf('\n At superpixel level \n');
+% fprintf('Intersection by Union (aggregate) \n');
+% display_results(r_int_SP);
+% fprintf('Intersection by Union (per image) \n');
+% display_results(rc2_SP);
 
-fprintf('\n Per pixel numbers\n');
+fprintf('\nPer pixel numbers\n');
 fprintf('Intersection by Union (aggregate) \n');
 display_results(r_int_P);
-fprintf('Intersection by Union (per image) \n');
-display_results(rc2_P);
+% fprintf('Intersection by Union (per image) \n');
+% display_results(rc2_P);
 
 % Bootstrapping parameters
 B=1e3; alpha=0.3173;
@@ -61,17 +61,17 @@ B=1e3; alpha=0.3173;
 [rc2_P,ci_P,r_int_P,ci_int_P]=compute_scores_with_bootstrapping(cmatrixP,B,alpha);
 
 fprintf('\n\nWith bootstrapping \n');
-fprintf('\n At superpixel level \n');
-fprintf('Intersection by Union (aggregate) \n');
-display_results2(r_int_SP,ci_int_SP);
-fprintf('Intersection by Union (per image) \n');
-display_results2(rc2_SP,ci_SP);
+% fprintf('\n At superpixel level \n');
+% fprintf('Intersection by Union (aggregate) \n');
+% display_results2(r_int_SP,ci_int_SP);
+% fprintf('Intersection by Union (per image) \n');
+% display_results2(rc2_SP,ci_SP);
 
-fprintf('\n Per pixel numbers\n');
+fprintf('\nPer pixel numbers\n');
 fprintf('Intersection by Union (aggregate) \n');
 display_results2(r_int_P,ci_int_P);
-fprintf('Intersection by Union (per image) \n');
-display_results2(rc2_P,ci_P);
+% fprintf('Intersection by Union (per image) \n');
+% display_results2(rc2_P,ci_P);
 
 save(stat_file,'cmatrixSP','cmatrixP');
 op=r_int_P;

@@ -69,7 +69,6 @@ expJCAS.unary.SPneighboorhoodsize=4;
 % Slack variable for the Cutting Plane algorithm
 % used for the segmentation constraints, this value
 % will be divided by the number of training images
-expJCAS.optimisation.params.C1 = 1e6;
 expJCAS.optimisation.params.eps = 0.01;
 expJCAS.optimisation.method = 'CP';
 expJCAS.optimisation.params.lossFnCP_name = 'hamming';
@@ -78,10 +77,12 @@ expJCAS.optimisation.params.args = '-w 0 -c 1.0';
 % Callbacks functions :
 switch optimization_type
     case 'nslack'
+        expJCAS.optimisation.params.C1 = 1e6;
         expJCAS.optimisation.params.max_iter=1e2;
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod(param,miter,C);
     case '1slack'
+        expJCAS.optimisation.params.C1 = 1e6;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod_1slack(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod_1slack(param,miter,C);

@@ -56,6 +56,7 @@ while flag
             w=quadprog(H,f,A,b,[],[],lb,ub,[],opts);
             model.w=w(1:param.dimension);
             slack=w(end);
+            model.slack=slack;
         else
             flag=0;
         end
