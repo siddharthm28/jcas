@@ -25,10 +25,17 @@ switch db_name
         train_file=fullfile(dataset_path,'train.txt');
         test_file=fullfile(dataset_path,'val.txt');
         ncat=2;
-    case {'msrc','voc2010'}
+        img_format='.jpg';
+    case 'msrc'
         train_file=fullfile(dataset_path,'trainval.txt');
         test_file=fullfile(dataset_path,'Test.txt');
         ncat=21;
+        img_format='.bmp';
+    case 'voc2010'
+        train_file=fullfile(dataset_path,'trainval.txt');
+        test_file=fullfile(dataset_path,'Test.txt');
+        ncat=21;
+        img_format='.jpg';
 end
 img_path=fullfile(dataset_path,'img');
 % relevant variables
@@ -39,16 +46,16 @@ image_names=sort([read_file(train_file);read_file(test_file)]);
 vis_path=fullfile(unary_matfiles_path,'visualizations'); vl_xmkdir(vis_path);
 % matlabpool('open',4);
 for i=1:length(image_names)
-    process_image(i,image_names,img_path,unary_path,unary_matfiles_path,vis_path,ncat);
+    process_image(i,image_names,img_path,img_format,unary_path,unary_matfiles_path,vis_path,ncat);
 end
 % matlabpool('close');
 
-function process_image(i,image_names,img_path,unary_path,unary_matfiles_path,vis_path,ncat)
+function process_image(i,image_names,img_path,img_format,unary_path,unary_matfiles_path,vis_path,ncat)
 % construct to do parfor
 eps=0;
 fprintf('i: %d/%d \n',i,length(image_names));
 % relevant files
-img_file=fullfile(img_path,[image_names{i},'.jpg']);
+img_file=fullfile(img_path,[image_names{i},img_format]);
 unary_file=fullfile(unary_path,[image_names{i},'.unary']);
 % read the image file
 img=imread(img_file);
