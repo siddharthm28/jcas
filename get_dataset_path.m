@@ -25,9 +25,9 @@ switch dataset_name
         end
     case 'voc2010-texton'
         if(ispc)
-            dataset_path='F:/datasets/voc2010/TBunarylogit1_matfiles/';
+            dataset_path='F:/datasets/voc2010/unary/';
         elseif(isunix)
-            dataset_path='/cis/project/vision_sequences/voc2010/TBunarylogit1_matfiles/';
+            dataset_path='/cis/project/vision_sequences/voc2010/unary/';
         end
     case 'voc2011-sbd-cars'
         if(ispc)
@@ -68,5 +68,11 @@ switch dataset_name
             dataset_path='F:/Datasets/msrc21_segmentation/';
         else
             dataset_path='/cis/project/vision_sequences/msrc21_segmentation/';
+        end
+    case 'msrc-texton'
+        if(ispc)
+            dataset_path='F:/Datasets/msrc21_segmentation/unary/';
+        else
+            dataset_path='/cis/project/vision_sequences/msrc21_segmentation/unary/';
         end
 end
