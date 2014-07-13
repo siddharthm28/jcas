@@ -14,6 +14,7 @@ end
 
 tmp=load(sprintf(obj.unary.dictionary.destmatpath,'unary_dictionary'));
 feature_clusters=tmp.feature_clusters;
+kdtree=vl_kdtreebuild(feature_clusters);
 
 %Indices of the image set (training or testing)
 ids = obj.dbparams.(imgsetname);
@@ -73,7 +74,8 @@ for i=1:length(ids)
                 
                 % Use k-means to cluster features
                 %hh = vl_ikmeanspush(uint8(img_feat.descriptors(:,index_n)),feature_clusters);
-                hh = vl_ikmeanspush((img_feat.descriptors(:,index_n)),feature_clusters);
+%                 hh = vl_ikmeanspush((img_feat.descriptors(:,index_n)),feature_clusters);
+                hh = double(vl_kdtreequery(kdtree, feature_clusters, single(img_feat.descriptors(:,index_n)),'MaxComparisons', 50)) ;
               
                 %superpixel_histograms(:,n)=hist(hh,1:obj.unary.dictionary.params.num_bu_clusters);
                 superpixel_histograms(:,n) = vl_binsum(zero_vector,ones(size(hh)),hh);

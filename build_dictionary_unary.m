@@ -68,8 +68,10 @@ if (~exist(dictionary_filename, 'file') || (obj.force_recompute.dictionary_unary
     %Build Dictionary with k-means
     %----------------------------------------------------------------------
     fprintf('\n Computing unary dictionary with kmeans')
-    feature_clusters = vl_ikmeans(features,obj.unary.dictionary.params.num_bu_clusters) ;
-    
+%     feature_clusters = vl_ikmeans(features,obj.unary.dictionary.params.num_bu_clusters) ;
+    feature_clusters=vl_kmeans(single(features),obj.unary.dictionary.params.num_bu_clusters,...
+        'algorithm','elkan','initialization','plusplus','numrepetitions',5);
+
     %Store the features/idexes of chosen features for clusturing/Clusters
     %centers given by k-means
     save(dictionary_filename,'features', 'feats_chosen', 'feature_clusters');

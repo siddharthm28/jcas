@@ -36,6 +36,20 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     param.featureFn = obj.optimisation.featureCB ;
     param.verbose=1;
     
+    if(obj.mode>=2)
+        features=cell(1,length(param.patterns));
+        for i=1:length(features)
+            x=param.patterns{i};
+            y=param.labels{i};
+            tmp=param.featureFn(param,x,y);
+            features{i}=reshape(tmp(3:3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat)-1),...
+                [obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
+        end
+        features=cat(2,features{:});
+        init.alphaMat=vl_kmeans(features,obj.topdown.dictionary.params.size_dictionary,...
+            'algorithm','elkan','initialization','plusplus','numrepetitions',10);
+    end
+    
     switch obj.mode
         case 0
             %unary
