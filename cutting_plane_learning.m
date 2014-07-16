@@ -36,20 +36,6 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
     param.featureFn = obj.optimisation.featureCB ;
     param.verbose=1;
     
-    if(obj.mode>=2)
-        features=cell(1,length(param.patterns));
-        for i=1:length(features)
-            x=param.patterns{i};
-            y=param.labels{i};
-            tmp=param.featureFn(param,x,y);
-            features{i}=reshape(tmp(3:3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat)-1),...
-                [obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
-        end
-        features=cat(2,features{:});
-        init.alphaMat=vl_kmeans(features,obj.topdown.dictionary.params.size_dictionary,...
-            'algorithm','elkan','initialization','plusplus','numrepetitions',10);
-    end
-    
     switch obj.mode
         case 0
             %unary
@@ -70,6 +56,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
             param.w0=zeros(1,param.dimension);
             param.w0(1:2)=init.UP;
+            [init.alphaMat,init.labelcost,~]=initialize_alpha(obj,param);
             param.w0(3:2+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary)=init.alphaMat;
             param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
@@ -165,6 +152,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(1:2)=init.UP;
             param.w0(3:2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary))=init.alphaMat;
             param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1))=init.labelcost;
+            param.w0(end-obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary+1:end)=init.dict;
             param.eps=obj.optimisation.params.eps;
             param.tmp.ncat=obj.dbparams.ncat;
             param.tmp.nwords=obj.topdown.dictionary.params.size_dictionary;
@@ -188,6 +176,8 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(1:2)=init.UP;
             param.w0(3:2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary))=init.alphaMat;
             param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1))=init.labelcost;
+            param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
+            obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary)=init.dict;
             param.eps=obj.optimisation.params.eps;
             param.nbIterLatent=20;
             %Store ideces for pairwise words
@@ -208,4 +198,28 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             
     end
 end
+end
+
+function [alpha,beta,dict]=initialize_alpha(obj,param)
+    if(obj.mode>=2)
+        features=cell(1,length(param.patterns));
+        for i=1:length(features)
+            x=param.patterns{i};
+            y=param.labels{i};
+            tmp=param.featureFn(param,x,y);
+            features{i}=reshape(tmp(3:3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat)-1),...
+                [obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat]);
+        end
+        features=full(cat(2,features{:}));
+        labels=rem(0:size(features,2)-1,obj.dbparams.ncat)+1;
+        model=train(labels',sparse(features),'-s 3 -c 10 -B 1','col');
+        alpha=model.w(:,1:end-1); beta=model.w(:,end);
+        tmp=max(-alpha); tmp(tmp<0)=0;
+        alpha=alpha+repmat(tmp,size(alpha,1),1);
+        tmp=max([0;-beta]); beta=beta+tmp;
+        alpha=alpha'; beta=beta';
+        dict=vl_kmeans(features,obj.dbparams.ncat,...
+            'algorithm','elkan','initialization','plusplus','numrepetitions',10);
+    end
+
 end

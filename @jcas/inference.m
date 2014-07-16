@@ -56,7 +56,7 @@ switch obj.mode
         end
         
         for i=1:length(ids)
-            fprintf('i: %d \n',i);
+%             fprintf('i: %d \n',i);
             segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
             pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',obj.dbparams.image_names{ids(i)}));
             unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',obj.dbparams.image_names{ids(i)},obj.unary.SPneighboorhoodsize));
@@ -525,7 +525,7 @@ switch obj.mode
         end
         
         for i=1:length(ids)
-        	fprintf('DOing inference on image %i over %i\n',i,length(ids))
+%         	fprintf('DOing inference on image %i over %i\n',i,length(ids))
         	x=obj.dbparams.image_names{ids(i)};
             segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
         	pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
@@ -675,7 +675,7 @@ switch obj.mode
         end
         for i=1:length(ids)
         	x=obj.dbparams.image_names{ids(i)};
-        	fprintf('DOing inference on image %i over %i\n',i,length(ids))
+%         	fprintf('DOing inference on image %i over %i\n',i,length(ids))
             segres_filename=sprintf(obj.test.destmatpath,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
 			pairwise_filename=sprintf(obj.pairwise.destmatpath,sprintf('%s-pairwise',x));
 			unary_filename=sprintf(obj.unary.svm.destmatpath,sprintf('%s-unary-%d',x,obj.unary.SPneighboorhoodsize));

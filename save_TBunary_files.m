@@ -76,5 +76,11 @@ pixel_probability_estimates=cat(3,prob{:});
 % figure, imagesc(ind);
 % tmp=sum(pixel_probability_estimates,3); disp(unique(tmp(:)));
 % keyboard;
+if(sum(isnan(pixel_probability_estimates(:))))
+    keyboard;
+end
+if(sum(pixel_probability_estimates(:)<0))
+    keyboard;
+end
 save(fullfile(unary_matfiles_path,[image_names{i},'.mat']),'pixel_probability_estimates');
 visualize_prob_image(pixel_probability_estimates,image_names{i},vis_path);
