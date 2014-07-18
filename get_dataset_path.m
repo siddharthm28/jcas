@@ -27,7 +27,7 @@ switch dataset_name
         if(ispc)
             dataset_path='F:/datasets/voc2010/unary/';
         elseif(isunix)
-            dataset_path='/cis/project/vision_sequences/voc2010/unary/';
+            dataset_path='/cis/project/vision_sequences/voc2010/TBunarylogit1_matfiles/';
         end
     case 'voc2011-sbd-cars'
         if(ispc)
@@ -73,6 +73,6 @@ switch dataset_name
         if(ispc)
             dataset_path='F:/Datasets/msrc21_segmentation/unary/';
         else
-            dataset_path='/cis/project/vision_sequences/msrc21_segmentation/unary/';
+            dataset_path='/cis/project/vision_sequences/msrc21_segmentation/TBunary_matfiles/';
         end
 end

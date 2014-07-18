@@ -56,7 +56,11 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.dimension=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
             param.w0=zeros(1,param.dimension);
             param.w0(1:2)=init.UP;
-            [init.alphaMat,init.labelcost,~]=initialize_alpha(obj,param);
+            if(obj.dbparams.ncat>2)
+                [init.alphaMat,init.labelcost,~]=initialize_alpha(obj,param);
+            else
+                [~,~,init.alphaMat]=initialize_alpha(obj,param);
+            end
             param.w0(3:2+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary)=init.alphaMat;
             param.w0(3+obj.dbparams.ncat*obj.topdown.dictionary.params.size_dictionary:end)=init.labelcost;
             param.eps=obj.optimisation.params.eps;
