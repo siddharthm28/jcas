@@ -86,6 +86,18 @@ switch optimization_type
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod_1slack(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod_1slack(param,miter,C);
+    case 'ssg'
+        expJCAS.optimisation.params.C1=1e4;
+        expJCAS.optimisation.params.max_iter=1e2;
+        expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'ssg');
+    case 'fw'
+        expJCAS.optimisation.params.C1=1e4;
+        expJCAS.optimisation.params.max_iter=1e2;
+        expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
+    case 'bcfw'
+        expJCAS.optimisation.params.C1=1e4;
+        expJCAS.optimisation.params.max_iter=1e2;
+        expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
 end
 expJCAS.optimisation.featureCB = @(parm,x,y) featureFnCP(expJCAS,parm,x,y);
 expJCAS.optimisation.lossCB = @(parm,y,yhat) lossFnCP(expJCAS,parm,y,yhat);

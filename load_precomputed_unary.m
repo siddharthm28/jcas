@@ -14,7 +14,7 @@ if ~obj.destpathmade
     error('Before doing anything you need to call obj.makedestpath')
 end
 ids = obj.dbparams.(imgsetname);
-eps=1e-8;
+eps=1e-12;
 
 %For each image in image set
 fprintf('\n');
