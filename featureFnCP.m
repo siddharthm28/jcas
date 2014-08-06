@@ -32,7 +32,7 @@ switch obj.mode
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
-        E=sparse(E);
+        E=-sparse(E);
     case 2
         %Unary + pairwise + Linear classifier for TD potential \sum
         %alpha_k,l h_k,l + beta_l delta(l in interest points)
