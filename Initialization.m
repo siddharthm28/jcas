@@ -87,15 +87,15 @@ switch optimization_type
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod_1slack(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod_1slack(param,miter,C);
     case 'ssg'
-        expJCAS.optimisation.params.C1=1e4;
+        expJCAS.optimisation.params.C1=0.2;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'ssg');
     case 'fw'
-        expJCAS.optimisation.params.C1=1e4;
+        expJCAS.optimisation.params.C1=0.2;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
     case 'bcfw'
-        expJCAS.optimisation.params.C1=0.01;
+        expJCAS.optimisation.params.C1=0.2;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
 end
