@@ -86,7 +86,7 @@ switch obj.mode
         E(3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat):end)=...
             labelPres(:);
         
-        E=sparse(E);   
+        E=-sparse(E);   
         
     case 3
         %Unary + pairwise + Linear classifier for TD potential \sum
@@ -142,7 +142,7 @@ switch obj.mode
         E(3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat):end)=...
             labelPres(:);
         
-        E=sparse(E);   
+        E=-sparse(E);   
         
     case 4
         %Unary + pairwise + Linear classifier for TD potential \sum

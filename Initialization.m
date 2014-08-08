@@ -96,7 +96,7 @@ switch optimization_type
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
     case 'bcfw'
         expJCAS.optimisation.params.C1=0.2;
-        expJCAS.optimisation.params.max_iter=1e3;
+        expJCAS.optimisation.params.max_iter=2e2;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
 end
 expJCAS.optimisation.featureCB = @(parm,x,y) featureFnCP(expJCAS,parm,x,y);
