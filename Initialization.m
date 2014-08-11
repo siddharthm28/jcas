@@ -95,7 +95,11 @@ switch optimization_type
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
     case 'bcfw'
-        expJCAS.optimisation.params.C1=0.2;
+        if(strcmp(db_name,'msrc'))
+            expJCAS.optimisation.params.C1=0.01;
+        else
+            expJCAS.optimisation.params.C1=0.2;
+        end
         expJCAS.optimisation.params.max_iter=5e2;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
 end
