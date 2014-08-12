@@ -36,7 +36,7 @@ switch db_name
         test_file=fullfile(dataset_path,'Test.txt');
         ncat=21;
         img_format='.jpg';
-    case 'inria_graz'
+    case 'inria-graz'
         train_file=fullfile(dataset_path,'train.txt');
         test_file=fullfile(dataset_path,'test.txt');
         ncat=4;

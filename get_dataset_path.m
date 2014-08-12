@@ -13,6 +13,12 @@ switch dataset_name
         elseif(isunix)
             dataset_path='/cis/project/vision_sequences/inria_graz/';
         end
+	case 'inria-graz-texton'
+		if(ispc)
+			dataset_path='F:/Datasets/InriaGraz/TBunary_matfiles/';
+		elseif(isunix)
+			dataset_path='/cis/project/vision_sequences/inria_graz/TBunary_matfiles/';
+		end
     case 'voc2010'
         if(ispc)
             dataset_path='F:/datasets/voc2010/';
