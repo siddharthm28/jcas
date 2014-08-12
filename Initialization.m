@@ -90,10 +90,12 @@ switch optimization_type
         expJCAS.optimisation.params.C1=0.2;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'ssg');
+        expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod(param,miter,C);
     case 'fw'
         expJCAS.optimisation.params.C1=0.2;
         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
+        expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod(param,miter,C);
     case 'bcfw'
         expJCAS.optimisation.params.C1=0.2;
         if(strcmp(db_name,'msrc'))
@@ -102,6 +104,7 @@ switch optimization_type
             expJCAS.optimisation.params.max_iter=5e2;
         end
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
+        expJCAS.optimisation.latent_svm_struct=@(param,miter,C) latent_svm_struct_mod(param,miter,C);
 end
 expJCAS.optimisation.featureCB = @(parm,x,y) featureFnCP(expJCAS,parm,x,y);
 expJCAS.optimisation.lossCB = @(parm,y,yhat) lossFnCP(expJCAS,parm,y,yhat);
