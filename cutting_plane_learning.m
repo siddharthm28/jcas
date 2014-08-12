@@ -5,6 +5,7 @@ if obj.init.given==0
 	init.UP=rand(1,2); %Unary + pairwise
 	init.labelcost=rand(1,obj.dbparams.ncat);
 	init.alphaMat=rand(obj.topdown.dictionary.params.size_dictionary,obj.dbparams.ncat);
+    init.dict=rand(obj.topdown.features.params.dimension,obj.topdown.dictionary.params.size_dictionary);
 else
 	init=obj.init.vals;
 end
