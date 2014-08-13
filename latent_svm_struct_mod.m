@@ -47,9 +47,9 @@ while flag
         y=param.labels{i};
         
         %Update GT features
-        %if iter==1
-        %    feature0(:,i)=param.featureFn(param,param.patterns{i},[param.labels{i};param.words{i}']);
-        %end
+        if iter==1
+           feature0(:,i)=param.featureFn(param,param.patterns{i},[param.labels{i};param.words{i}']);
+        end
         
         %Compute eventually new feature for CP
         %Call separation oracle
@@ -59,7 +59,6 @@ while flag
         
         lb=[zeros(param.dimension,1);zeros(n,1)];
         ub=[];
-        
         %If new violated constraint, add to zorking set and optimize
         if dot(model.w,feature0(:,i)-feature_new)+param.lossFn(param,y,yhat)>slack(i)+param.eps
             S=[S,{yhat}];Slabel=[Slabel,i];
