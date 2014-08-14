@@ -348,7 +348,7 @@ switch obj.mode
         E(latentOffset+1+(k-1)*obj.topdown.features.params.dimension:latentOffset+k*obj.topdown.features.params.dimension)=...
             sum(D(:,z==k),2);
         end
-        E=sparse(E);   
+        E=-sparse(E);   
         
     case 8
         latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);

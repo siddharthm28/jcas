@@ -171,7 +171,7 @@ end
 
 % general initializations
 lambda = options.lambda;
-phi1 = phi(param, patterns{1}, labels{1}); % use first example to determine dimension
+phi1 = phi(param, patterns{1}, [labels{1};param.words{1}']); % use first example to determine dimension
 d = length(phi1); % dimension of feature mapping
 using_sparse_features = issparse(phi1);
 progress = [];
@@ -187,11 +187,15 @@ progress = [];
 %    Using implicit dual variable notation, we would have w_i = A \alpha_[i]
 %    -- see section 5, "application to the Structural SVM"
 if using_sparse_features
-    model.w = sparse(d,1);
-    wMat = sparse(d,n); 
+%     model.w = sparse(d,1);
+%     wMat = sparse(d,n); 
+    model.w = sparse(rand(d,1));
+    wMat = sparse(rand(d,n)); 
 else
-    model.w = zeros(d,1);
-    wMat = zeros(d,n); 
+%     model.w = zeros(d,1);
+%     wMat = zeros(d,n); 
+    model.w = rand(d,1);
+    wMat = rand(d,n); 
 end
 
 ell = 0; % this is \ell in the paper. Here it is assumed that at the true label, the loss is zero
@@ -251,7 +255,7 @@ for p=1:options.num_passes
         % 3) define the update quantities:
         % [note that lambda*w_s is subgradient of 1/n*H_i(w) ]
         % psi_i(y) := phi(x_i,y_i) - phi(x_i, y)
-        psi_i =   phi(param, patterns{i}, labels{i}) ...
+        psi_i =   phi(param, patterns{i}, [labels{i};param.words{i}']) ...
                 - phi(param, patterns{i}, ystar_i);
         w_s = 1/(n*lambda) * psi_i;
         loss_i = loss(param, labels{i}, ystar_i);
@@ -309,7 +313,7 @@ for p=1:options.num_passes
                 model_debug.ell = ell;
             end
             f = -objective_function(model_debug.w, model_debug.ell, lambda); % dual value -equation (4)
-            gap = duality_gap(param, maxOracle, model_debug, lambda);
+            gap = latent_duality_gap(param, maxOracle, model_debug, lambda);
             primal = f+gap; % a cheaper alternative to get the primal value
             train_error = average_loss(param, maxOracle, model_debug);
             fprintf('pass %d (iteration %d), SVM primal = %f, SVM dual = %f, duality gap = %f, train_error = %f \n', ...
@@ -357,7 +361,7 @@ for p=1:options.num_passes
         end
         
         % compute gap:
-        gap = duality_gap(param, maxOracle, model_debug, lambda);
+        gap = latent_duality_gap(param, maxOracle, model_debug, lambda);
         % for later: [gap, w_s, ell_s] = duality_gap(param, maxOracle, model, lambda);
         if gap <= options.gap_threshold
             fprintf('Duality gap below threshold -- stopping!\n')
