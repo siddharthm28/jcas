@@ -12,12 +12,10 @@ for i=1:length(ids)
     img_gt=sprintf(obj.dbparams.segpath,obj.dbparams.image_names{ids(i)});
     img_pred=sprintf(path,sprintf('%s-seg_result',obj.dbparams.image_names{ids(i)}));
     img_predP=sprintf(path,sprintf('%s-seg_resultP',obj.dbparams.image_names{ids(i)}));
-    histogram_filename = sprintf(obj.unary.destmatpath,sprintf('%s-SP_histogram',obj.dbparams.image_names{ids(i)}));
     
     load(img_gt,'seg_i'); seg_i=seg_i(:);
     load(img_pred,'seg'); seg=seg(:);
     load(img_predP,'pixelSeg'); pixelSeg=pixelSeg(:);
-    load(histogram_filename,'superpixel_histograms');
     gt=get_ground_truth(obj,obj.dbparams.image_names{ids(i)}); gt=gt(:);
     
     indNoVoidP=find(seg_i(:));
