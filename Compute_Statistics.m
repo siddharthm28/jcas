@@ -18,15 +18,15 @@ for i=1:length(ids)
     load(img_pred,'seg'); seg=seg(:);
     load(img_predP,'pixelSeg'); pixelSeg=pixelSeg(:);
     load(histogram_filename,'superpixel_histograms');
-    tmp=superpixel_histograms(end,:); tmp=tmp(:);
+    gt=get_ground_truth(obj,obj.dbparams.image_names{ids(i)}); gt=gt(:);
     
     indNoVoidP=find(seg_i(:));
-    indNoVoidSP=find(superpixel_histograms(end,:));
+    indNoVoidSP=find(gt);
     
     %indCM=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(seg_i(:)),double(pixelSeg(:)));
     %indCMP=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(superpixel_histograms(end,:)'),double(seg(:)));
     indCM=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(seg_i(indNoVoidP)),double(pixelSeg(indNoVoidP)));
-    indCMP=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(tmp(indNoVoidSP)),double(seg(indNoVoidSP)));
+    indCMP=sub2ind([obj.dbparams.ncat,obj.dbparams.ncat],double(gt(indNoVoidSP)),double(seg(indNoVoidSP)));
     
     
     cmatrixSP(:,:,i)=vl_binsum(zeros(obj.dbparams.ncat,obj.dbparams.ncat),ones(size(indCMP)),indCMP);
@@ -36,9 +36,9 @@ end
 
 idx=eye(obj.dbparams.ncat); idx=(idx(:)>0);
 tot = squeeze(sum(cmatrixSP,2));
-tmp=reshape(cmatrixSP,[obj.dbparams.ncat^2,length(ids)]);
-tmp=tmp(idx,:);
-tot2 = squeeze(sum(cmatrixSP,2)) + squeeze(sum(cmatrixSP,1))-tmp;
+gt=reshape(cmatrixSP,[obj.dbparams.ncat^2,length(ids)]);
+gt=gt(idx,:);
+tot2 = squeeze(sum(cmatrixSP,2)) + squeeze(sum(cmatrixSP,1))-gt;
 nr2 = 0;
 rc=zeros(1,obj.dbparams.ncat);
 rc2=zeros(1,obj.dbparams.ncat);
