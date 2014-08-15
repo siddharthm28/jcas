@@ -107,7 +107,7 @@ switch optimization_type
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) my_latent_SSVM(obj,param,miter,C,'bcfw');
 end
 if(expJCAS.mode>=7)
-    expJCAS.optimisation.params.max_iter=1e2;
+    expJCAS.optimisation.params.max_iter=expJCAS.optimisation.params.max_iter/2;
 end
 expJCAS.optimisation.featureCB = @(parm,x,y) featureFnCP(expJCAS,parm,x,y);
 expJCAS.optimisation.lossCB = @(parm,y,yhat) lossFnCP(expJCAS,parm,y,yhat);
