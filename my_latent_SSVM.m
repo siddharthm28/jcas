@@ -6,7 +6,9 @@ function model=my_latent_SSVM(obj,param,miter,C,type)
 %Output model with weights in model.w
 
 n=length(param.patterns);
+d=param.dimension;
 model.w=param.w0';
+model.wMat = rand(d,n); 
 previousw=model.w;
 previousw(1)=previousw(1)+1;
 opts=optimset('Algorithm','interior-point-convex','Display','off');
@@ -33,6 +35,8 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
         case 'fw'
             [model,progress]=latent_solverFWpos(param,options);
         case 'bcfw'
+            options.w=model.w;
+            options.wMat=model.wMat;
             [model,progress]=latent_solverBCFWpos(param,options);
     end
     

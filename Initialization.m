@@ -1,4 +1,4 @@
-function expJCAS=Initialization(db_name,mode,pre_unary,pre_sp,recompute,optimization_type)
+function expJCAS=Initialization(db_name,mode,pre_unary,pre_sp,recompute,optimization_type,max_iter)
 % Function that Initializes the framework for dataset db_name under type mode
 % also pass if you want to use precomputed unaries and superpixels or not
 clc; close all;
@@ -16,6 +16,12 @@ if(~exist('pre_sp','var') || isempty(pre_sp))
 end
 if(~exist('recompute','var') || isempty(recompute))
     recompute=0;
+end
+if(~exist('optimization_type','var') || isempty(optimization_type))
+    optimization_type='bcfw';
+end
+if(~exist('max_iter','var') || isempty(max_iter))
+    max_iter=1e3;
 end
 % Create an object of class jcas.
 expJCAS = jcas();
@@ -78,34 +84,31 @@ expJCAS.optimisation.params.args = '-w 0 -c 1.0';
 switch optimization_type
     case 'nslack'
         expJCAS.optimisation.params.C1 = 1e6;
-        expJCAS.optimisation.params.max_iter=1e2;
+%         expJCAS.optimisation.params.max_iter=1e2;
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) latent_svm_struct_mod(obj,param,miter,C);
     case '1slack'
         expJCAS.optimisation.params.C1 = 1e6;
-        expJCAS.optimisation.params.max_iter=1e3;
+%         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) svm_struct_mod_1slack(param,miter,C);
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) latent_svm_struct_mod_1slack(obj,param,miter,C);
     case 'ssg'
         expJCAS.optimisation.params.C1=0.2;
-        expJCAS.optimisation.params.max_iter=1e3;
+%         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'ssg');
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) my_latent_SSVM(obj,param,miter,C,'ssg');
     case 'fw'
         expJCAS.optimisation.params.C1=0.2;
-        expJCAS.optimisation.params.max_iter=1e3;
+%         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'fw');
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) my_latent_SSVM(obj,param,miter,C,'fw');
     case 'bcfw'
         expJCAS.optimisation.params.C1=0.2;
-        if(strcmp(db_name,'msrc'))
-            expJCAS.optimisation.params.max_iter=1e3;
-        else
-            expJCAS.optimisation.params.max_iter=5e2;
-        end
+%         expJCAS.optimisation.params.max_iter=1e3;
         expJCAS.optimisation.svm_struct=@(param,miter,C) mySSVM(param,miter,C,'bcfw');
         expJCAS.optimisation.latent_svm_struct=@(obj,param,miter,C) my_latent_SSVM(obj,param,miter,C,'bcfw');
 end
+expJCAS.optimisation.params.max_iter=max_iter;
 if(expJCAS.mode>=7)
     expJCAS.optimisation.params.max_iter=expJCAS.optimisation.params.max_iter/2;
 end

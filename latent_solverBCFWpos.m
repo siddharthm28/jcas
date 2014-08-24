@@ -186,16 +186,17 @@ progress = [];
 % wMat: d x n matrix, wMat(:,i) is storing w_i (in Alg. 4 notation) for example i.
 %    Using implicit dual variable notation, we would have w_i = A \alpha_[i]
 %    -- see section 5, "application to the Structural SVM"
-if using_sparse_features
-%     model.w = sparse(d,1);
-%     wMat = sparse(d,n); 
-    model.w = sparse(rand(d,1));
-    wMat = sparse(rand(d,n)); 
+if(~isfield(options,'w'))
+    if using_sparse_features
+        model.w = sparse(rand(d,1));
+        wMat = sparse(rand(d,n)); 
+    else
+        model.w = rand(d,1);
+        wMat = rand(d,n); 
+    end
 else
-%     model.w = zeros(d,1);
-%     wMat = zeros(d,n); 
-    model.w = rand(d,1);
-    wMat = rand(d,n); 
+    model.w=options.w;
+    wMat=options.wMat;
 end
 
 ell = 0; % this is \ell in the paper. Here it is assumed that at the true label, the loss is zero
@@ -286,6 +287,7 @@ for p=1:options.num_passes
         tmp = model.w + wMat(:,i); % this is w^(k+1) = w^(k)-w_i^(k)+w_i^(k+1)
         tmp(tmp<0)=0;   % project w onto the space w>=0
         model.w = tmp;
+        model.wMat=wMat;
         
         ell = ell - ellMat(i); % this is ell^(k)-ell_i^(k)
         ellMat(i) = (1-gamma)*ellMat(i) + gamma*ell_s;

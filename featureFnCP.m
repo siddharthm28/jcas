@@ -431,7 +431,7 @@ switch obj.mode
 
         E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd);
                 
-        E=sparse(E);           
+        E=-sparse(E);           
 
     otherwise
         error('Problem with mode selected')
