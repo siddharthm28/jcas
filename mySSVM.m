@@ -3,6 +3,7 @@ function model=mySSVM(param,max_iter,C,type)
 
 options.num_passes=max_iter;
 options.lambda=1/C;
+options.gap_check=100;
 switch type
     case 'ssg'
         [model,progress]=solverSSGpos(param,options);

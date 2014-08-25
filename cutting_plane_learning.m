@@ -166,7 +166,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.tmp.featdim=obj.topdown.features.params.dimension;
             param.tmp.superpixels.destmatpath=obj.superpixels.destmatpath;
             param.tmp.topdown.features.destmatpath=obj.topdown.features.destmatpath;
-            param.nbIterLatent=20;
+            param.nbIterLatent=5;
             param.wordsInd=[];
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=obj.optimisation.latent_svm_struct(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);
@@ -186,7 +186,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
             obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary)=init.dict;
             param.eps=obj.optimisation.params.eps;
-            param.nbIterLatent=20;
+            param.nbIterLatent=5;
             %Store ideces for pairwise words
             %Words Pairwise
             param.wordsInd=zeros(obj.topdown.dictionary.params.size_dictionary*(obj.topdown.dictionary.params.size_dictionary-1)/2,1);
