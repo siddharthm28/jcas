@@ -10,5 +10,6 @@ switch type
     case 'fw'
         [model,progress]=solverFWpos(param,options);
     case 'bcfw'
+        keyboard;
         [model,progress]=solverBCFWpos(param,options);
 end

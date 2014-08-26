@@ -29,6 +29,7 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     % learn the SSVM with the current words
     options.num_passes=miter;
     options.lambda=1/C;
+    options.gap_check=100;
     switch type
         case 'ssg'
             [model,progress]=latent_solverSSGpos(param,options);
