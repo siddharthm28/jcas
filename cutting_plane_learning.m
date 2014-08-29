@@ -166,7 +166,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.tmp.featdim=obj.topdown.features.params.dimension;
             param.tmp.superpixels.destmatpath=obj.superpixels.destmatpath;
             param.tmp.topdown.features.destmatpath=obj.topdown.features.destmatpath;
-            param.nbIterLatent=5;
+            param.nbIterLatent=10;
             param.wordsInd=[];
             %optsvm=svm_struct_learn(obj.optimisation.params.args,param);
             optsvm=obj.optimisation.latent_svm_struct(obj,param,obj.optimisation.params.max_iter,obj.optimisation.params.C1);

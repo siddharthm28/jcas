@@ -30,14 +30,14 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     options.num_passes=miter;
     options.lambda=1/C;
     options.gap_check=100;
+    options.w=model.w;
+%     options.wMat=model.wMat;
     switch type
         case 'ssg'
             [model,progress]=latent_solverSSGpos(param,options);
         case 'fw'
             [model,progress]=latent_solverFWpos(param,options);
         case 'bcfw'
-            options.w=model.w;
-            options.wMat=model.wMat;
             [model,progress]=latent_solverBCFWpos(param,options);
     end
     
