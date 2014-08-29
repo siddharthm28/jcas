@@ -189,13 +189,20 @@ progress = [];
 if(~isfield(options,'w'))
     if using_sparse_features
         model.w = sparse(rand(d,1));
-        wMat = sparse(rand(d,n)); 
     else
         model.w = rand(d,1);
-        wMat = rand(d,n); 
     end
 else
     model.w=options.w;
+end
+
+if(~isfield(options,'wMat'))
+    if using_sparse_features
+        wMat = sparse(rand(d,n)); 
+    else
+        wMat = rand(d,n); 
+    end
+else
     wMat=options.wMat;
 end
 
