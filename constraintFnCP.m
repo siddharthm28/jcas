@@ -859,6 +859,8 @@ switch obj.mode
             optsvm=model;
             save(sprintf(obj.optimisation.destmatpath,sprintf('optmodel_%d',obj.mode)),'optsvm');
             
+        else
+            yMostViolatedLabel=[yMostViolatedLabel(:);z(:)];
         end
         
 end
