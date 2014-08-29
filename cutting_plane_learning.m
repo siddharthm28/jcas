@@ -186,7 +186,7 @@ if ~exist(opt_filename,'file')|| obj.force_recompute.optimisation
             param.w0(3+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1):2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1)+...
             obj.topdown.features.params.dimension*obj.topdown.dictionary.params.size_dictionary)=init.dict;
             param.eps=obj.optimisation.params.eps;
-            param.nbIterLatent=5;
+            param.nbIterLatent=10;
             %Store ideces for pairwise words
             %Words Pairwise
             param.wordsInd=zeros(obj.topdown.dictionary.params.size_dictionary*(obj.topdown.dictionary.params.size_dictionary-1)/2,1);
