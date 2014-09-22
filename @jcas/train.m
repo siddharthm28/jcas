@@ -112,7 +112,9 @@ end
     
 
 %Cutting plane algorithm to learn the parameters
+tic;
 cutting_plane_learning(obj);
+toc;
 
 if ~exist(sprintf([tDir,'%s.mat'],'CP_learning'),'file')
 p = profile('info');
