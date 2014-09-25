@@ -248,7 +248,7 @@ for p=1:options.num_passes
         perm = randperm(n);
     end
 
-    for dummy = 1:n
+    for dummy = 1%:n
         % (each numbered comment correspond to a line in algorithm 4)
         % 1) Picking random example:
         if (isequal(options.sample, 'uniform'))
