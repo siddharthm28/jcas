@@ -243,6 +243,7 @@ k=0; % same k as in paper
 gap_check_counter = 1; % keeps track of how many passes through the data since last duality gap check...
 for p=1:options.num_passes
 
+    fprintf('p: %d/%d \n',p,options.num_passes);
     perm = [];
     if (isequal(options.sample, 'perm'))
         perm = randperm(n);

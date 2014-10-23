@@ -29,7 +29,7 @@ while iterLatent<param.nbIterLatent && sum(previousw~=model.w)>0
     % learn the SSVM with the current words
     options.num_passes=miter;
     options.lambda=1/C;
-    options.gap_check=100;
+    options.gap_check=0;
     options.w=model.w;
 %     options.wMat=model.wMat;
     switch type
