@@ -29,7 +29,7 @@ switch obj.mode
             tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
             tmp=load(model_filename,'optsvm'); optsvm=tmp.optsvm;
             
-            unary=full(optsvm.w(1))*unary';
+            unary=full(optsvm.w(1))*unary;
             pairwise=sparse(optsvm.w(2)*pairwise);
             
 %             labelcost_total = ones(size(unary,2))-eye(size(unary,2));
