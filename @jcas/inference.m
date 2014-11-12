@@ -29,15 +29,16 @@ switch obj.mode
             tmp=load(pairwise_filename,'pairwise'); pairwise=tmp.pairwise;
             tmp=load(model_filename,'optsvm'); optsvm=tmp.optsvm;
             
-            unary=full(optsvm.w(1))*unary;
+            unary=full(optsvm.w(1))*unary';
             pairwise=sparse(optsvm.w(2)*pairwise);
             
-            labelcost_total = ones(size(unary,2))-eye(size(unary,2));
-            [~, seg] =  min(unary,[],2);
-            if (optsvm.w(2)~=0) %%% USING PAIRWISE
-                [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
-                seg = seg2+1;
-            end
+%             labelcost_total = ones(size(unary,2))-eye(size(unary,2));
+%             [~, seg] =  min(unary,[],2);
+%             if (optsvm.w(2)~=0) %%% USING PAIRWISE
+%                 [seg2,~,~] =  GCMex(seg'-1, single(unary'), pairwise, single(labelcost_total),0);
+%                 seg = seg2+1;
+%             end
+            seg=run_solver(unary',pairwise,size(unary,2));
             save(segres_filename,'seg');
         end
         

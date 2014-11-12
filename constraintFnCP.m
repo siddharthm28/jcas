@@ -28,13 +28,14 @@ switch obj.mode
         unary=(model.w(1)*unary - hamming);
         pairwise=sparse(model.w(2)*(pairwise));
         
-        [~, yMostViolatedLabel] =  min(unary,[],2); %min(unary',[],1);
-        labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
-        if (model.w(2)~=0) %%% USING PAIRWISE
-            [seg2,~,~] =  GCMex(yMostViolatedLabel'-1, single(unary'), pairwise, single(labelcost_total),0);
-            yMostViolatedLabel = seg2+1;
-        end
-        yMostViolatedLabel=yMostViolatedLabel(:);
+%         [~, yMostViolatedLabel] =  min(unary,[],2); %min(unary',[],1);
+%         labelcost_total = ones(obj.dbparams.ncat)-eye(obj.dbparams.ncat);
+%         if (model.w(2)~=0) %%% USING PAIRWISE
+%             [seg2,~,~] =  GCMex(yMostViolatedLabel'-1, single(unary'), pairwise, single(labelcost_total),0);
+%             yMostViolatedLabel = seg2+1;
+%         end
+%         yMostViolatedLabel=yMostViolatedLabel(:);
+        yMostViolatedLabel=run_solver(unary',pairwise,obj.dbparams.ncat);
         
     case 2
         %Unary + pairwise + Linear classifier for TD potential \sum
