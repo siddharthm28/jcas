@@ -41,6 +41,11 @@ switch db_name
         test_file=fullfile(dataset_path,'test.txt');
         ncat=4;
         img_format='.png';
+    case '3dobject-cars'
+        train_file=fullfile(dataset_path,'train.txt');
+        test_file=fullfile(dataset_path,'test.txt');
+        ncat=2;
+        img_format='.png';
 end
 img_path=fullfile(dataset_path,'img');
 % relevant variables
@@ -76,7 +81,7 @@ prob=tmp./repmat(sum(tmp),ncat,1);
 prob=num2cell(prob,2);
 prob=cellfun(@(x) reshape(x,[N,M])',prob,'uniformoutput',false);
 pixel_probability_estimates=cat(3,prob{:});
-% pixel_probability_estimates=pixel_probability_estimates(:,:,[2,1]); % to have bg as label 1
+pixel_probability_estimates=pixel_probability_estimates(:,:,[2,1]); % to have bg as label 1
 % [~,ind]=max(pixel_probability_estimates,[],3);
 % figure, imagesc(ind);
 % tmp=sum(pixel_probability_estimates,3); disp(unique(tmp(:)));
@@ -89,3 +94,10 @@ if(sum(pixel_probability_estimates(:)<0))
 end
 save(fullfile(unary_matfiles_path,[image_names{i},'.mat']),'pixel_probability_estimates');
 visualize_prob_image(pixel_probability_estimates,image_names{i},vis_path);
+
+function visualize_prob_image(p,name,filepath)
+% function to visualize the given probability map on the basis of MAP
+% estimate of the class
+[~,labels]=max(p,[],3);
+tmp=label2rgb(labels);
+imwrite(tmp,fullfile(filepath,[name,'.png']));

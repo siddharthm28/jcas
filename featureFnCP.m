@@ -32,7 +32,7 @@ switch obj.mode
         pairwise = sparse(pairwise);
         edge_cost = pairwise(img_sp.edges(:,1)+nbSp*(img_sp.edges(:,2)-1));
         E(2) = sum(edge_cost((y(img_sp.edges(:,1))~=y(img_sp.edges(:,2)))));
-        E=-sparse(E);
+        E=sparse(E);
     case 2
         %Unary + pairwise + Linear classifier for TD potential \sum
         %alpha_k,l h_k,l + beta_l delta(l in interest points)
@@ -86,7 +86,7 @@ switch obj.mode
         E(3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat):end)=...
             labelPres(:);
         
-        E=-sparse(E);   
+        E=sparse(E);   
         
     case 3
         %Unary + pairwise + Linear classifier for TD potential \sum
@@ -142,7 +142,7 @@ switch obj.mode
         E(3+(obj.topdown.dictionary.params.size_dictionary*obj.dbparams.ncat):end)=...
             labelPres(:);
         
-        E=-sparse(E);   
+        E=sparse(E);   
         
     case 4
         %Unary + pairwise + Linear classifier for TD potential \sum
@@ -348,7 +348,7 @@ switch obj.mode
         E(latentOffset+1+(k-1)*obj.topdown.features.params.dimension:latentOffset+k*obj.topdown.features.params.dimension)=...
             sum(D(:,z==k),2);
         end
-        E=-sparse(E);   
+        E=sparse(E);   
         
     case 8
         latentOffset=2+obj.dbparams.ncat*(obj.topdown.dictionary.params.size_dictionary+1);
@@ -431,7 +431,7 @@ switch obj.mode
 
         E(wordOffset+1:end)=wordsPairwiseMat(param.wordsInd);
                 
-        E=-sparse(E);           
+        E=sparse(E);           
 
     otherwise
         error('Problem with mode selected')

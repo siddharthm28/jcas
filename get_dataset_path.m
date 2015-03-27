@@ -75,4 +75,16 @@ switch dataset_name
         else
             dataset_path='/cis/project/vision_sequences/msrc21_segmentation/TBunary_matfiles/';
         end
+    case '3dobject-cars'
+        if(ispc)
+            dataset_path='F:/Datasets/3Ddataset/car/';
+        else
+            dataset_path='/cis/project/vision_sequences/3dobject/car/';
+        end
+    case '3dobject-cars-texton'
+        if(ispc)
+            dataset_path='F:/Datasets/3Ddataset/car/TBunary_matfiles/';
+        else
+            dataset_path='/cis/project/vision_sequences/3dobject/car/TBunary_matfiles/';
+        end
 end

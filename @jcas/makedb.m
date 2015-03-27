@@ -106,7 +106,7 @@ switch db_name
         obj.dbparams.destmatpath = [strrep(pwd,'\','/'),'/resulits_msrc/%s.mat'];
         vl_xmkdir(fileparts(obj.dbparams.destmatpath));
     case {'inria-graz','voc2010','voc2011-sbd-cars','voc2011-sbd-all',...
-            'voc2011-sbd-cars-subset'}
+            'voc2011-sbd-cars-subset','3dobject-cars'}
         switch db_name
             case 'inria-graz'
                 % relevant paths
@@ -153,6 +153,12 @@ switch db_name
                 obj.dbparams.ncat=2;
                 % image format
                 obj.dbparams.format='.jpg';
+            case '3dobject-cars'
+                dataset_path=get_dataset_path('3dobject-cars');
+                train_file=fullfile(dataset_path,'train.txt');
+                test_file=fullfile(dataset_path,'test.txt');
+                obj.dbparams.ncat=2;
+                obj.dbparams.format='.png';
         end
         % read the train file for training images
         train_images = read_file(train_file);
